@@ -1,3 +1,9 @@
+# Notes
+
+- [Google Drive](https://drive.google.com/drive/folders/1uNNYx3B4vuSA39m7bktqp9M_-Bn_L534)
+- [Design Doc](https://docs.google.com/document/d/1msNrJvMxTN4Jp4JxNhMrArqtY5VRBMpU6_QLwFGYoeE/edit)
+- Using [Ant Design](https://ant.design/)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
