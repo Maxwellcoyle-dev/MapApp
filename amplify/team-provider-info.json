@@ -17,6 +17,9 @@
           "appId": "d30lmkalg5o596",
           "type": "manual"
         }
+      },
+      "auth": {
+        "mapappd7c070fc": {}
       }
     }
   }
