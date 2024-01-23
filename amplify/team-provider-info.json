@@ -10,6 +10,14 @@
       "StackName": "amplify-mapapp-dev-174629",
       "StackId": "arn:aws:cloudformation:us-east-2:950809776337:stack/amplify-mapapp-dev-174629/41852730-ba41-11ee-95d2-064cc3d3624d",
       "AmplifyAppId": "d30lmkalg5o596"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d30lmkalg5o596",
+          "type": "manual"
+        }
+      }
     }
   }
 }
