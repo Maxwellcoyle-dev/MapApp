@@ -12,7 +12,9 @@ function App({ signOut }) {
   return (
     <View className="App">
       <Card>
-        <Heading level={1}>We now have Auth!</Heading>
+        <Heading level={1}>
+          We now have Auth! Let's hope this shit works
+        </Heading>
       </Card>
       <Button onClick={signOut}>Sign Out</Button>
     </View>
