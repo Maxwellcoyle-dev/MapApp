@@ -8,6 +8,9 @@
 - Places API - https://github.com/googleapis/google-cloud-node/tree/main/packages/google-maps-places
 - React Maps - https://github.com/JustFly1984/react-google-maps-api?tab=readme-ov-file#react-google-maps-organization-root
 
+# AWS Libraries
+- DynamoDB - https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-client-dynamodb/
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
