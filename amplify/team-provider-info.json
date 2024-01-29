@@ -14,6 +14,9 @@
     "categories": {
       "auth": {
         "mapappf0a0dd80": {}
+      },
+      "storage": {
+        "MapAppTable": {}
       }
     }
   }
