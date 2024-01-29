@@ -4,6 +4,10 @@
 - [Design Doc](https://docs.google.com/document/d/1msNrJvMxTN4Jp4JxNhMrArqtY5VRBMpU6_QLwFGYoeE/edit)
 - Using [Ant Design](https://ant.design/)
 
+# Google Libraries
+- Places API - https://github.com/googleapis/google-cloud-node/tree/main/packages/google-maps-places
+- React Maps - https://github.com/JustFly1984/react-google-maps-api?tab=readme-ov-file#react-google-maps-organization-root
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
