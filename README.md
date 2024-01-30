@@ -6,7 +6,7 @@
 
 # Google Libraries
 - Places API - https://github.com/googleapis/google-cloud-node/tree/main/packages/google-maps-places
-- React Wrapper - https://github.com/googlemaps/react-wrapper?tab=readme-ov-file
+- Maps Loader - https://developers.google.com/maps/documentation/javascript/load-maps-js-api#javascript_1
 
 # AWS Libraries
 - DynamoDB - https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-client-dynamodb/
