@@ -6,7 +6,7 @@
 
 # Google Libraries
 - Places API - https://github.com/googleapis/google-cloud-node/tree/main/packages/google-maps-places
-- React Maps - https://github.com/JustFly1984/react-google-maps-api?tab=readme-ov-file#react-google-maps-organization-root
+- React Wrapper - [https://github.com/JustFly1984/react-google-maps-api?tab=readme-ov-file#react-google-maps-organization-root](https://github.com/googlemaps/react-wrapper?tab=readme-ov-file)
 
 # AWS Libraries
 - DynamoDB - https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-client-dynamodb/
