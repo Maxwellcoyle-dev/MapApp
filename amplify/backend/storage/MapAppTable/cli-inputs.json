@@ -1,0 +1,14 @@
+{
+  "resourceName": "MapAppTable",
+  "tableName": "MapAppTable",
+  "partitionKey": {
+    "fieldName": "placeId",
+    "fieldType": "string"
+  },
+  "sortKey": {
+    "fieldName": "uid",
+    "fieldType": "string"
+  },
+  "gsi": [],
+  "triggerFunctions": []
+}
