@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 
-const googleAPIKey = "AIzaSyBL50aCZHy0CGkTlq9BN3It51dlchZn4ak";
+const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
 
 const Map = ({ center, zoom }) => {
   const ref = useRef();
@@ -10,7 +10,7 @@ const Map = ({ center, zoom }) => {
 
   useEffect(() => {
     const loader = new Loader({
-      apiKey: googleAPIKey,
+      apiKey: GOOGLE_API_KEY,
       version: "weekly",
     });
 
