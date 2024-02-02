@@ -1,37 +1,34 @@
-import React, { useRef, useEffect, useState } from "react";
-import { Loader } from "@googlemaps/js-api-loader";
+import React, { useRef, useEffect, useContext } from "react";
 
-const GOOGLE_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY;
+import { GoogleMapsAPIContext } from "../../context/GoogleMapsAPIProvider";
 
 const Map = ({ center, zoom }) => {
   const ref = useRef();
-  const [map, setMap] = useState(null);
-  const [mapLoaded, setMapLoaded] = useState(false);
+  const { isApiLoaded, setBounds } = useContext(GoogleMapsAPIContext);
 
+  // Inside your Map component
   useEffect(() => {
-    const loader = new Loader({
-      apiKey: GOOGLE_API_KEY,
-      version: "weekly",
-    });
+    if (isApiLoaded) {
+      const map = new window.google.maps.Map(ref.current, {
+        center,
+        zoom,
+        mapTypeId: window.google.maps.MapTypeId.ROADMAP,
+        mapTypeControl: false,
+        fullscreenControl: false,
+      });
 
-    loader.load().then(() => {
-      setMap(
-        new window.google.maps.Map(ref.current, {
-          center,
-          zoom,
-          mapTypeId: window.google.maps.MapTypeId.ROADMAP,
-          mapTypeControl: false,
-          fullscreenControl: false,
-        })
-      );
-    });
-  }, [zoom]);
-
-  useEffect(() => {
-    if (map) {
-      map.setCenter(center);
+      // Update bounds in the context when the map is loaded or its bounds change
+      google.maps.event.addListener(map, "bounds_changed", () => {
+        const bounds = map.getBounds();
+        setBounds({
+          north: bounds.getNorthEast().lat(),
+          east: bounds.getNorthEast().lng(),
+          south: bounds.getSouthWest().lat(),
+          west: bounds.getSouthWest().lng(),
+        });
+      });
     }
-  }, [center, map]);
+  }, [isApiLoaded, center, zoom, setBounds]);
 
   return <div ref={ref} style={{ width: "100%", height: "100vh" }} id="map" />;
 };
