@@ -2,11 +2,10 @@ import React, { useRef, useEffect, useContext } from "react";
 
 import { GoogleMapsAPIContext } from "../../context/GoogleMapsAPIProvider";
 
-const Map = ({ center, zoom }) => {
+const Map = ({ center, zoom, places }) => {
   const ref = useRef();
   const { isApiLoaded, setBounds } = useContext(GoogleMapsAPIContext);
 
-  // Inside your Map component
   useEffect(() => {
     if (isApiLoaded) {
       const map = new window.google.maps.Map(ref.current, {
@@ -15,10 +14,11 @@ const Map = ({ center, zoom }) => {
         mapTypeId: window.google.maps.MapTypeId.ROADMAP,
         mapTypeControl: false,
         fullscreenControl: false,
+        streetViewControl: false,
       });
 
       // Update bounds in the context when the map is loaded or its bounds change
-      google.maps.event.addListener(map, "bounds_changed", () => {
+      window.google.maps.event.addListener(map, "bounds_changed", () => {
         const bounds = map.getBounds();
         setBounds({
           north: bounds.getNorthEast().lat(),

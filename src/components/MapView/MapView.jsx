@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Map from "../Map/Map";
 
-const MapView = () => {
+const MapView = ({ places }) => {
   const [center, setCenter] = useState({ lat: -34.397, lng: 150.644 });
   const [zoom, setZoom] = useState(4);
 
@@ -26,7 +26,7 @@ const MapView = () => {
     }
   }, []);
 
-  return <Map center={center} zoom={zoom} />;
+  return <Map center={center} zoom={zoom} places={places} />;
 };
 
 export default MapView;

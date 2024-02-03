@@ -6,6 +6,7 @@ export const GoogleMapsAPIContext = createContext(null);
 
 export const GoogleMapsAPIProvider = ({ children }) => {
   const [isApiLoaded, setIsApiLoaded] = useState(false);
+  const [query, setQuery] = useState("");
   const [bounds, setBounds] = useState(null);
 
   useEffect(() => {
@@ -22,8 +23,10 @@ export const GoogleMapsAPIProvider = ({ children }) => {
   const value = {
     isApiLoaded,
     setIsApiLoaded,
+    query,
+    setQuery,
     bounds,
-    setBounds, // Make sure to provide a way to update bounds
+    setBounds,
   };
 
   return (

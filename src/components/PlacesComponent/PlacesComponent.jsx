@@ -1,15 +1,10 @@
-import React, { useState } from "react";
-import { usePlacesSearch } from "../../hooks/usePlacesSearch";
+import React, { useState, useContext } from "react";
 
-const PlacesComponent = () => {
-  const [searchInBounds, setSearchInBounds] = React.useState(false);
+import { GoogleMapsAPIContext } from "../../context/GoogleMapsAPIProvider";
+
+const PlacesComponent = ({ places, isLoading, error }) => {
   const [input, setInput] = useState("");
-  const [query, setQuery] = useState("");
-  const {
-    data: places,
-    isLoading,
-    error,
-  } = usePlacesSearch(query, searchInBounds);
+  const { setQuery } = useContext(GoogleMapsAPIContext);
 
   return (
     <div>
@@ -19,14 +14,6 @@ const PlacesComponent = () => {
         onChange={(e) => setInput(e.target.value)}
         placeholder="Search for places"
       />
-      <label>
-        <input
-          type="checkbox"
-          checked={searchInBounds}
-          onChange={() => setSearchInBounds(!searchInBounds)}
-        />
-        Search within current map view
-      </label>
       <button onClick={() => setQuery(input)}>Search</button>
       {isLoading && <p>Loading...</p>}
       {error && <p>Error: {error}</p>}
