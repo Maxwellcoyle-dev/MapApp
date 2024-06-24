@@ -1,64 +1,21 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-  APIProvider,
-  Map,
-  Marker,
-  useMapsLibrary,
-} from "@vis.gl/react-google-maps";
+import React, { useState, useEffect } from "react";
+import { APIProvider, Map, useMap } from "@vis.gl/react-google-maps";
 
-const AutocompleteInput = ({ onPlaceSelected }) => {
-  const autocompleteRef = useRef();
-  const inputRef = useRef();
-  const placesLibrary = useMapsLibrary("places");
-
-  useEffect(() => {
-    if (!placesLibrary) return;
-
-    const autocomplete = new placesLibrary.Autocomplete(inputRef.current);
-    autocompleteRef.current = autocomplete;
-
-    const handlePlaceChanged = () => {
-      const place = autocomplete.getPlace();
-      if (place.geometry) {
-        onPlaceSelected({
-          lat: place.geometry.location.lat(),
-          lng: place.geometry.location.lng(),
-        });
-      }
-    };
-
-    const placeChangedListener = autocomplete.addListener(
-      "place_changed",
-      handlePlaceChanged
-    );
-
-    return () => {
-      if (placeChangedListener) {
-        placeChangedListener.remove();
-      }
-    };
-  }, [placesLibrary, onPlaceSelected]);
-
-  return (
-    <input
-      ref={inputRef}
-      type="text"
-      placeholder="Enter a location"
-      style={{
-        position: "absolute",
-        top: "10px",
-        left: "10px",
-        zIndex: 10,
-        padding: "5px 10px",
-        width: "300px",
-      }}
-    />
-  );
-};
+import SearchBar from "../Search/SearchBar";
 
 const MapView = () => {
   const [center, setCenter] = useState({ lat: -34.397, lng: 150.644 });
   const [zoom, setZoom] = useState(4);
+
+  const mapOptions = {
+    zoomControl: true,
+    mapTypeControl: false,
+    scaleControl: false,
+    streetViewControl: true,
+    rotateControl: false,
+    fullscreenControl: false,
+    gestureHandling: "greedy",
+  };
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -78,28 +35,58 @@ const MapView = () => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log("center: ", center);
-  }, [center, zoom]);
-
   const handlePlaceSelected = (location) => {
     setCenter(location);
     setZoom(14);
   };
 
+  const MapComponent = () => {
+    const map = useMap();
+
+    useEffect(() => {
+      if (!map) return;
+
+      const centerChangedListener = map.addListener("center_changed", () => {
+        setCenter({
+          lat: map.getCenter().lat(),
+          lng: map.getCenter().lng(),
+        });
+      });
+
+      const zoomChangedListener = map.addListener("zoom_changed", () => {
+        setZoom(map.getZoom());
+      });
+
+      return () => {
+        centerChangedListener.remove();
+        zoomChangedListener.remove();
+      };
+    }, [map]);
+
+    return null;
+  };
+
   return (
-    <div style={{ position: "relative", height: "100%", width: "100%" }}>
-      <APIProvider apiKey={process.env.REACT_APP_GOOGLE_API_KEY}>
-        <AutocompleteInput onPlaceSelected={handlePlaceSelected} />
-        <Map
-          style={{ width: "100vw", height: "100vh" }}
-          defaultCenter={center}
-          center={center}
-          zoom={zoom}
-        >
-          <Marker position={center} />
-        </Map>
-      </APIProvider>
+    <div
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        zIndex: 0,
+        height: "100%",
+        width: "100%",
+      }}
+    >
+      <Map
+        mapId={"126ae8e8ffefefdf"}
+        style={{ width: "100vw", height: "100vh" }}
+        defaultCenter={center}
+        center={center}
+        zoom={zoom}
+        options={mapOptions}
+      >
+        <MapComponent />
+      </Map>
     </div>
   );
 };
