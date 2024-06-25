@@ -1,11 +1,19 @@
-import React, { useState, useEffect } from "react";
-import { APIProvider, Map, useMap } from "@vis.gl/react-google-maps";
+import React, { useState, useEffect, useRef } from "react";
+import {
+  APIProvider,
+  Map,
+  useMap,
+  AdvancedMarker,
+  InfoWindow,
+  Pin,
+} from "@vis.gl/react-google-maps";
 
-import SearchBar from "../Search/SearchBar";
+import MapInfoWindow from "../MapInfoWindow/MapInfoWindow";
 
-const MapView = () => {
+const MapView = ({ markers }) => {
   const [center, setCenter] = useState({ lat: -34.397, lng: 150.644 });
   const [zoom, setZoom] = useState(4);
+  const [selectedMarker, setSelectedMarker] = useState(null);
 
   const mapOptions = {
     zoomControl: true,
@@ -40,6 +48,15 @@ const MapView = () => {
     setZoom(14);
   };
 
+  const handleMarkerClick = (marker) => {
+    console.log("Marker clicked:", marker);
+    setSelectedMarker(marker);
+  };
+
+  const handleInfoWindowClose = () => {
+    setSelectedMarker(null);
+  };
+
   const MapComponent = () => {
     const map = useMap();
 
@@ -66,6 +83,10 @@ const MapView = () => {
     return null;
   };
 
+  useEffect(() => {
+    console.log("Selected marker changed:", selectedMarker);
+  }, [selectedMarker]);
+
   return (
     <div
       style={{
@@ -86,6 +107,28 @@ const MapView = () => {
         options={mapOptions}
       >
         <MapComponent />
+        {markers.map((marker, index) => (
+          <AdvancedMarker
+            key={index}
+            position={marker}
+            onClick={() => handleMarkerClick(marker)}
+          >
+            {marker.placeId === selectedMarker?.placeId ? (
+              <Pin
+                background={"blue"}
+                glyphColor={"gray"}
+                borderColor={"gray"}
+              />
+            ) : (
+              <Pin background={""} glyphColor={""} borderColor={""} />
+            )}
+          </AdvancedMarker>
+        ))}
+
+        <MapInfoWindow
+          placeDetails={selectedMarker}
+          handleInfoWindowClose={handleInfoWindowClose}
+        />
       </Map>
     </div>
   );

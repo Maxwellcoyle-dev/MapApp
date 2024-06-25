@@ -5,7 +5,7 @@ import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 import Input from "./Input";
 import AutoComplete from "./AutoComplete";
 
-const SearchBar = () => {
+const SearchBar = ({ setMarkers }) => {
   const [query, setQuery] = useState("");
   const [autoCompleteResults, setAutoCompleteResults] = useState([]);
 
@@ -49,6 +49,37 @@ const SearchBar = () => {
     }
   };
 
+  const handleInputSubmit = () => {
+    placesService.textSearch(
+      {
+        query,
+        location: map.getCenter(),
+      },
+      (results, status) => {
+        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+          console.log("Results: ", results);
+          setMarkers(
+            results.map((result) => ({
+              placeId: result.place_id,
+              lat: result.geometry.location.lat(),
+              lng: result.geometry.location.lng(),
+              name: result.name,
+              isOpen: result.opening_hours?.isOpen(),
+              rating: result.rating,
+              totalUserRatings: result.user_ratings_total,
+              address: result.formatted_address,
+              priceLevel: result.price_level,
+              types: result.types,
+            }))
+          );
+          setAutoCompleteResults([]);
+        } else {
+          console.warn("Places service failed due to: ", status);
+        }
+      }
+    );
+  };
+
   return (
     <div
       style={{
@@ -61,7 +92,11 @@ const SearchBar = () => {
         padding: "2rem 0",
       }}
     >
-      <Input query={query} handleInputChange={handleInputChange} />
+      <Input
+        query={query}
+        handleInputChange={handleInputChange}
+        handleInputSubmit={handleInputSubmit}
+      />
       <AutoComplete autoCompleteResults={autoCompleteResults} />
     </div>
   );
