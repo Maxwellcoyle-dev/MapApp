@@ -1,3 +1,4 @@
+// Libaries
 import React, { useState, useEffect } from "react";
 import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 
@@ -5,28 +6,29 @@ import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 import Input from "./Input";
 import AutoComplete from "./AutoComplete";
 
-const SearchBar = ({ setMarkers }) => {
+// Hooks
+import useGetPlace from "../../hooks/useGetPlace";
+
+const SearchBar = ({ setMarkers, setCenter, setSelectedMarker }) => {
   const [query, setQuery] = useState("");
   const [autoCompleteResults, setAutoCompleteResults] = useState([]);
-
+  const [selectedPlaceId, setSelectedPlaceId] = useState(null);
   const [placesService, setPlacesService] = useState(null);
   const [autocompleteService, setAutocompleteService] = useState(null);
+
+  const { placeData, isPlaceDataLoading, isPlaceDataError, placeDataError } =
+    useGetPlace(selectedPlaceId);
 
   const map = useMap();
   const placesLibrary = useMapsLibrary("places");
 
+  // Set the placesService and autocompleteService when the map and placesLibrary are ready
   useEffect(() => {
     if (!placesLibrary || !map) return;
 
     setPlacesService(new placesLibrary.PlacesService(map));
     setAutocompleteService(new placesLibrary.AutocompleteService());
   }, [placesLibrary, map]);
-
-  useEffect(() => {
-    if (!autocompleteService) return;
-
-    console.log("autocompleteService: ", autocompleteService);
-  }, [autocompleteService]);
 
   const handleInputChange = (event) => {
     setQuery(event.target.value);
@@ -47,6 +49,11 @@ const SearchBar = ({ setMarkers }) => {
         }
       );
     }
+  };
+
+  const handleAutoCompleteClick = (placeId) => {
+    console.log("Selected Place ID: ", placeId);
+    setSelectedPlaceId(placeId);
   };
 
   const handleInputSubmit = () => {
@@ -80,6 +87,47 @@ const SearchBar = ({ setMarkers }) => {
     );
   };
 
+  useEffect(() => {
+    if (placeData) {
+      console.log("Place Data: ", placeData);
+      handlePlaceSelected(placeData);
+    }
+  }, [placeData]);
+
+  const handlePlaceSelected = (place) => {
+    setCenter({
+      lat: place.geometry.location.lat(),
+      lng: place.geometry.location.lng(),
+    });
+    setMarkers([
+      {
+        placeId: place.place_id,
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+        name: place.name,
+        isOpen: place.opening_hours?.isOpen(),
+        rating: place.rating,
+        totalUserRatings: place.user_ratings_total,
+        address: place.formatted_address,
+        priceLevel: place.price_level,
+        types: place.types,
+      },
+    ]);
+    setSelectedMarker({
+      placeId: place.place_id,
+      lat: place.geometry.location.lat(),
+      lng: place.geometry.location.lng(),
+      name: place.name,
+      isOpen: place.opening_hours?.isOpen(),
+      rating: place.rating,
+      totalUserRatings: place.user_ratings_total,
+      address: place.formatted_address,
+      priceLevel: place.price_level,
+      types: place.types,
+    });
+    setAutoCompleteResults([]);
+  };
+
   return (
     <div
       style={{
@@ -97,7 +145,12 @@ const SearchBar = ({ setMarkers }) => {
         handleInputChange={handleInputChange}
         handleInputSubmit={handleInputSubmit}
       />
-      <AutoComplete autoCompleteResults={autoCompleteResults} />
+      <AutoComplete
+        autoCompleteResults={autoCompleteResults}
+        handleAutoCompleteClick={handleAutoCompleteClick}
+      />
+      {isPlaceDataLoading && <div>Loading...</div>}
+      {isPlaceDataError && <div>Error: {placeDataError.message}</div>}
     </div>
   );
 };

@@ -1,19 +1,17 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-  APIProvider,
-  Map,
-  useMap,
-  AdvancedMarker,
-  InfoWindow,
-  Pin,
-} from "@vis.gl/react-google-maps";
+import React, { useState, useEffect } from "react";
+import { Map, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
 
+import MapComponent from "./MapComponent";
 import MapInfoWindow from "../MapInfoWindow/MapInfoWindow";
 
-const MapView = ({ markers }) => {
-  const [center, setCenter] = useState({ lat: -34.397, lng: 150.644 });
+const MapView = ({
+  markers,
+  setCenter,
+  center,
+  selectedMarker,
+  setSelectedMarker,
+}) => {
   const [zoom, setZoom] = useState(4);
-  const [selectedMarker, setSelectedMarker] = useState(null);
 
   const mapOptions = {
     zoomControl: true,
@@ -49,43 +47,13 @@ const MapView = ({ markers }) => {
   };
 
   const handleMarkerClick = (marker) => {
-    console.log("Marker clicked:", marker);
     setSelectedMarker(marker);
+    setCenter({ lat: marker.lat, lng: marker.lng });
   };
 
   const handleInfoWindowClose = () => {
     setSelectedMarker(null);
   };
-
-  const MapComponent = () => {
-    const map = useMap();
-
-    useEffect(() => {
-      if (!map) return;
-
-      const centerChangedListener = map.addListener("center_changed", () => {
-        setCenter({
-          lat: map.getCenter().lat(),
-          lng: map.getCenter().lng(),
-        });
-      });
-
-      const zoomChangedListener = map.addListener("zoom_changed", () => {
-        setZoom(map.getZoom());
-      });
-
-      return () => {
-        centerChangedListener.remove();
-        zoomChangedListener.remove();
-      };
-    }, [map]);
-
-    return null;
-  };
-
-  useEffect(() => {
-    console.log("Selected marker changed:", selectedMarker);
-  }, [selectedMarker]);
 
   return (
     <div
@@ -106,7 +74,8 @@ const MapView = ({ markers }) => {
         zoom={zoom}
         options={mapOptions}
       >
-        <MapComponent />
+        <MapComponent setCenter={setCenter} setZoom={setZoom} />
+
         {markers.map((marker, index) => (
           <AdvancedMarker
             key={index}

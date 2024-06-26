@@ -8,7 +8,6 @@ import {
   MdOutlineStarHalf,
   MdDirections,
   MdOutlineLocalCafe,
-  MdOutlineFastfood,
   MdOutlineLocalBar,
   MdOutlineRestaurant,
 } from "react-icons/md";
