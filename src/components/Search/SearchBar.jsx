@@ -9,6 +9,9 @@ import AutoComplete from "./AutoComplete";
 // Hooks
 import useGetPlace from "../../hooks/useGetPlace";
 
+// Styles
+import styles from "./SearchBar.module.css";
+
 const SearchBar = ({ setMarkers, setCenter, setSelectedMarker }) => {
   const [query, setQuery] = useState("");
   const [autoCompleteResults, setAutoCompleteResults] = useState([]);
@@ -129,17 +132,7 @@ const SearchBar = ({ setMarkers, setCenter, setSelectedMarker }) => {
   };
 
   return (
-    <div
-      style={{
-        zIndex: 1,
-        position: "relative",
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "2rem 0",
-      }}
-    >
+    <div className={styles.searchBarContainer}>
       <Input
         query={query}
         handleInputChange={handleInputChange}

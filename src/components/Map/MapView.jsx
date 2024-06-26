@@ -4,6 +4,8 @@ import { Map, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
 import MapComponent from "./MapComponent";
 import MapInfoWindow from "../MapInfoWindow/MapInfoWindow";
 
+import styles from "./MapView.module.css";
+
 const MapView = ({
   markers,
   setCenter,
@@ -56,19 +58,10 @@ const MapView = ({
   };
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        top: 0,
-        left: 0,
-        zIndex: 0,
-        height: "100%",
-        width: "100%",
-      }}
-    >
+    <div className={styles.mapViewContainer}>
       <Map
         mapId={"126ae8e8ffefefdf"}
-        style={{ width: "100vw", height: "100vh" }}
+        style={{ width: "100vw", height: "calc(100vh - 5.5rem)" }}
         defaultCenter={center}
         center={center}
         zoom={zoom}

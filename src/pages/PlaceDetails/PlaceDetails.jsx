@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { MdLocationOn, MdPhone, MdStar, MdWeb } from "react-icons/md";
 import useGetPlace from "../../hooks/useGetPlace";
-import styles from "./PlaceDetailsView.module.css";
+import styles from "./PlaceDetails.module.css";
 
-const PlaceDetailsView = ({ placeId = "ChIJa8m_owvxNIgRjqA4JlAe_Yg" }) => {
+const PlaceDetails = ({ placeId = "ChIJa8m_owvxNIgRjqA4JlAe_Yg" }) => {
   const { placeData, isPlaceDataLoading, isPlaceDataError, placeDataError } =
     useGetPlace(placeId);
 
@@ -64,4 +64,4 @@ const PlaceDetailsView = ({ placeId = "ChIJa8m_owvxNIgRjqA4JlAe_Yg" }) => {
   );
 };
 
-export default PlaceDetailsView;
+export default PlaceDetails;
