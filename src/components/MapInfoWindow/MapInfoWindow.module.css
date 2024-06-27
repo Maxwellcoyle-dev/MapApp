@@ -1,22 +1,41 @@
 /* MapInfoWindow.module.css */
 .infoWindow {
-  position: fixed;
+  position: absolute;
   bottom: -100%; /* Start off the screen */
   left: 0;
   width: 100%;
   background: white;
   box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
   transition: bottom 0.3s ease-in-out;
-  z-index: 999;
+  transition: bottom 0.3s ease-in-out;
+  z-index: 2;
   padding: 20px;
-
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
 .open {
-  bottom: 0; /* Slide up into view */
+  bottom: -5.5rem; /* Slide up into view */
+}
+
+.fullOpen {
+  position: relative;
+  top: 0; /* Fully open */
+  height: 100%;
+  overflow-y: none;
+}
+
+.controlDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.controlDiv .swipeDiv {
+  width: 2rem;
+  height: 0.25rem;
+  background: #273f44;
+  border-radius: 0.125rem;
 }
 
 .optionsDiv {

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-const AutoComplete = ({ autoCompleteResults }) => {
+const AutoComplete = ({ autoCompleteResults, handleAutoCompleteClick }) => {
   if (autoCompleteResults === null) {
     return null;
   }
@@ -20,7 +20,11 @@ const AutoComplete = ({ autoCompleteResults }) => {
       >
         {autoCompleteResults.map((place) => {
           return (
-            <div key={place.place_id} style={{}}>
+            <div
+              key={place.place_id}
+              style={{}}
+              onClick={() => handleAutoCompleteClick(place.place_id)}
+            >
               <p>
                 <strong>{place.structured_formatting.main_text}</strong>
               </p>

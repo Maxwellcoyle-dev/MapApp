@@ -1,0 +1,59 @@
+/* navbar is in a flex box. it should be moved to the bottom of the page with position relative */
+.navBar {
+  position: absolute;
+  bottom: 0;
+  z-index: 1;
+  width: 100%;
+  background-color: #273f44;
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  transition: bottom 0.3s ease-in-out;
+}
+
+.closed {
+  bottom: -100%;
+}
+
+.button {
+  background-color: transparent;
+  border: none;
+  width: 3.5rem;
+  height: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.iconContainer {
+  padding: 0 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1rem;
+}
+
+.iconContainerSelected {
+  padding: 0 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #536d72;
+  border-radius: 1rem;
+
+  transition: background-color 0.3s;
+}
+
+.icon {
+  color: lightblue;
+  font-size: 2rem;
+}
+
+.text {
+  margin: 0 !important;
+  padding: 0;
+  color: lightblue;
+  font-size: 16;
+  margin-left: 0.5rem;
+}

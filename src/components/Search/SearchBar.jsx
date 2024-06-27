@@ -1,103 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
+// Libaries
+import React from "react";
 
-// components
-import Input from "./Input";
+// Components
+import Input from "./Input/Input";
 import AutoComplete from "./AutoComplete";
 
-const SearchBar = ({ setMarkers }) => {
-  const [query, setQuery] = useState("");
-  const [autoCompleteResults, setAutoCompleteResults] = useState([]);
+// State
+import { useMapContext } from "../../state/MapContext";
 
-  const [placesService, setPlacesService] = useState(null);
-  const [autocompleteService, setAutocompleteService] = useState(null);
+// Hooks
+import useAutoCompleteSelect from "../../hooks/useAutoCompleteSelect";
 
-  const map = useMap();
-  const placesLibrary = useMapsLibrary("places");
+// Styles
+import styles from "./SearchBar.module.css";
 
-  useEffect(() => {
-    if (!placesLibrary || !map) return;
+const SearchBar = () => {
+  const { autoCompleteResults } = useMapContext();
 
-    setPlacesService(new placesLibrary.PlacesService(map));
-    setAutocompleteService(new placesLibrary.AutocompleteService());
-  }, [placesLibrary, map]);
+  const handleAutoCompleteSelect = useAutoCompleteSelect();
 
-  useEffect(() => {
-    if (!autocompleteService) return;
-
-    console.log("autocompleteService: ", autocompleteService);
-  }, [autocompleteService]);
-
-  const handleInputChange = (event) => {
-    setQuery(event.target.value);
-    if (autocompleteService && event.target.value) {
-      autocompleteService.getPlacePredictions(
-        {
-          input: event.target.value,
-          types: ["establishment"],
-          locationBias: map.getCenter(),
-        },
-        (predictions, status) => {
-          if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-            console.log("Predictions: ", predictions);
-            setAutoCompleteResults(predictions);
-          } else {
-            console.warn("Autocomplete service failed due to: ", status);
-          }
-        }
-      );
-    }
-  };
-
-  const handleInputSubmit = () => {
-    placesService.textSearch(
-      {
-        query,
-        location: map.getCenter(),
-      },
-      (results, status) => {
-        if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-          console.log("Results: ", results);
-          setMarkers(
-            results.map((result) => ({
-              placeId: result.place_id,
-              lat: result.geometry.location.lat(),
-              lng: result.geometry.location.lng(),
-              name: result.name,
-              isOpen: result.opening_hours?.isOpen(),
-              rating: result.rating,
-              totalUserRatings: result.user_ratings_total,
-              address: result.formatted_address,
-              priceLevel: result.price_level,
-              types: result.types,
-            }))
-          );
-          setAutoCompleteResults([]);
-        } else {
-          console.warn("Places service failed due to: ", status);
-        }
-      }
-    );
-  };
+  const handlePlaceSelected = (place) => {};
 
   return (
-    <div
-      style={{
-        zIndex: 1,
-        position: "relative",
-        width: "100%",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: "2rem 0",
-      }}
-    >
-      <Input
-        query={query}
-        handleInputChange={handleInputChange}
-        handleInputSubmit={handleInputSubmit}
+    <div className={styles.searchBarContainer}>
+      <Input />
+      <AutoComplete
+        autoCompleteResults={autoCompleteResults}
+        handleAutoCompleteClick={handleAutoCompleteSelect}
       />
-      <AutoComplete autoCompleteResults={autoCompleteResults} />
     </div>
   );
 };

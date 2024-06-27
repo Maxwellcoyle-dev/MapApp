@@ -1,0 +1,10 @@
+.searchBarContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding: 2rem 0;
+  position: absolute;
+  z-index: 1;
+}
