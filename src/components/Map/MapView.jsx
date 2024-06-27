@@ -6,11 +6,13 @@ import MapComponent from "./MapComponent";
 import { useMapContext } from "../../state/MapContext";
 
 import useGetPlace from "../../hooks/useGetPlace";
+import useMarkerClick from "../../hooks/useMakerClick";
 
 import styles from "./MapView.module.css";
 
 const MapView = () => {
   const { placeData } = useGetPlace();
+  const handleMarkerClick = useMarkerClick();
 
   useEffect(() => {
     if (placeData) {
@@ -56,8 +58,6 @@ const MapView = () => {
     }
   }, [userLocation, setCenter]);
 
-  const handleMarkerClick = (marker) => {};
-
   return (
     <div className={styles.mapViewContainer}>
       <Map
@@ -74,7 +74,9 @@ const MapView = () => {
           <AdvancedMarker
             key={index}
             position={{ lat: marker.location.lat, lng: marker.location.lng }}
-            onClick={() => handleMarkerClick(marker)}
+            onClick={() => {
+              handleMarkerClick(marker.placeId);
+            }}
           >
             {marker.placeId === selectedPlace?.placeId ? (
               <Pin

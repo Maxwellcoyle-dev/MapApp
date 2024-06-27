@@ -11,28 +11,46 @@ import {
   MdOutlineLocalBar,
   MdOutlineRestaurant,
 } from "react-icons/md";
+import { useSpring, animated } from "@react-spring/web";
+import { useDrag } from "react-use-gesture";
 import { useParams, useNavigate } from "react-router-dom";
 
 import useGetPlace from "../../hooks/useGetPlace";
 import styles from "./PlaceDetails.module.css";
 
 const PlaceDetails = () => {
-  const [openPlace, setOpenPlace] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const { placeId } = useParams();
 
+  const [{ y }, api] = useSpring(() => ({ y: window.innerHeight }));
+
   useEffect(() => {
-    console.log("placeId: ", placeId);
-  }, [placeId]);
+    setIsOpen(true);
+    api.start({ y: window.innerHeight / 2 });
+  }, [placeId, api]);
+
+  const bind = useDrag(
+    ({ down, movement: [, my], direction: [, dy], velocity }) => {
+      const trigger = velocity > 0.2;
+      const dir = dy > 0 ? 1 : -1;
+      if (!down && trigger && dir === -1) {
+        api.start({ y: 0 });
+      } else if (!down && trigger && dir === 1) {
+        api.start({ y: window.innerHeight / 2 });
+      } else {
+        api.start({ y: down ? my : window.innerHeight / 2 });
+      }
+    },
+    {
+      from: () => [0, y.get()],
+      bounds: { top: -window.innerHeight + 100, bottom: 0 },
+      rubberband: true,
+    }
+  );
 
   const { placeData, isPlaceDataLoading, isPlaceDataError, placeDataError } =
     useGetPlace(placeId);
-
-  useEffect(() => {
-    console.log("placeData: ", placeData);
-  }, [placeData]);
-
-  const handleClosePlace = () => {};
 
   if (isPlaceDataLoading) {
     return <div>Loading...</div>;
@@ -47,7 +65,7 @@ const PlaceDetails = () => {
   }
 
   return (
-    <div className={`${styles.infoWindow} ${openPlace ? styles.fullOpen : ""}`}>
+    <animated.div {...bind()} style={{ y }} className={styles.placeDetails}>
       {placeData && (
         <>
           <div className={styles.controlDiv}>
@@ -60,8 +78,8 @@ const PlaceDetails = () => {
             <button className={styles.button}>
               <MdFormatListBulletedAdd className={styles.icon} />
             </button>
-            <button className={styles.button} onClick={handleClosePlace}>
-              <MdClose className={styles.icon} />
+            <button className={styles.button}>
+              <MdClose className={styles.icon} onClick={() => navigate(-1)} />
             </button>
           </div>
           <div className={styles.headerDiv}>
@@ -76,7 +94,6 @@ const PlaceDetails = () => {
               <MdOutlineLocalBar className={styles.icon} />
             )}
           </div>
-          {/* when user clicks the addressDic, open a new google maps page with the place for directions */}
           <div
             className={styles.addressDiv}
             onClick={() => {
@@ -112,7 +129,7 @@ const PlaceDetails = () => {
           </div>
         </>
       )}
-    </div>
+    </animated.div>
   );
 };
 

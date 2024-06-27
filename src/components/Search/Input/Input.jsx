@@ -1,8 +1,8 @@
 import React from "react";
 import { MdOutlineSearch, MdClear } from "react-icons/md";
 import { useMapContext } from "../../../state/MapContext";
-import useInputChange from "../../../hooks/map-handlers/useInputChange";
-import useTextSearch from "../../../hooks/map-handlers/useTextSearch";
+import useInputChange from "../../../hooks/useInputChange";
+import useTextSearch from "../../../hooks/useTextSearch";
 import styles from "./Input.module.css";
 
 const Input = () => {
@@ -10,6 +10,12 @@ const Input = () => {
 
   const handleInputChange = useInputChange();
   const handleTextSearch = useTextSearch();
+
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleTextSearch(searchQuery);
+    }
+  };
 
   return (
     <div className={styles.inputContainer}>
@@ -47,6 +53,7 @@ const Input = () => {
         value={searchQuery}
         onChange={handleInputChange}
         className={styles.input}
+        onKeyDown={handleKeyDown}
       />
     </div>
   );

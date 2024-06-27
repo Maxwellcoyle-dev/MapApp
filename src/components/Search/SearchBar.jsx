@@ -9,7 +9,7 @@ import AutoComplete from "./AutoComplete";
 import { useMapContext } from "../../state/MapContext";
 
 // Hooks
-import useAutoCompleteSelect from "../../hooks/map-handlers/useAutoCompleteSelect";
+import useAutoCompleteSelect from "../../hooks/useAutoCompleteSelect";
 
 // Styles
 import styles from "./SearchBar.module.css";

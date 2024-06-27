@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
-import { useMapContext } from "../../state/MapContext";
+import { useMapContext } from "../state/MapContext";
 
 const useTextSearch = () => {
   const [placesService, setPlacesService] = useState(null);

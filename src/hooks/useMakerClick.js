@@ -1,24 +1,23 @@
 import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 import { useQueryClient } from "@tanstack/react-query";
-import { fetchPlaceDetails } from "../useGetPlace";
-import { useMapContext } from "../../state/MapContext";
+import { useNavigate } from "react-router-dom";
 
-const useAutoCompleteSelect = () => {
-  const {
-    setSelectedPlace,
-    setAutoCompleteResults,
-    setSearchResults,
-    setCenter,
-    setSearchQuery,
-    setZoom,
-  } = useMapContext();
+import { useMapContext } from "../state/MapContext";
+import { fetchPlaceDetails } from "./useGetPlace";
 
+const useMarkerClick = () => {
+  const navigate = useNavigate();
   const map = useMap();
   const placesLibrary = useMapsLibrary("places");
   const queryClient = useQueryClient();
 
-  const handleAutoCompleteSelect = async (placeId) => {
+  const { setSelectedPlace, setCenter, setSearchQuery, setZoom } =
+    useMapContext();
+
+  const handleMarkerClick = async (placeId) => {
     try {
+      navigate(`/place/${placeId}`);
+
       const placeData = await fetchPlaceDetails(placesLibrary, map, placeId);
 
       const selectedPlace = {
@@ -29,12 +28,10 @@ const useAutoCompleteSelect = () => {
           lng: placeData.geometry.location.lng(),
         },
       };
-
       setSelectedPlace(selectedPlace);
-      setSearchResults([selectedPlace]);
       setCenter(selectedPlace.location);
-      setAutoCompleteResults([]);
       setSearchQuery(selectedPlace.name);
+
       setZoom(14);
       queryClient.setQueryData(["place", placeId], placeData);
     } catch (error) {
@@ -42,7 +39,7 @@ const useAutoCompleteSelect = () => {
     }
   };
 
-  return handleAutoCompleteSelect;
+  return handleMarkerClick;
 };
 
-export default useAutoCompleteSelect;
+export default useMarkerClick;
