@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MdClose,
-  MdOutlineSearch,
   MdFormatListBulletedAdd,
+  MdLabelOutline,
   MdOutlineStar,
   MdOutlineStarBorder,
   MdOutlineStarHalf,
@@ -11,26 +11,43 @@ import {
   MdOutlineLocalBar,
   MdOutlineRestaurant,
 } from "react-icons/md";
+import { useSwipeable } from "react-swipeable";
 import styles from "./MapInfoWindow.module.css"; // Import the CSS module
 
 const MapInfoWindow = ({ placeDetails, handleInfoWindowClose }) => {
+  const [openPlace, setOpenPlace] = useState(false);
+
+  const handlers = useSwipeable({
+    onSwipedUp: () => setOpenPlace(true),
+    onSwipedDown: () => setOpenPlace(false),
+    preventDefaultTouchmoveEvent: true,
+    trackMouse: false, // you can set this to true if you want to support mouse swipes as well
+  });
+
   useEffect(() => {
     console.log("placeDetails: ", placeDetails);
   }, [placeDetails]);
 
   return (
-    <div className={`${styles.infoWindow} ${placeDetails ? styles.open : ""}`}>
+    <div
+      className={`${styles.infoWindow} ${placeDetails ? styles.open : ""} ${
+        openPlace ? styles.fullOpen : ""
+      }`}
+    >
       {placeDetails && (
         <>
+          <div className={styles.controlDiv}>
+            <div className={styles.swipeDiv}></div>
+          </div>
           <div className={styles.optionsDiv}>
             <button className={styles.button}>
-              <MdOutlineSearch />
+              <MdLabelOutline className={styles.icon} />
             </button>
             <button className={styles.button}>
-              <MdFormatListBulletedAdd />
+              <MdFormatListBulletedAdd className={styles.icon} />
             </button>
             <button className={styles.button} onClick={handleInfoWindowClose}>
-              <MdClose />
+              <MdClose className={styles.icon} />
             </button>
           </div>
           <div className={styles.headerDiv}>

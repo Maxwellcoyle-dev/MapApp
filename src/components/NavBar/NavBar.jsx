@@ -8,7 +8,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import styles from "./NavBar.module.css";
 
-const NavBar = () => {
+const NavBar = ({ selectedMarker }) => {
   const [currentTab, setCurrentTab] = useState("/");
   const location = useLocation();
 
@@ -18,7 +18,7 @@ const NavBar = () => {
   }, [location]);
 
   return (
-    <div className={styles.navBar}>
+    <div className={`${styles.navBar} ${selectedMarker ? styles.closed : ""}`}>
       <button className={styles.button}>
         <Link to="/">
           <div

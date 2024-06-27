@@ -1,19 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Map, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
 
 import MapComponent from "./MapComponent";
-import MapInfoWindow from "../MapInfoWindow/MapInfoWindow";
+
+import { useMapContext } from "../../state/MapContext";
+
+import useGetPlace from "../../hooks/useGetPlace";
 
 import styles from "./MapView.module.css";
 
-const MapView = ({
-  markers,
-  setCenter,
-  center,
-  selectedMarker,
-  setSelectedMarker,
-}) => {
-  const [zoom, setZoom] = useState(4);
+const MapView = () => {
+  const { placeData } = useGetPlace();
+
+  useEffect(() => {
+    if (placeData) {
+      console.log("Place Data:", placeData);
+    }
+  }, [placeData]);
+
+  const {
+    center,
+    searchQuery,
+    setAutoCompleteResults,
+    setCenter,
+    selectedPlace,
+    searchResults,
+    setSearchResults,
+    userLocation,
+    setZoom,
+    zoom,
+  } = useMapContext();
 
   const mapOptions = {
     zoomControl: true,
@@ -26,36 +42,21 @@ const MapView = ({
   };
 
   useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setCenter({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          });
-          setZoom(12);
-        },
-        (err) => {
-          console.warn(`ERROR(${err.code}): ${err.message}`);
-          // Handle errors or use default location
-        }
-      );
+    if (searchQuery === "") {
+      setAutoCompleteResults([]);
+      setZoom(12);
+      setSearchResults([]);
     }
-  }, []);
+  }, [searchQuery]);
 
-  const handlePlaceSelected = (location) => {
-    setCenter(location);
-    setZoom(14);
-  };
+  useEffect(() => {
+    if (userLocation) {
+      console.log("User Location:", userLocation);
+      setCenter(userLocation);
+    }
+  }, [userLocation, setCenter]);
 
-  const handleMarkerClick = (marker) => {
-    setSelectedMarker(marker);
-    setCenter({ lat: marker.lat, lng: marker.lng });
-  };
-
-  const handleInfoWindowClose = () => {
-    setSelectedMarker(null);
-  };
+  const handleMarkerClick = (marker) => {};
 
   return (
     <div className={styles.mapViewContainer}>
@@ -69,13 +70,13 @@ const MapView = ({
       >
         <MapComponent setCenter={setCenter} setZoom={setZoom} />
 
-        {markers.map((marker, index) => (
+        {searchResults.map((marker, index) => (
           <AdvancedMarker
             key={index}
-            position={marker}
+            position={{ lat: marker.location.lat, lng: marker.location.lng }}
             onClick={() => handleMarkerClick(marker)}
           >
-            {marker.placeId === selectedMarker?.placeId ? (
+            {marker.placeId === selectedPlace?.placeId ? (
               <Pin
                 background={"blue"}
                 glyphColor={"gray"}
@@ -86,11 +87,6 @@ const MapView = ({
             )}
           </AdvancedMarker>
         ))}
-
-        <MapInfoWindow
-          placeDetails={selectedMarker}
-          handleInfoWindowClose={handleInfoWindowClose}
-        />
       </Map>
     </div>
   );

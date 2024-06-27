@@ -1,70 +1,88 @@
-.container {
+/* MapInfoWindow.module.css */
+.infoWindow {
   position: absolute;
-  top: 0;
+  bottom: -100%; /* Start off the screen */
   left: 0;
   width: 100%;
-  height: 100vh;
-  background-color: #f9f9f9;
-  z-index: 999;
+  background: white;
+  box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.1);
+  transition: bottom 0.3s ease-in-out;
+  transition: bottom 0.3s ease-in-out;
+  z-index: 2;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.open {
+  bottom: -5.5rem; /* Slide up into view */
+}
+
+.fullOpen {
+  position: relative;
+  top: 0; /* Fully open */
+  height: 100%;
+  overflow-y: none;
+}
+
+.controlDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.controlDiv .swipeDiv {
+  width: 2rem;
+  height: 0.25rem;
+  background: #273f44;
+  border-radius: 0.125rem;
+}
+
+.optionsDiv {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5rem 0;
+}
+
+.headerDiv {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.icon {
+  font-size: 24px;
+}
+
+.button {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 1rem;
+  padding: 8px;
+  background: "lightgrey";
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
-.message {
-  font-size: 1.2rem;
-  color: #333;
-}
-
-.details {
-  width: 100%;
-  max-width: 600px;
-  background: #fff;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.imageWrapper {
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
-}
-
-.image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.content {
-  padding: 1rem;
-}
-
-.title {
-  font-size: 1.8rem;
-  margin-bottom: 0.5rem;
-  color: #333;
-}
-
-.info {
+.addressDiv {
   display: flex;
   align-items: center;
-  margin-bottom: 0.5rem;
-  color: #666;
-  font-size: 1rem;
 }
 
-.text {
-  font-size: 1rem;
+.directionsIcon {
+  font-size: 20px;
+  min-width: 1.5rem;
+  min-height: 1.5rem;
 }
 
-.link {
-  color: #1e90ff;
-  text-decoration: none;
+.ratingsDiv {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
 }
 
-.link:hover {
-  text-decoration: underline;
+.ratingStar {
+  color: #f1c40f;
+  font-size: 22px;
 }
