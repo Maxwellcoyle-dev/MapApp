@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   MdClose,
+  MdOpenInFull,
   MdFormatListBulletedAdd,
   MdLabelOutline,
   MdOutlineStar,
@@ -11,46 +12,27 @@ import {
   MdOutlineLocalBar,
   MdOutlineRestaurant,
 } from "react-icons/md";
-import { useSpring, animated } from "@react-spring/web";
-import { useDrag } from "react-use-gesture";
 import { useParams, useNavigate } from "react-router-dom";
 
 import useGetPlace from "../../hooks/useGetPlace";
+import useClosePlaceDetails from "../../hooks/useClosePlaceDetails";
+
 import styles from "./PlaceDetails.module.css";
+import PhotoGallery from "../../components/PhotoGallery/PhotoGallery";
 
 const PlaceDetails = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
+  const [view, setView] = useState("half");
+
   const { placeId } = useParams();
 
-  const [{ y }, api] = useSpring(() => ({ y: window.innerHeight }));
-
-  useEffect(() => {
-    setIsOpen(true);
-    api.start({ y: window.innerHeight / 2 });
-  }, [placeId, api]);
-
-  const bind = useDrag(
-    ({ down, movement: [, my], direction: [, dy], velocity }) => {
-      const trigger = velocity > 0.2;
-      const dir = dy > 0 ? 1 : -1;
-      if (!down && trigger && dir === -1) {
-        api.start({ y: 0 });
-      } else if (!down && trigger && dir === 1) {
-        api.start({ y: window.innerHeight / 2 });
-      } else {
-        api.start({ y: down ? my : window.innerHeight / 2 });
-      }
-    },
-    {
-      from: () => [0, y.get()],
-      bounds: { top: -window.innerHeight + 100, bottom: 0 },
-      rubberband: true,
-    }
-  );
+  const handleClosePlace = useClosePlaceDetails();
 
   const { placeData, isPlaceDataLoading, isPlaceDataError, placeDataError } =
     useGetPlace(placeId);
+
+  useEffect(() => {
+    console.log("placeData: ", placeData);
+  }, [placeData]);
 
   if (isPlaceDataLoading) {
     return <div>Loading...</div>;
@@ -64,8 +46,75 @@ const PlaceDetails = () => {
     return <div>No place data found</div>;
   }
 
+  const halfView = (
+    <div className={styles.halfView}>
+      <div className={styles.viewControlDiv}>
+        <button className={styles.iconButton}>
+          <MdOpenInFull className={styles.btnIcon} />
+        </button>
+        <button className={styles.iconButton} onClick={handleClosePlace}>
+          <MdClose className={styles.btnIcon} />
+        </button>
+      </div>
+      <div className={styles.hvHeaderDiv}>
+        <h2 className={styles.name}>{placeData.name}</h2>
+        {Array(placeData.priceLevel)
+          .fill()
+          .map((_, index) => (
+            <span key={index} className={styles.hvHeaderIcons}>
+              $
+            </span>
+          ))}
+        {placeData.types?.includes("cafe") && (
+          <MdOutlineLocalCafe className={styles.hvHeaderIcons} />
+        )}
+        {placeData.types?.includes("restaurant") && (
+          <MdOutlineRestaurant className={styles.hvHeaderIcons} />
+        )}
+        {placeData.types?.includes("bar") && (
+          <MdOutlineLocalBar className={styles.hvHeaderIcons} />
+        )}
+        {/* check if the place is open */}
+        {placeData.opening_hours.isOpen ? (
+          <p className={styles.hvOpen}>Open</p>
+        ) : (
+          <p className={styles.hvClosed}>Closed</p>
+        )}
+      </div>
+      <div className={styles.hvInfoDiv}>
+        {/* display rating, reviews, type, priceLevel, if they are open */}
+        <div className={styles.hvRatingDiv}>
+          <p>{placeData.rating}</p>
+          {[1, 2, 3, 4, 5].map((star) => {
+            if (placeData.rating >= star) {
+              return <MdOutlineStar key={star} className={styles.ratingStar} />;
+            } else if (placeData.rating >= star - 0.5) {
+              return (
+                <MdOutlineStarHalf key={star} className={styles.ratingStar} />
+              );
+            } else {
+              return (
+                <MdOutlineStarBorder key={star} className={styles.ratingStar} />
+              );
+            }
+          })}
+          <p>({placeData.userRatingsTotal} reviews)</p>
+        </div>
+      </div>
+      <div className={styles.optionsDiv}></div>
+
+      <PhotoGallery photos={placeData.photos} />
+    </div>
+  );
+
+  if (view === "half") {
+    return halfView;
+  } else {
+    return <div>Full View</div>;
+  }
+
   return (
-    <animated.div {...bind()} style={{ y }} className={styles.placeDetails}>
+    <div className={styles.placeDetailsDiv}>
       {placeData && (
         <>
           <div className={styles.controlDiv}>
@@ -78,8 +127,8 @@ const PlaceDetails = () => {
             <button className={styles.button}>
               <MdFormatListBulletedAdd className={styles.icon} />
             </button>
-            <button className={styles.button}>
-              <MdClose className={styles.icon} onClick={() => navigate(-1)} />
+            <button className={styles.button} onClick={handleClosePlace}>
+              <MdClose className={styles.icon} />
             </button>
           </div>
           <div className={styles.headerDiv}>
@@ -94,6 +143,7 @@ const PlaceDetails = () => {
               <MdOutlineLocalBar className={styles.icon} />
             )}
           </div>
+          {/* when user clicks the addressDic, open a new google maps page with the place for directions */}
           <div
             className={styles.addressDiv}
             onClick={() => {
@@ -129,7 +179,7 @@ const PlaceDetails = () => {
           </div>
         </>
       )}
-    </animated.div>
+    </div>
   );
 };
 

@@ -1,6 +1,107 @@
+/* Half view */
+.halfView {
+  position: absolute;
+  z-index: 2;
+  bottom: 0;
+  height: 50%;
+  background: white;
+  width: 100%;
+  border-top-left-radius: 2rem;
+  border-top-right-radius: 2rem;
+  box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  /* transition in with ease from the bottom up */
+
+  transition: bottom 0.3s ease;
+}
+
+.viewControlDiv {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  cursor: pointer;
+  padding: 1rem 0 0.5rem 0;
+}
+
+.iconButton {
+  background: lightgrey;
+  padding: 0.5rem;
+  border-radius: 25%;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.btnIcon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.hvHeaderDiv {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem 1rem;
+}
+
+.name {
+  margin: 0;
+  padding: 0;
+}
+
+.hvHeaderIcons {
+  font-size: 20px;
+}
+
+.hvOpen {
+  font-size: 20px;
+  color: green;
+}
+
+.hvClosed {
+  font-size: 20px;
+  color: red;
+}
+
+.hvInfoDiv {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1rem;
+}
+
+.hvRatingDiv {
+  display: flex;
+  align-items: center;
+}
+
+.imageDiv {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0 1rem;
+}
+
+.largeImageDiv {
+}
+
+.smallImageDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.largeImage {
+  border-radius: 1.5rem;
+}
+
+.smallImage {
+  border-radius: 1rem;
+}
+
+/* Full View */
 .placeDetails {
   position: fixed;
-  z-index: 2;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -48,5 +149,5 @@
 
 .ratingStar {
   margin-left: 5px;
-  color: gold;
+  color: rgb(253, 220, 34);
 }

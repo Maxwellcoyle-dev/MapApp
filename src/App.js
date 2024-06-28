@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
 import "@aws-amplify/ui-react/styles.css";
 
@@ -24,9 +24,25 @@ import PlaceDetails from "./pages/PlaceDetails/PlaceDetails";
 import NavBar from "./components/NavBar/NavBar";
 import { MapProvider } from "./state/MapContext"; // Import MapProvider
 
+import { useAppContext } from "./state/AppContext";
+
 const queryClient = new QueryClient();
 
 function App({ signOut }) {
+  const { userLocation, setUserLocation } = useAppContext();
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      },
+      (error) => console.error(error)
+    );
+  }, []);
+
   return (
     <APIProvider apiKey={process.env.REACT_APP_GOOGLE_API_KEY}>
       <QueryClientProvider client={queryClient}>
@@ -53,4 +69,5 @@ function App({ signOut }) {
   );
 }
 
-export default withAuthenticator(App);
+// export default withAuthenticator(App);
+export default App;
