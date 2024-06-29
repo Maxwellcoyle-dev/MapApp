@@ -1,7 +1,8 @@
 const user = {
-  userId: 1,
+  userId: 1, // primary key - cognito userId
   userName: "email@gmail.com",
   lastLocation: {
+    // last known location of the user - use to center map while searching for location or on location error
     lat: 0,
     long: 0,
   },
@@ -17,7 +18,12 @@ const user = {
     {
       categoryId: 1,
       name: "Category Name",
-      tags: [{ tagId: 1, tagName: "" }],
+      tags: [
+        {
+          tagId: 1, // uuid to identify tag / make tags searchable
+          tagName: "",
+        },
+      ],
       creationType: "user || default",
       createdAt: "2021-01-01T00:00:00Z",
       lastUpdaedAt: "2021-01-01T00:00:00Z",
@@ -27,14 +33,12 @@ const user = {
 };
 
 const list = {
-  listId: 1,
-  userId: user.userId,
+  listId: 1, // primary key - uuid - reference in user table
+  userId: user.userId, // userId of the user who created / owns the list
   listName: "My List",
   places: [
-    // place contains everything necessary to display in list view + query can be made to google places api for more detailed information
-    // could consider storing all google place data in dynamodb / if so consider how to reuse place data across lists and users.
     {
-      placeId: 1, // google place_id
+      placeId: 1, // google place_id - reference the placeId - primary key of place table
     },
   ],
   public: false, // if true, list is shareable
@@ -42,6 +46,8 @@ const list = {
   lastUpdaedAt: "2021-01-01T00:00:00Z",
 };
 
+// contains enough information to display a place on the map + show basic details in a list view
+// use google places api to get more details
 const place = {
   placeId: 1, // google place_id - primary key
   userId: user.userId, // user specific - sortkey
