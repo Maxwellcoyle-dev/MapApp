@@ -7,6 +7,7 @@ import {
 import { defaultCategories } from "./userDefaults.mjs";
 
 const REGION = "us-east-2";
+const USER_TABLE = "MapAppUserTable";
 const dbclient = new DynamoDBClient({ region: REGION });
 
 const headers = {
@@ -22,7 +23,6 @@ export const lambdaHandler = async (event) => {
   const email = event.queryStringParameters.email;
   console.log("userId: ", userId);
   console.log("email: ", email);
-  console.log("defaultCategories: ", defaultCategories);
 
   if (!userId) {
     return {
@@ -35,7 +35,7 @@ export const lambdaHandler = async (event) => {
   }
 
   const params = {
-    TableName: "MapAppUserTable",
+    TableName: USER_TABLE,
     Key: {
       userId: { S: userId },
     },
@@ -48,7 +48,19 @@ export const lambdaHandler = async (event) => {
     if (data.Item) {
       const userObj = {
         userId: data.Item.userId.S,
-        createdAt: parseInt(data.Item.createdAt.N),
+        email: data.Item.email.S,
+        categories: data.Item.categories.L.map((category) => ({
+          categoryId: category.M.categoryId.S,
+          name: category.M.name.S,
+          tags: category.M.tags.L.map((tag) => ({
+            tagId: tag.M.tagId.S,
+            tagName: tag.M.tagName.S,
+          })),
+          creationType: category.M.creationType.S,
+          createdAt: category.M.createdAt.N,
+          lastUpdatedAt: category.M.lastUpdatedAt.N,
+        })),
+        createdAt: data.Item.createdAt.N,
       };
       return {
         statusCode: 200,
@@ -61,6 +73,7 @@ export const lambdaHandler = async (event) => {
     } else {
       console.log("User not found, creating user...");
 
+      console.log("defaultCategories: ", defaultCategories);
       const formattedCategories = defaultCategories.map((category) => ({
         M: {
           categoryId: category.categoryId,
@@ -80,7 +93,7 @@ export const lambdaHandler = async (event) => {
       }));
 
       const putParams = {
-        TableName: "MapAppUserTable",
+        TableName: USER_TABLE,
         Item: {
           userId: { S: userId },
           email: { S: email },
@@ -92,13 +105,27 @@ export const lambdaHandler = async (event) => {
       };
 
       const putData = await dbclient.send(new PutItemCommand(putParams));
+
       console.log("User created: ", putData);
+
+      const getUserParams = {
+        TableName: USER_TABLE,
+        Key: {
+          userId: { S: userId },
+        },
+      };
+      const getUserData = await dbclient.send(
+        new GetItemCommand(getUserParams)
+      );
+
+      console.log("getUserData: ", getUserData.Item);
+
       return {
         statusCode: 200,
         headers,
         body: JSON.stringify({
           message: "User created",
-          data: putParams.Item,
+          data: getUserData.Item,
         }),
       };
     }

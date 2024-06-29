@@ -93,4 +93,4 @@ export const defaultCategories = [
   },
 ];
 
-export const defaultLists = [];
+export const defaultLists = [{}];
