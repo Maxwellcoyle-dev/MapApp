@@ -1,3 +1,4 @@
+// App.js
 import { useEffect } from "react";
 import "./App.css";
 import "@aws-amplify/ui-react/styles.css";
@@ -7,10 +8,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Amplify
 import { withAuthenticator } from "@aws-amplify/ui-react";
-import { APIProvider } from "@vis.gl/react-google-maps";
-
-// React Query
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Pages
 import Main from "./pages/Main/Main";
@@ -26,9 +23,9 @@ import { MapProvider } from "./state/MapContext"; // Import MapProvider
 
 import { useAppContext } from "./state/AppContext";
 
-const queryClient = new QueryClient();
+import useUser from "./hooks/useUser";
 
-function App({ signOut }) {
+function App({ signOut, user }) {
   const { userLocation, setUserLocation } = useAppContext();
 
   useEffect(() => {
@@ -43,31 +40,34 @@ function App({ signOut }) {
     );
   }, []);
 
-  return (
-    <APIProvider apiKey={process.env.REACT_APP_GOOGLE_API_KEY}>
-      <QueryClientProvider client={queryClient}>
-        <MapProvider>
-          <Router>
-            <Routes>
-              <Route path="/" element={<Main />}>
-                <Route
-                  path="/my-account"
-                  element={<MyAccount signOut={signOut} />}
-                />
-                <Route path="my-lists" element={<MyLists />} />
-                <Route path="list-manager" element={<ListManager />} />
-                <Route path="list/:listId" element={<List />} />
-                <Route path="place/:placeId" element={<PlaceDetails />} />
-              </Route>
-            </Routes>
+  const { user: loggedInUser, isUserLoading, userError } = useUser(user);
 
-            <NavBar />
-          </Router>
-        </MapProvider>
-      </QueryClientProvider>
-    </APIProvider>
+  useEffect(() => {
+    if (loggedInUser) {
+      console.log("Logged in as: ", loggedInUser);
+    }
+  }, [loggedInUser]);
+
+  return (
+    <MapProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Main />}>
+            <Route
+              path="/my-account"
+              element={<MyAccount signOut={signOut} />}
+            />
+            <Route path="my-lists" element={<MyLists />} />
+            <Route path="list-manager" element={<ListManager />} />
+            <Route path="list/:listId" element={<List />} />
+            <Route path="place/:placeId" element={<PlaceDetails />} />
+          </Route>
+        </Routes>
+
+        <NavBar />
+      </Router>
+    </MapProvider>
   );
 }
 
-// export default withAuthenticator(App);
-export default App;
+export default withAuthenticator(App);

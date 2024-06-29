@@ -48,35 +48,14 @@ Resources:
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref MapAppUserTable
+        - DynamoDBWritePolicy:
+            TableName: !Ref MapAppUserTable
       Events:
         GetUser:
           Type: Api
           Properties:
             Path: /user/{userId}
             Method: get
-            RestApiId: !Ref MappAppAPI
-  CreateUserFunction:
-    Type: "AWS::Serverless::Function"
-    Properties:
-      Handler: app.lambdaHandler
-      Runtime: nodejs20.x
-      CodeUri: "./functions/user/create-user"
-      Architectures:
-        - x86_64
-      Environment:
-        Variables:
-          TABLE_NAME: !Ref MapAppUserTable
-      Policies:
-        - DynamoDBWritePolicy:
-            TableName: !Ref MapAppUserTable
-        - DynamoDBReadPolicy:
-            TableName: !Ref MapAppUserTable
-      Events:
-        CreateUser:
-          Type: Api
-          Properties:
-            Path: /user
-            Method: post
             RestApiId: !Ref MappAppAPI
   UpdateUserFunction:
     Type: "AWS::Serverless::Function"
@@ -424,16 +403,6 @@ Outputs:
   GetUserFunctionIamRole:
     Description: "Implicit IAM Role created for Get User function"
     Value: !GetAtt GetUserFunctionRole.Arn
-
-  CreateUserApi:
-    Description: "API Gateway endpoint URL for Create User function"
-    Value: !Sub "https://${MappAppAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/user/"
-  CreateUserFunctionArn:
-    Description: "ARN of the CreateUser Lambda function"
-    Value: !GetAtt CreateUserFunction.Arn
-  CreateUserFunctionIamRole:
-    Description: "Implicit IAM Role created for Create User function"
-    Value: !GetAtt CreateUserFunctionRole.Arn
 
   UpdateUserApi:
     Description: "API Gateway endpoint URL for Update User function"

@@ -61,7 +61,7 @@ const place = {
   priceLevel: 1,
   myRating: 5,
   myNotes: "My Notes",
-  myTags: [{ category: categoryId, tagId: 1 }], // tag = categoryId + tagId
+  myTags: [{ categoryId: categoryId, tagId: tagId }], // tag = categoryId + tagId
   createdAt: "2021-01-01T00:00:00Z",
   lastUpdaedAt: "2021-01-01T00:00:00Z",
 };
