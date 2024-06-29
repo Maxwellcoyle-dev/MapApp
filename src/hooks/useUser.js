@@ -32,6 +32,7 @@ const useUser = (userData) => {
     enabled: !!userData.userId, // Only run the query if userId is provided
   });
 
+  console.log("user: ", user);
   return { user, userError, isUserLoading };
 };
 

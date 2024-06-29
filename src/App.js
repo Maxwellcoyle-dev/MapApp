@@ -46,7 +46,10 @@ function App({ signOut, user }) {
     if (loggedInUser) {
       console.log("Logged in as: ", loggedInUser);
     }
-  }, [loggedInUser]);
+    if (userError) {
+      console.error("Error fetching user: ", userError);
+    }
+  }, [loggedInUser, userError]);
 
   return (
     <MapProvider>
