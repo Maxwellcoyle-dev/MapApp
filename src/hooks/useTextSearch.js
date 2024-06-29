@@ -25,6 +25,7 @@ const useTextSearch = () => {
         (results, status) => {
           if (status === window.google.maps.places.PlacesServiceStatus.OK) {
             resolve(results);
+
             const mappedResults = results.map((result) => ({
               name: result.name,
               placeId: result.place_id,

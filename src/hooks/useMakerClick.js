@@ -1,39 +1,30 @@
-import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
-import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 import { useMapContext } from "../state/MapContext";
-import { fetchPlaceDetails } from "./useGetPlace";
 
 const useMarkerClick = () => {
   const navigate = useNavigate();
-  const map = useMap();
-  const placesLibrary = useMapsLibrary("places");
-  const queryClient = useQueryClient();
 
   const { setSelectedPlace, setCenter, setSearchQuery, setZoom } =
     useMapContext();
 
-  const handleMarkerClick = async (placeId) => {
+  const handleMarkerClick = async (place) => {
+    console.log("place: ", place);
     try {
-      navigate(`/place/${placeId}`);
-
-      const placeData = await fetchPlaceDetails(placesLibrary, map, placeId);
+      navigate(`/place/${place.placeId}`);
+      setCenter(place.location);
 
       const selectedPlace = {
-        placeId: placeData.place_id,
-        name: placeData.name,
+        placeId: place.placeId,
+        name: place.name,
         location: {
-          lat: placeData.geometry.location.lat(),
-          lng: placeData.geometry.location.lng(),
+          lat: place.location.lat,
+          lng: place.location.lng,
         },
       };
       setSelectedPlace(selectedPlace);
-      setCenter(selectedPlace.location);
       setSearchQuery(selectedPlace.name);
-
       setZoom(14);
-      queryClient.setQueryData(["place", placeId], placeData);
     } catch (error) {
       console.error("Error fetching place details:", error);
     }

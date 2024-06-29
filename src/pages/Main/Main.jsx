@@ -7,6 +7,8 @@ import styles from "./Main.module.css";
 
 import useGetUserLocation from "../../hooks/useGetUserLocation";
 
+import { useMapContext } from "../../state/MapContext";
+
 const Main = () => {
   useGetUserLocation();
 
