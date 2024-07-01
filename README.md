@@ -1,15 +1,29 @@
 # Notes
 
+- Dev Deployment Site - [https://main.d3prqyhmvclbmc.amplifyapp.com/](url)
+
 - [Google Drive](https://drive.google.com/drive/folders/1uNNYx3B4vuSA39m7bktqp9M_-Bn_L534)
 - [Design Doc](https://docs.google.com/document/d/1msNrJvMxTN4Jp4JxNhMrArqtY5VRBMpU6_QLwFGYoeE/edit)
 - Using [Ant Design](https://ant.design/)
 
-# Google Libraries
-- Places API - https://github.com/googleapis/google-cloud-node/tree/main/packages/google-maps-places
-- Maps Loader - https://developers.google.com/maps/documentation/javascript/load-maps-js-api#javascript_1
+# Libraries
+- [React Google Maps - @vis.gl/react-google-maps](https://visgl.github.io/react-google-maps/)
+- [React Query](https://tanstack.com/query/latest/docs/framework/react/reference/useQuery)
+- aws-amplify
+  - https://docs.amplify.aws/react/build-a-backend/auth/concepts/user-attributes/
+  - https://us-east-2.console.aws.amazon.com/amplify/apps/d3prqyhmvclbmc/overview
+- [Ant Design](https://ant.design/components/overview/)
+- [react-icons/md](https://react-icons.github.io/react-icons/icons/md/)
 
 # AWS Libraries
 - DynamoDB - https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/Package/-aws-sdk-client-dynamodb/
+
+# backend - ./map-app-backend
+- provisioned via sam template in map-app-backend
+- lambda functions in ./map-app-backend/functions/
+
+
+
 
 # Getting Started with Create React App
 
