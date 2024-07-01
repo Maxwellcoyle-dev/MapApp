@@ -1,10 +1,5 @@
-import {
-  DynamoDBClient,
-  GetItemCommand,
-  PutItemCommand,
-} from "@aws-sdk/client-dynamodb";
-
-import { defaultCategories } from "./userDefaults.mjs";
+import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
+import { createNewUser } from "./createNewUser.mjs";
 
 const REGION = "us-east-2";
 const USER_TABLE = "MapAppUserTable";
@@ -25,6 +20,7 @@ export const lambdaHandler = async (event) => {
   console.log("email: ", email);
 
   if (!userId) {
+    console.error("No userId is present");
     return {
       statusCode: 400,
       headers,
@@ -34,6 +30,57 @@ export const lambdaHandler = async (event) => {
     };
   }
 
+  try {
+    console.log("Checking if user exists...");
+    const userData = await getUser(userId);
+
+    if (userData) {
+      console.log("User found: ", userData);
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          message: "User found",
+          data: userData,
+        }),
+      };
+    } else {
+      if (!email) {
+        return {
+          statusCode: 400,
+          headers,
+          body: JSON.stringify({
+            message: "Email is required to create a new user",
+          }),
+        };
+      }
+
+      console.log("User not found, creating user...");
+      const newUser = await createNewUser(userId, email);
+      console.log("New user created: ", newUser);
+
+      return {
+        statusCode: 201,
+        headers,
+        body: JSON.stringify({
+          message: "User created",
+          data: newUser,
+        }),
+      };
+    }
+  } catch (err) {
+    console.error("Error: ", err);
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({
+        message: `Error processing request: ${err.message}`,
+      }),
+    };
+  }
+};
+
+const getUser = async (userId) => {
   const params = {
     TableName: USER_TABLE,
     Key: {
@@ -49,6 +96,9 @@ export const lambdaHandler = async (event) => {
       const userObj = {
         userId: data.Item.userId.S,
         email: data.Item.email.S,
+        lists: data.Item.lists.L.map((list) => ({
+          listId: list.M.listId.S,
+        })),
         categories: data.Item.categories.L.map((category) => ({
           categoryId: category.M.categoryId.S,
           name: category.M.name.S,
@@ -62,81 +112,12 @@ export const lambdaHandler = async (event) => {
         })),
         createdAt: data.Item.createdAt.N,
       };
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify({
-          message: "User found",
-          data: userObj,
-        }),
-      };
+      return userObj;
     } else {
-      console.log("User not found, creating user...");
-
-      console.log("defaultCategories: ", defaultCategories);
-      const formattedCategories = defaultCategories.map((category) => ({
-        M: {
-          categoryId: category.categoryId,
-          name: category.name,
-          tags: {
-            L: category.tags.L.map((tag) => ({
-              M: {
-                tagId: tag.M.tagId,
-                tagName: tag.M.tagName,
-              },
-            })),
-          },
-          creationType: category.creationType,
-          createdAt: category.createdAt,
-          lastUpdatedAt: category.lastUpdatedAt,
-        },
-      }));
-
-      const putParams = {
-        TableName: USER_TABLE,
-        Item: {
-          userId: { S: userId },
-          email: { S: email },
-          categories: {
-            L: formattedCategories,
-          },
-          createdAt: { N: `${Date.now()}` },
-        },
-      };
-
-      const putData = await dbclient.send(new PutItemCommand(putParams));
-
-      console.log("User created: ", putData);
-
-      const getUserParams = {
-        TableName: USER_TABLE,
-        Key: {
-          userId: { S: userId },
-        },
-      };
-      const getUserData = await dbclient.send(
-        new GetItemCommand(getUserParams)
-      );
-
-      console.log("getUserData: ", getUserData.Item);
-
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify({
-          message: "User created",
-          data: getUserData.Item,
-        }),
-      };
+      return null;
     }
   } catch (err) {
     console.error("Error: ", err);
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({
-        message: `Error processing request: ${err.message}`,
-      }),
-    };
+    return null;
   }
 };

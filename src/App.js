@@ -12,7 +12,7 @@ import { withAuthenticator } from "@aws-amplify/ui-react";
 // Pages
 import Main from "./pages/Main/Main";
 import MyAccount from "./pages/MyAccount";
-import MyLists from "./pages/MyLists";
+import MyLists from "./pages/MyLists/MyLists";
 import ListManager from "./pages/ListManager";
 import List from "./pages/List";
 import PlaceDetails from "./pages/PlaceDetails/PlaceDetails";
@@ -41,15 +41,6 @@ function App({ signOut, user }) {
   }, []);
 
   const { user: loggedInUser, isUserLoading, userError } = useUser(user);
-
-  useEffect(() => {
-    if (loggedInUser) {
-      console.log("Logged in as: ", loggedInUser);
-    }
-    if (userError) {
-      console.error("Error fetching user: ", userError);
-    }
-  }, [loggedInUser, userError]);
 
   return (
     <MapProvider>

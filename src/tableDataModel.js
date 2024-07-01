@@ -36,6 +36,7 @@ const list = {
   listId: 1, // primary key - uuid - reference in user table
   userId: user.userId, // userId of the user who created / owns the list
   listName: "My List",
+  description: "My List Description",
   places: [
     {
       placeId: 1, // google place_id - reference the placeId - primary key of place table

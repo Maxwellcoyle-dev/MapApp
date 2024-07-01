@@ -1,8 +1,12 @@
 // api.js
 import axiosInstance from "./axiosInstance";
 
-export const getUser = async (userId, email) => {
-  const response = await axiosInstance.get(`/user/${userId}?email=${email}`);
+export const scanLists = async (userId) => {
+  const response = await axiosInstance.get(`/lists/`, {
+    params: {
+      userId,
+    },
+  });
   return response.data;
 };
 
@@ -15,5 +19,3 @@ export const deleteUser = async (userId) => {
   const response = await axiosInstance.delete(`/user/${userId}`);
   return response.data;
 };
-
-
