@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProvider } from "./state/AppContext";
 
 import { APIProvider } from "@vis.gl/react-google-maps";
+
 import { Amplify } from "aws-amplify";
 import config from "./aws-exports";
 Amplify.configure(config);

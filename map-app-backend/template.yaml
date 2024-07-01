@@ -109,142 +109,140 @@ Resources:
             Method: delete
             RestApiId: !Ref MappAppAPI
 
-  # # List table and functions
-  # MapAppListTable:
-  #   Type: "AWS::DynamoDB::Table"
-  #   Properties:
-  #     TableName: "MapAppListTable"
-  #     AttributeDefinitions:
-  #       - AttributeName: "listId"
-  #         AttributeType: "N"
-  #       - AttributeName: "userId"
-  #         AttributeType: "N"
-  #     KeySchema:
-  #       - AttributeName: "listId"
-  #         KeyType: "HASH"
-  #       - AttributeName: "userId"
-  #         KeyType: "RANGE"
-  #     ProvisionedThroughput:
-  #       ReadCapacityUnits: 5
-  #       WriteCapacityUnits: 5
-  # GetListFunction:
-  #   Type: "AWS::Serverless::Function"
-  #   Properties:
-  #     Handler: app.lambdaHandler
-  #     Runtime: nodejs20.x
-  #     CodeUri: "./functions/list/get-list"
-  #     Architectures:
-  #       - x86_64
-  #     Environment:
-  #       Variables:
-  #         TABLE_NAME: !Ref ListTable
-  #     Policies:
-  #       - DynamoDBReadPolicy:
-  #           TableName: !Ref MapAppUserTable
-  #     Events:
-  #       GetList:
-  #         Type: Api
-  #         Properties:
-  #           Path: /list/{listId}
-  #           Method: get
-  #           RestApiId:
-  #             Ref: MapAppAPI
-  # ScanListsFunction:
-  #   Type: "AWS::Serverless::Function"
-  #   Properties:
-  #     Handler: app.lambdaHandler
-  #     Runtime: nodejs20.x
-  #     CodeUri: "./functions/list/scan-lists"
-  #     Architectures:
-  #       - x86_64
-  #     Environment:
-  #       Variables:
-  #         TABLE_NAME: !Ref ListTable
-  #     Policies:
-  #       - DynamoDBReadPolicy:
-  #           TableName: !Ref MapAppUserTable
-  #     Events:
-  #       ScanLists:
-  #         Type: Api
-  #         Properties:
-  #           Path: /lists
-  #           Method: get
-  #           RestApiId:
-  #             Ref: MapAppAPI
-  # CreateListFunction:
-  #   Type: "AWS::Serverless::Function"
-  #   Properties:
-  #     Handler: app.lambdaHandler
-  #     Runtime: nodejs20.x
-  #     CodeUri: "./functions/list/create-list"
-  #     Architectures:
-  #       - x86_64
-  #     Environment:
-  #       Variables:
-  #         TABLE_NAME: !Ref ListTable
-  #     Policies:
-  #       - DynamoDBWritePolicy:
-  #           TableName: !Ref MapAppListTable
-  #       - DynamoDBReadPolicy:
-  #           TableName: !Ref MapAppListTable
-  #     Events:
-  #       CreateListApiEvent:
-  #         Type: Api
-  #         Properties:
-  #           Path: /list
-  #           Method: post
-  #           RestApiId:
-  #             Ref: MapAppAPI
-  # UpdateListFunction:
-  #   Type: "AWS::Serverless::Function"
-  #   Properties:
-  #     Handler: app.lambdaHandler
-  #     Runtime: nodejs20.x
-  #     CodeUri: "./functions/list/update-list"
-  #     Architectures:
-  #       - x86_64
-  #     Environment:
-  #       Variables:
-  #         TABLE_NAME: !Ref ListTable
-  #     Policies:
-  #       - DynamoDBReadPolicy:
-  #           TableName: !Ref MapAppListTable
-  #       - DynamoDBWritePolicy:
-  #           TableName: !Ref MapAppListTable
-  #     Events:
-  #       UpdateListApiEvent:
-  #         Type: Api
-  #         Properties:
-  #           Path: /list
-  #           Method: put
-  #           RestApiId:
-  #             Ref: MapAppAPI
-  # DeleteListFunction:
-  #   Type: "AWS::Serverless::Function"
-  #   Properties:
-  #     Handler: app.lambdaHandler
-  #     Runtime: nodejs20.x
-  #     CodeUri: "./functions/list/delete-list"
-  #     Architectures:
-  #       - x86_64
-  #     Environment:
-  #       Variables:
-  #         TABLE_NAME: !Ref ListTable
-  #     Policies:
-  #       - DynamoDBReadPolicy:
-  #           TableName: !Ref MapAppListTable
-  #       - DynamoDBWritePolicy:
-  #           TableName: !Ref MapAppListTable
-  #       - DynamoDBDeletePolicy:
-  #           TableName: !Ref MapAppListTable
-  #     Events:
-  #       DeleteListApiEvent:
-  #         Type: Api
-  #         Properties:
-  #           Path: /list
-  #           Method: delete
-  #           RestApiId:
-  #             Ref: MapAppAPI
+  # List table and functions
+  MapAppListsTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: "MapAppListsTable"
+      AttributeDefinitions:
+        - AttributeName: "listId"
+          AttributeType: "S"
+        - AttributeName: "userId"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "listId"
+          KeyType: "HASH"
+        - AttributeName: "userId"
+          KeyType: "RANGE"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+  GetListFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: "./functions/list/get-list"
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref MapAppListsTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref MapAppListsTable
+      Events:
+        GetList:
+          Type: Api
+          Properties:
+            Path: /list/{listId}
+            Method: get
+            RestApiId: !Ref MappAppAPI
+  ScanListsFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: "./functions/list/scan-lists"
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref MapAppListsTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref MapAppListsTable
+      Events:
+        ScanLists:
+          Type: Api
+          Properties:
+            Path: /lists
+            Method: get
+            RestApiId: !Ref MappAppAPI
+  CreateListFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: "./functions/list/create-list"
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref MapAppListsTable
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref MapAppListsTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref MapAppListsTable
+      Events:
+        CreateListApiEvent:
+          Type: Api
+          Properties:
+            Path: /list
+            Method: post
+            RestApiId: !Ref MappAppAPI
+  UpdateListFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: "./functions/list/update-list"
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref MapAppListsTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref MapAppListsTable
+        - DynamoDBWritePolicy:
+            TableName: !Ref MapAppListsTable
+      Events:
+        UpdateListApiEvent:
+          Type: Api
+          Properties:
+            Path: /list
+            Method: put
+            RestApiId: !Ref MappAppAPI
+  DeleteListFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: "./functions/list/delete-list"
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref MapAppListsTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref MapAppListsTable
+        - DynamoDBWritePolicy:
+            TableName: !Ref MapAppListsTable
+        - Statement:
+            Effect: Allow
+            Action:
+              - dynamodb:DeleteItem
+            Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/MapAppListsTable"
+      Events:
+        DeleteListApiEvent:
+          Type: Api
+          Properties:
+            Path: /list
+            Method: delete
+            RestApiId: !Ref MappAppAPI
 
   # # List table and functions
   # MapAppPlacesTable:
@@ -390,6 +388,7 @@ Outputs:
     Export:
       Name: MapAppAPI
 
+  #  User Table outputs
   MapAppUserTableName:
     Description: "The name of the User table"
     Value: !Ref MapAppUserTable
@@ -413,3 +412,68 @@ Outputs:
   UpdateUserFunctionIamRole:
     Description: "Implicit IAM Role created for Update User function"
     Value: !GetAtt UpdateUserFunctionRole.Arn
+
+  DeleteUserApi:
+    Description: "API Gateway endpoint URL for Delete User function"
+    Value: !Sub "https://${MappAppAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/user/{userId}/"
+  DeleteUserFunctionArn:
+    Description: "ARN of the DeleteUser Lambda function"
+    Value: !GetAtt DeleteUserFunction.Arn
+  DeleteUserFunctionIamRole:
+    Description: "Implicit IAM Role created for Delete User function"
+    Value: !GetAtt DeleteUserFunctionRole.Arn
+
+  # List Table outputs
+  MapAppListsTableName:
+    Description: "The name of the List table"
+    Value: !Ref MapAppListsTable
+
+  GetListApi:
+    Description: "API Gateway endpoint URL for Get List function"
+    Value: !Sub "https://${MappAppAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/list/{listId}/"
+  GetListFunctionArn:
+    Description: "ARN of the GetList Lambda function"
+    Value: !GetAtt GetListFunction.Arn
+  GetListFunctionIamRole:
+    Description: "Implicit IAM Role created for Get List function"
+    Value: !GetAtt GetListFunctionRole.Arn
+
+  ScanListsApi:
+    Description: "API Gateway endpoint URL for Scan Lists function"
+    Value: !Sub "https://${MappAppAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/lists/"
+  ScanListsFunctionArn:
+    Description: "ARN of the ScanLists Lambda function"
+    Value: !GetAtt ScanListsFunction.Arn
+  ScanListsFunctionIamRole:
+    Description: "Implicit IAM Role created for Scan Lists function"
+    Value: !GetAtt ScanListsFunctionRole.Arn
+
+  CreateListApi:
+    Description: "API Gateway endpoint URL for Create List function"
+    Value: !Sub "https://${MappAppAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/list/"
+  CreateListFunctionArn:
+    Description: "ARN of the CreateList Lambda function"
+    Value: !GetAtt CreateListFunction.Arn
+  CreateListFunctionIamRole:
+    Description: "Implicit IAM Role created for Create List function"
+    Value: !GetAtt CreateListFunctionRole.Arn
+
+  UpdateListApi:
+    Description: "API Gateway endpoint URL for Update List function"
+    Value: !Sub "https://${MappAppAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/list/"
+  UpdateListFunctionArn:
+    Description: "ARN of the UpdateList Lambda function"
+    Value: !GetAtt UpdateListFunction.Arn
+  UpdateListFunctionIamRole:
+    Description: "Implicit IAM Role created for Update List function"
+    Value: !GetAtt UpdateListFunctionRole.Arn
+
+  DeleteListApi:
+    Description: "API Gateway endpoint URL for Delete List function"
+    Value: !Sub "https://${MappAppAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/list/"
+  DeleteListFunctionArn:
+    Description: "ARN of the DeleteList Lambda function"
+    Value: !GetAtt DeleteListFunction.Arn
+  DeleteListFunctionIamRole:
+    Description: "Implicit IAM Role created for Delete List function"
+    Value: !GetAtt DeleteListFunctionRole.Arn
