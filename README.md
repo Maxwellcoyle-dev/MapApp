@@ -1,6 +1,8 @@
 # Notes
 
-- [Dev Deployment Site](https://main.d3prqyhmvclbmc.amplifyapp.com/)
+Mobile dev first
+
+- [Dev Deployment Site](https://main.d3prqyhmvclbmc.amplifyapp.com/) - preview through mobile. 
 
 - [Google Drive](https://drive.google.com/drive/folders/1uNNYx3B4vuSA39m7bktqp9M_-Bn_L534)
 - [Design Doc](https://docs.google.com/document/d/1msNrJvMxTN4Jp4JxNhMrArqtY5VRBMpU6_QLwFGYoeE/edit)
