@@ -101,6 +101,7 @@ const createDefaultList = async (userId) => {
       listId: { S: listId },
       userId: { S: userId },
       listName: { S: "My List" },
+      listDescription: { S: "This is your default list." },
       public: { BOOL: false },
       createdAt: { N: `${Date.now()}` },
       lastUpdatedAt: { N: `${Date.now()}` },

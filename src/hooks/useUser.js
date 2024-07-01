@@ -12,7 +12,6 @@ const useUser = (userData) => {
   useEffect(() => {
     fetchUserAttributes()
       .then((user) => {
-        console.log("User: ", user);
         setUserAttributes((prev) => ({
           ...prev,
           email: user.email,
@@ -29,10 +28,11 @@ const useUser = (userData) => {
     queryKey: ["user", userAttributes.userId, userAttributes.email],
     queryFn: () => getUser(userAttributes.userId, userAttributes.email),
     retry: false, // Do not retry if the user does not exist
-    enabled: !!userData.userId, // Only run the query if userId is provided
+    enabled: !!userAttributes.userId && !!userAttributes.email, // Only run the query if userId and email address are provided
+    refetchOnMount: false, // Do not refetch on mount
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 
-  console.log("user: ", user);
   return { user, userError, isUserLoading };
 };
 
