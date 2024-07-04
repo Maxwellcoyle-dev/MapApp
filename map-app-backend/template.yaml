@@ -245,23 +245,23 @@ Resources:
             RestApiId: !Ref MappAppAPI
 
   # # List table and functions
-  # MapAppPlacesTable:
-  #   Type: "AWS::DynamoDB::Table"
-  #   Properties:
-  #     TableName: "MapAppPlacesTable"
-  #     AttributeDefinitions:
-  #       - AttributeName: "placeId"
-  #         AttributeType: "N"
-  #       - AttributeName: "userId"
-  #         AttributeType: "N"
-  #     KeySchema:
-  #       - AttributeName: "placeId"
-  #         KeyType: "HASH"
-  #       - AttributeName: "userId"
-  #         KeyType: "RANGE"
-  #     ProvisionedThroughput:
-  #       ReadCapacityUnits: 5
-  #       WriteCapacityUnits: 5
+  MapAppPlacesTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: "MapAppPlacesTable"
+      AttributeDefinitions:
+        - AttributeName: "placeId"
+          AttributeType: "S"
+        - AttributeName: "userId"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "placeId"
+          KeyType: "HASH"
+        - AttributeName: "userId"
+          KeyType: "RANGE"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
   # GetPlaceFunction:
   #   Type: "AWS::Serverless::Function"
   #   Properties:
@@ -282,8 +282,7 @@ Resources:
   #         Properties:
   #           Path: /place/{placeId}
   #           Method: get
-  #           RestApiId:
-  #             Ref: MapAppAPI
+  #           RestApiId: !Ref MappAppAPI
   # ScanPlacesFunction:
   #   Type: "AWS::Serverless::Function"
   #   Properties:
@@ -304,32 +303,30 @@ Resources:
   #         Properties:
   #           Path: /places
   #           Method: get
-  #           RestApiId:
-  #             Ref: MapAppAPI
-  # CreatePlaceFunction:
-  #   Type: "AWS::Serverless::Function"
-  #   Properties:
-  #     Handler: app.lambdaHandler
-  #     Runtime: nodejs20.x
-  #     CodeUri: "./functions/place/create-place"
-  #     Architectures:
-  #       - x86_64
-  #     Environment:
-  #       Variables:
-  #         TABLE_NAME: !Ref MapAppPlacesTable
-  #     Policies:
-  #       - DynamoDBWritePolicy:
-  #           TableName: !Ref MapAppPlacesTable
-  #       - DynamoDBReadPolicy:
-  #           TableName: !Ref MapAppPlacesTable
-  #     Events:
-  #       CreatePlaceApiEvent:
-  #         Type: Api
-  #         Properties:
-  #           Path: /place
-  #           Method: post
-  #           RestApiId:
-  #             Ref: MapAppAPI
+  #           RestApiId: !Ref MappAppAPI
+  CreatePlaceFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: "./functions/place/create-place"
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref MapAppPlacesTable
+      Policies:
+        - DynamoDBWritePolicy:
+            TableName: !Ref MapAppPlacesTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref MapAppPlacesTable
+      Events:
+        CreatePlaceApiEvent:
+          Type: Api
+          Properties:
+            Path: /place
+            Method: post
+            RestApiId: !Ref MappAppAPI
   # UpdatePlaceFunction:
   #   Type: "AWS::Serverless::Function"
   #   Properties:
@@ -352,8 +349,7 @@ Resources:
   #         Properties:
   #           Path: /place
   #           Method: put
-  #           RestApiId:
-  #             Ref: MapAppAPI
+  #           RestApiId: !Ref MappAppAPI
   # DeletePlaceFunction:
   #   Type: "AWS::Serverless::Function"
   #   Properties:
@@ -378,8 +374,7 @@ Resources:
   #         Properties:
   #           Path: /place
   #           Method: delete
-  #           RestApiId:
-  #             Ref: MapAppAPI
+  #           RestApiId: !Ref MappAppAPI
 
 Outputs:
   MapAppApiUrl:
@@ -477,3 +472,18 @@ Outputs:
   DeleteListFunctionIamRole:
     Description: "Implicit IAM Role created for Delete List function"
     Value: !GetAtt DeleteListFunctionRole.Arn
+
+  # Place Table outputs
+  MapAppPlacesTableName:
+    Description: "The name of the Place table"
+    Value: !Ref MapAppPlacesTable
+
+  CreatePlaceApi:
+    Description: "API Gateway endpoint URL for Create Place function"
+    Value: !Sub "https://${MappAppAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/place/"
+  CreatePlaceFunctionArn:
+    Description: "ARN of the CreatePlace Lambda function"
+    Value: !GetAtt CreatePlaceFunction.Arn
+  CreatePlaceFunctionIamRole:
+    Description: "Implicit IAM Role created for Create Place function"
+    Value: !GetAtt CreatePlaceFunctionRole.Arn

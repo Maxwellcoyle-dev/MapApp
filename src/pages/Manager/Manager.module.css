@@ -1,0 +1,28 @@
+.manager {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  height: calc(100vh - 5.5rem);
+  background: white;
+  padding: 1rem;
+  padding-bottom: 0;
+}
+
+.headerDiv {
+}
+
+.formDiv {
+  width: 100%;
+  padding-bottom: 0;
+}
+
+.radioButtonGroup {
+  width: 100%;
+}
+
+.radioButton {
+  width: 50%;
+}

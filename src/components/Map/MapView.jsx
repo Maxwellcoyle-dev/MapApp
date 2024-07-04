@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Map, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
 
 import MapComponent from "./MapComponent";
@@ -9,8 +9,11 @@ import { useAppContext } from "../../state/AppContext";
 import useMarkerClick from "../../hooks/useMakerClick";
 
 import styles from "./MapView.module.css";
+import PlaceDetailsCard from "../PlaceDetailsCard/PlaceDetailsCard";
 
 const MapView = () => {
+  const [placeId, setPlaceId] = useState(null);
+  const [showPlaceDetailsCard, setShowPlaceDetailsCard] = useState(false);
   const handleMarkerClick = useMarkerClick();
 
   const { userLocation } = useAppContext();
@@ -26,6 +29,10 @@ const MapView = () => {
     setZoom,
     zoom,
   } = useMapContext();
+
+  useEffect(() => {
+    console.log("searchResults: ", selectedPlace);
+  }, [searchResults]);
 
   useEffect(() => {
     if (userLocation) {
@@ -82,6 +89,9 @@ const MapView = () => {
             )}
           </AdvancedMarker>
         ))}
+        {selectedPlace.placeId && (
+          <PlaceDetailsCard placeId={selectedPlace?.placeId} />
+        )}
       </Map>
     </div>
   );

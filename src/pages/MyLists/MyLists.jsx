@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { getCurrentUser } from "aws-amplify/auth";
+import { MdOutlineCreateNewFolder } from "react-icons/md";
+
+// hooks
 import useUserLists from "../../hooks/useUserLists";
+
+// components
+import UserLists from "../../components/UserLists/UserLists";
 
 import styles from "./MyLists.module.css";
 
@@ -35,24 +41,13 @@ const MyLists = () => {
       <h1>My Lists</h1>
       {isListsLoading && <p>Loading...</p>}
       {listsError && <p>{listsError.message}</p>}
-      {listsData && (
-        <div className={styles.listContainer}>
-          {listsData.data.map((list) => {
-            const createdAt = new Date(
-              parseInt(list.createdAt.N)
-            ).toLocaleDateString();
 
-            return (
-              <div key={list.listId.S}>
-                <h2>{list.listName.S}</h2>
-                <p>Description: {list.description?.S || "Add description"}</p>
-                <p>Created on: {createdAt}</p>
-                <p>Number of Places: {list.places?.length || 0}</p>
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <div>
+        <h3>Create a list</h3>
+        <MdOutlineCreateNewFolder size={30} />
+      </div>
+
+      {listsData && <UserLists userLists={listsData.data} />}
     </div>
   );
 };

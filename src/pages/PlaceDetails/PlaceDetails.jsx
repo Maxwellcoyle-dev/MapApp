@@ -18,6 +18,7 @@ import useGetPlace from "../../hooks/useGetPlace";
 import useClosePlaceDetails from "../../hooks/useClosePlaceDetails";
 
 import styles from "./PlaceDetails.module.css";
+
 import PhotoGallery from "../../components/PhotoGallery/PhotoGallery";
 
 const PlaceDetails = () => {
@@ -33,85 +34,6 @@ const PlaceDetails = () => {
   useEffect(() => {
     console.log("placeData: ", placeData);
   }, [placeData]);
-
-  if (isPlaceDataLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (isPlaceDataError) {
-    return <div>Error: {placeDataError}</div>;
-  }
-
-  if (!placeData) {
-    return <div>No place data found</div>;
-  }
-
-  const halfView = (
-    <div className={styles.halfView}>
-      <div className={styles.viewControlDiv}>
-        <button className={styles.iconButton}>
-          <MdOpenInFull className={styles.btnIcon} />
-        </button>
-        <button className={styles.iconButton} onClick={handleClosePlace}>
-          <MdClose className={styles.btnIcon} />
-        </button>
-      </div>
-      <div className={styles.hvHeaderDiv}>
-        <h2 className={styles.name}>{placeData.name}</h2>
-        {Array(placeData.priceLevel)
-          .fill()
-          .map((_, index) => (
-            <span key={index} className={styles.hvHeaderIcons}>
-              $
-            </span>
-          ))}
-        {placeData.types?.includes("cafe") && (
-          <MdOutlineLocalCafe className={styles.hvHeaderIcons} />
-        )}
-        {placeData.types?.includes("restaurant") && (
-          <MdOutlineRestaurant className={styles.hvHeaderIcons} />
-        )}
-        {placeData.types?.includes("bar") && (
-          <MdOutlineLocalBar className={styles.hvHeaderIcons} />
-        )}
-        {/* check if the place is open */}
-        {placeData.opening_hours.isOpen ? (
-          <p className={styles.hvOpen}>Open</p>
-        ) : (
-          <p className={styles.hvClosed}>Closed</p>
-        )}
-      </div>
-      <div className={styles.hvInfoDiv}>
-        {/* display rating, reviews, type, priceLevel, if they are open */}
-        <div className={styles.hvRatingDiv}>
-          <p>{placeData.rating}</p>
-          {[1, 2, 3, 4, 5].map((star) => {
-            if (placeData.rating >= star) {
-              return <MdOutlineStar key={star} className={styles.ratingStar} />;
-            } else if (placeData.rating >= star - 0.5) {
-              return (
-                <MdOutlineStarHalf key={star} className={styles.ratingStar} />
-              );
-            } else {
-              return (
-                <MdOutlineStarBorder key={star} className={styles.ratingStar} />
-              );
-            }
-          })}
-          <p>({placeData.userRatingsTotal} reviews)</p>
-        </div>
-      </div>
-      <div className={styles.optionsDiv}></div>
-
-      <PhotoGallery photos={placeData.photos} />
-    </div>
-  );
-
-  if (view === "half") {
-    return halfView;
-  } else {
-    return <div>Full View</div>;
-  }
 
   return (
     <div className={styles.placeDetailsDiv}>

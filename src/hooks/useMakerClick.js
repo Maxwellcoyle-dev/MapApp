@@ -11,7 +11,6 @@ const useMarkerClick = () => {
   const handleMarkerClick = async (place) => {
     console.log("place: ", place);
     try {
-      navigate(`/place/${place.placeId}`);
       setCenter(place.location);
 
       const selectedPlace = {
