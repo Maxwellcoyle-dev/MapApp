@@ -13,7 +13,7 @@ import { withAuthenticator } from "@aws-amplify/ui-react";
 import Main from "./pages/Main/Main";
 import MyAccount from "./pages/MyAccount";
 import MyLists from "./pages/MyLists/MyLists";
-import ListManager from "./pages/ListManager";
+import Manager from "./pages/Manager/Manager";
 import List from "./pages/List";
 import PlaceDetails from "./pages/PlaceDetails/PlaceDetails";
 
@@ -40,7 +40,7 @@ function App({ signOut, user }) {
     );
   }, []);
 
-  const { user: loggedInUser, isUserLoading, userError } = useUser(user);
+  const { user: authUser } = useUser(user.userId);
 
   return (
     <MapProvider>
@@ -52,7 +52,7 @@ function App({ signOut, user }) {
               element={<MyAccount signOut={signOut} />}
             />
             <Route path="my-lists" element={<MyLists />} />
-            <Route path="list-manager" element={<ListManager />} />
+            <Route path="manager" element={<Manager />} />
             <Route path="list/:listId" element={<List />} />
             <Route path="place/:placeId" element={<PlaceDetails />} />
           </Route>

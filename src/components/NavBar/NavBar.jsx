@@ -34,10 +34,10 @@ const NavBar = ({ selectedMarker }) => {
         </Link>
       </button>
       <button className={styles.button}>
-        <Link to="/list-manager">
+        <Link to="/manager">
           <div
             className={
-              currentTab === "/list-manager"
+              currentTab === "/manager"
                 ? styles.iconContainerSelected
                 : styles.iconContainer
             }

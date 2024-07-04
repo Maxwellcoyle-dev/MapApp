@@ -10,12 +10,12 @@ export const scanLists = async (userId) => {
   return response.data;
 };
 
-export const updateUser = async (userId, userData) => {
-  const response = await axiosInstance.put(`/user/${userId}`, userData);
+export const createList = async (listData) => {
+  const response = await axiosInstance.post("/list/", listData);
   return response.data;
 };
 
-export const deleteUser = async (userId) => {
-  const response = await axiosInstance.delete(`/user/${userId}`);
+export const updateList = async (listData) => {
+  const response = await axiosInstance.put("/list/", listData);
   return response.data;
 };

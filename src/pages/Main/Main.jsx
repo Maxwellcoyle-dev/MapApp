@@ -7,10 +7,14 @@ import styles from "./Main.module.css";
 
 import useGetUserLocation from "../../hooks/useGetUserLocation";
 
-import { useMapContext } from "../../state/MapContext";
+import { useAppContext } from "../../state/AppContext";
+
+import AddToList from "../../components/AddToList/AddToList";
 
 const Main = () => {
   useGetUserLocation();
+
+  const { showAddToList } = useAppContext();
 
   return (
     <div className={styles.mainContainer}>
@@ -19,6 +23,7 @@ const Main = () => {
       <div className={styles.overlayContainer}>
         <Outlet />
       </div>
+      {showAddToList && <AddToList />}
     </div>
   );
 };
