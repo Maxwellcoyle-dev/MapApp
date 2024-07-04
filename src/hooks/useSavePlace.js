@@ -35,7 +35,7 @@ const useSavePlace = () => {
       const processedPlaceData = {
         ...placeData,
         photos: placeData?.photos?.map((photo) => ({
-          url: photo?.getUrl(), // Extract the URL from the photo object
+          url: photo?.getUrl(),
         })),
       };
       return savePlace({
