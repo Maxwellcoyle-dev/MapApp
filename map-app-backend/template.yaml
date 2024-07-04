@@ -317,7 +317,9 @@ Resources:
           TABLE_NAME: !Ref MapAppPlacesTable
       Policies:
         - DynamoDBWritePolicy:
-            TableName: !Ref MapAppPlacesTable
+            TableName:
+              - !Ref MapAppPlacesTable
+              - !Ref MapAppListsTable
         - DynamoDBReadPolicy:
             TableName: !Ref MapAppPlacesTable
       Events:

@@ -68,7 +68,7 @@ const AddToList = () => {
                 </div>
                 <div className={styles.textDiv}>
                   <h4>{list.listName.S}</h4>
-                  <p>{list.places?.length || 0} saved</p>
+                  <p>{list.places?.L.length || 0} saved</p>
                 </div>
               </div>
             ))}
