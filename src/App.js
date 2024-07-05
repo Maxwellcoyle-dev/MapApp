@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import "./App.css";
 import "@aws-amplify/ui-react/styles.css";
 
+import { Layout } from "antd";
+
 // React Router
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -20,10 +22,13 @@ import PlaceDetails from "./pages/PlaceDetails/PlaceDetails";
 // Components
 import NavBar from "./components/NavBar/NavBar";
 import { MapProvider } from "./state/MapContext"; // Import MapProvider
+import { SearchProvider } from "./state/SearchContext";
 
 import { useAppContext } from "./state/AppContext";
 
 import useUser from "./hooks/useUser";
+
+const { Header, Content, Footer, Sider } = Layout;
 
 function App({ signOut, user }) {
   const { userLocation, setUserLocation } = useAppContext();
@@ -43,24 +48,37 @@ function App({ signOut, user }) {
   const { user: authUser } = useUser(user.userId);
 
   return (
-    <MapProvider>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Main />}>
-            <Route
-              path="/my-account"
-              element={<MyAccount signOut={signOut} />}
-            />
-            <Route path="my-lists" element={<MyLists />} />
-            <Route path="manager" element={<Manager />} />
-            <Route path="list/:listId" element={<List />} />
-            <Route path="place/:placeId" element={<PlaceDetails />} />
-          </Route>
-        </Routes>
-
-        <NavBar />
-      </Router>
-    </MapProvider>
+    <SearchProvider>
+      <MapProvider>
+        <Router>
+          <Layout style={{ height: "100vh", position: "relative" }}>
+            <Content>
+              <Routes>
+                <Route path="/" element={<Main />} />
+                {/* <Route path="my-lists" element={<MyLists />} /> */}
+                <Route
+                  path="/my-account"
+                  element={<MyAccount signOut={signOut} />}
+                />
+                <Route path="manager" element={<Manager />} />
+                <Route path="list/:listId" element={<List />} />
+                <Route path="place/:placeId" element={<PlaceDetails />} />
+              </Routes>
+            </Content>
+            <Footer
+              style={{
+                position: "sticky",
+                bottom: 0,
+                zIndex: 3,
+                padding: 0,
+              }}
+            >
+              <NavBar />
+            </Footer>
+          </Layout>
+        </Router>
+      </MapProvider>
+    </SearchProvider>
   );
 }
 

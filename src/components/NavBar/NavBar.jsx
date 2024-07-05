@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   MdOutlineExplore,
   MdFormatListBulleted,
-  MdAddCircleOutline,
+  MdOutlineAccountCircle,
 } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
 
@@ -18,7 +18,7 @@ const NavBar = ({ selectedMarker }) => {
   }, [location]);
 
   return (
-    <div className={`${styles.navBar} ${selectedMarker ? styles.closed : ""}`}>
+    <div className={styles.navBar}>
       <button className={styles.button}>
         <Link to="/">
           <div
@@ -42,23 +42,23 @@ const NavBar = ({ selectedMarker }) => {
                 : styles.iconContainer
             }
           >
-            <MdAddCircleOutline className={styles.icon} />
+            <MdFormatListBulleted className={styles.icon} />
           </div>
-          <p className={styles.text}>Add</p>
+          <p className={styles.text}>Lists</p>
         </Link>
       </button>
       <button className={styles.button}>
-        <Link to="/my-lists">
+        <Link to="/my-account">
           <div
             className={
-              currentTab === "/my-lists"
+              currentTab === "/my-account"
                 ? styles.iconContainerSelected
                 : styles.iconContainer
             }
           >
-            <MdFormatListBulleted className={styles.icon} />
+            <MdOutlineAccountCircle className={styles.icon} />
           </div>
-          <p className={styles.text}>Lists</p>
+          <p className={styles.text}>Account</p>
         </Link>
       </button>
     </div>

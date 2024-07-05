@@ -5,6 +5,7 @@ import MapComponent from "./MapComponent";
 
 import { useMapContext } from "../../state/MapContext";
 import { useAppContext } from "../../state/AppContext";
+import { useSearchContext } from "../../state/SearchContext";
 
 import useMarkerClick from "../../hooks/useMakerClick";
 
@@ -18,17 +19,15 @@ const MapView = () => {
 
   const { userLocation } = useAppContext();
 
+  const { center, setCenter, setZoom, zoom } = useMapContext();
+
   const {
-    center,
     searchQuery,
     setAutoCompleteResults,
-    setCenter,
     selectedPlace,
     searchResults,
     setSearchResults,
-    setZoom,
-    zoom,
-  } = useMapContext();
+  } = useSearchContext();
 
   useEffect(() => {
     console.log("searchResults: ", selectedPlace);
@@ -62,7 +61,11 @@ const MapView = () => {
     <div className={styles.mapViewContainer}>
       <Map
         mapId={"126ae8e8ffefefdf"}
-        style={{ width: "100vw", height: "calc(100vh - 5.5rem)" }}
+        style={{
+          width: "100vw",
+          height: "calc(100vh - 10rem)",
+          overflow: "hidden",
+        }}
         defaultCenter={center}
         center={center}
         zoom={zoom}
@@ -89,7 +92,7 @@ const MapView = () => {
             )}
           </AdvancedMarker>
         ))}
-        {selectedPlace.placeId && (
+        {selectedPlace?.placeId && (
           <PlaceDetailsCard placeId={selectedPlace?.placeId} />
         )}
       </Map>

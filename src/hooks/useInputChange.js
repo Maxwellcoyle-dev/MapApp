@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 
 import { useMapContext } from "../state/MapContext";
+import { useSearchContext } from "../state/SearchContext";
 
 const useInputChange = () => {
-  const { setAutoCompleteResults, setSearchQuery } = useMapContext();
+  const { setAutoCompleteResults, setSearchQuery } = useSearchContext();
+
   const [autocompleteService, setAutocompleteService] = useState(null);
 
   const map = useMap();

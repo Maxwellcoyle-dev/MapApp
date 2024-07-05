@@ -4,6 +4,7 @@ import React from "react";
 // Components
 import Input from "./Input/Input";
 import AutoComplete from "./AutoComplete";
+import PlaceTypeSelector from "./PlaceTypeSelector/PlaceTypeSelector";
 
 // State
 import { useMapContext } from "../../state/MapContext";
@@ -28,6 +29,7 @@ const SearchBar = () => {
         autoCompleteResults={autoCompleteResults}
         handleAutoCompleteClick={handleAutoCompleteSelect}
       />
+      <PlaceTypeSelector />
     </div>
   );
 };

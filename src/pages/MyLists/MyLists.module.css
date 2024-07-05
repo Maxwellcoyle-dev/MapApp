@@ -1,7 +1,4 @@
 .myListsPage {
-  height: calc(100vh - 5.5rem);
   width: 100%;
   background: white;
-  position: absolute;
-  z-index: 2;
 }

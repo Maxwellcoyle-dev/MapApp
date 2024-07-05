@@ -2,13 +2,14 @@ import { useNavigate } from "react-router-dom";
 
 import useGetUserLocation from "./useGetUserLocation";
 import { useMapContext } from "../state/MapContext";
+import { useSearchContext } from "../state/SearchContext";
 
 const useClosePlaceDetails = () => {
   const location = useGetUserLocation();
   const navigate = useNavigate();
 
-  const { setSelectedPlace, setCenter, setSearchQuery, setZoom } =
-    useMapContext();
+  const { setCenter, setZoom } = useMapContext();
+  const { setSelectedPlace, setSearchQuery } = useSearchContext();
 
   const handleClosePlace = () => {
     setSelectedPlace({
