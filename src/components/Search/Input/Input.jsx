@@ -1,12 +1,12 @@
 import React from "react";
 import { MdOutlineSearch, MdClear } from "react-icons/md";
-import { useMapContext } from "../../../state/MapContext";
+import { useSearchContext } from "../../../state/SearchContext";
 import useInputChange from "../../../hooks/useInputChange";
 import useTextSearch from "../../../hooks/useTextSearch";
 import styles from "./Input.module.css";
 
 const Input = () => {
-  const { searchQuery } = useMapContext();
+  const { searchQuery } = useSearchContext();
 
   const handleInputChange = useInputChange();
   const handleTextSearch = useTextSearch();

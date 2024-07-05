@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router-dom";
 
 import { useMapContext } from "../state/MapContext";
+import { useSearchContext } from "../state/SearchContext";
 
 const useMarkerClick = () => {
   const navigate = useNavigate();
 
-  const { setSelectedPlace, setCenter, setSearchQuery, setZoom } =
-    useMapContext();
+  const { setCenter, setZoom } = useMapContext();
+
+  const { setSelectedPlace, setSearchQuery } = useSearchContext();
 
   const handleMarkerClick = async (place) => {
     console.log("place: ", place);
