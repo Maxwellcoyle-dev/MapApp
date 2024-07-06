@@ -16,7 +16,7 @@ const UserLists = (userLists) => {
               <h2>{list.listName.S}</h2>
               <p>Description: {list.description?.S || "Add description"}</p>
               <p>Created on: {createdAt}</p>
-              <p>Number of Places: {list.places?.length || 0}</p>
+              <p>Number of Places: {list.places?.L.length || 0}</p>
             </div>
           );
         })}

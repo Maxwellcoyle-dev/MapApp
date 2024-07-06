@@ -4,16 +4,16 @@ import { getCurrentUser } from "aws-amplify/auth";
 
 import { savePlace } from "../api/placeApi";
 
-import { useMapContext } from "../state/MapContext";
+import { useSearchContext } from "../state/SearchContext";
 
 import useGetPlace from "../hooks/useGetPlace";
 
 const useSavePlace = () => {
   const [user, setUser] = useState(null);
 
-  const { selectedPlace } = useMapContext();
+  const { selectedPlace } = useSearchContext();
 
-  const { placeData } = useGetPlace(selectedPlace?.placeId);
+  const { placeData } = useGetPlace(selectedPlace?.place_id);
 
   useEffect(() => {
     console.log("selectedPlace: ", selectedPlace);

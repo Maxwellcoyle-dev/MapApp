@@ -61,7 +61,11 @@ const AddToList = () => {
                 <div className={styles.imageDiv}>
                   <Image
                     className={styles.image}
-                    src={list.listPhoto?.S}
+                    src={
+                      list?.places?.L[0].M.photo.S
+                        ? list.places.L[0].M.photo.S
+                        : list.listPhoto?.S
+                    }
                     fallback={fallbackImage}
                     preview={false}
                   />
