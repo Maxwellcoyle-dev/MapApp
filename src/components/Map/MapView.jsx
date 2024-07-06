@@ -8,6 +8,7 @@ import { useAppContext } from "../../state/AppContext";
 import { useSearchContext } from "../../state/SearchContext";
 
 import useMarkerClick from "../../hooks/useMakerClick";
+import usePlacesTextSearch from "../../hooks/usePlacesTextSearch";
 
 import styles from "./MapView.module.css";
 import PlaceDetailsCard from "../PlaceDetailsCard/PlaceDetailsCard";
@@ -22,22 +23,24 @@ const MapView = () => {
   const { center, setCenter, setZoom, zoom } = useMapContext();
 
   const {
-    searchQuery,
-    setAutoCompleteResults,
-    selectedPlace,
-    searchResults,
-    setSearchResults,
-  } = useSearchContext();
+    placesResults,
+    isPlacesResultsLoading,
+    isPlacesResultsError,
+    placesResultsError,
+  } = usePlacesTextSearch("");
 
-  useEffect(() => {
-    console.log("searchResults: ", selectedPlace);
-  }, [searchResults]);
+  const { searchQuery, setAutoCompleteResults, selectedPlace } =
+    useSearchContext();
 
   useEffect(() => {
     if (userLocation) {
       setCenter(userLocation);
     }
   }, [userLocation]);
+
+  useEffect(() => {
+    console.log("selectedPlace: ", selectedPlace);
+  }, [selectedPlace]);
 
   const mapOptions = {
     zoomControl: false,
@@ -53,7 +56,6 @@ const MapView = () => {
     if (searchQuery === "") {
       setAutoCompleteResults([]);
       setZoom(12);
-      setSearchResults([]);
     }
   }, [searchQuery]);
 
@@ -72,16 +74,18 @@ const MapView = () => {
         options={mapOptions}
       >
         <MapComponent setCenter={setCenter} setZoom={setZoom} />
-
-        {searchResults.map((marker, index) => (
+        {placesResults?.map((marker, index) => (
           <AdvancedMarker
             key={index}
-            position={{ lat: marker.location.lat, lng: marker.location.lng }}
+            position={{
+              lat: marker?.geometry.location.lat(),
+              lng: marker?.geometry.location.lng(),
+            }}
             onClick={() => {
               handleMarkerClick(marker);
             }}
           >
-            {marker.placeId === selectedPlace?.placeId ? (
+            {marker.place_id === selectedPlace?.place_id ? (
               <Pin
                 background={"blue"}
                 glyphColor={"gray"}
@@ -92,8 +96,8 @@ const MapView = () => {
             )}
           </AdvancedMarker>
         ))}
-        {selectedPlace?.placeId && (
-          <PlaceDetailsCard placeId={selectedPlace?.placeId} />
+        {selectedPlace?.place_id && (
+          <PlaceDetailsCard placeId={selectedPlace?.place_id} />
         )}
       </Map>
     </div>
