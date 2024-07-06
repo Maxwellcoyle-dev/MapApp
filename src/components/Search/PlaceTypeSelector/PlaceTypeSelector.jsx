@@ -17,7 +17,7 @@ import { useSearchContext } from "../../../state/SearchContext";
 const types = [
   {
     name: "All",
-    value: "all",
+    value: "establishment",
     icon: <MdOutlineSearch className={styles.typeIcon} />,
   },
   {
