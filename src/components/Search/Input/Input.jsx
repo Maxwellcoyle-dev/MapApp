@@ -1,18 +1,20 @@
+// Libraries
 import React from "react";
 import { MdOutlineSearch, MdClear } from "react-icons/md";
+
+// State
 import { useSearchContext } from "../../../state/SearchContext";
+
+// Hooks
 import useAutocomplete from "../../../hooks/google-api-hooks/useAutocomplete";
-import usePlacesSearch from "../../../hooks/google-api-hooks/usePlacesSearch";
+
+// styles
 import styles from "./Input.module.css";
 
 const Input = () => {
-  const { searchQuery, setSearchQuery, queryInput, setQueryInput } =
-    useSearchContext();
+  const { searchQuery, setSearchQuery, queryInput } = useSearchContext();
 
   const handleInputChange = useAutocomplete();
-
-  const { placesResults, isPlacesResultsLoading, refetchPlacesResults } =
-    usePlacesSearch();
 
   const handleKeyDown = (event) => {
     // if its not enter, but a letter then update the query input

@@ -1,3 +1,4 @@
+// Librairies
 import React, { useEffect, useState } from "react";
 import {
   MdOutlineExplore,
@@ -6,9 +7,10 @@ import {
 } from "react-icons/md";
 import { Link, useLocation } from "react-router-dom";
 
+// Styles
 import styles from "./NavBar.module.css";
 
-const NavBar = ({ selectedMarker }) => {
+const NavBar = () => {
   const [currentTab, setCurrentTab] = useState("/");
   const location = useLocation();
 

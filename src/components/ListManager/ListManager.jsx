@@ -1,3 +1,4 @@
+// Libraries
 import React, { useState, useEffect } from "react";
 import { getCurrentUser } from "aws-amplify/auth";
 import { Button } from "antd";
@@ -10,6 +11,7 @@ import useUserLists from "../../hooks/backend-hooks/useUserLists";
 import UserLists from "../UserLists/UserLists";
 import CreateListForm from "../CreateListForm/CreateListForm";
 
+// styles
 import styles from "./ListManager.module.css";
 
 // component for creating a new list

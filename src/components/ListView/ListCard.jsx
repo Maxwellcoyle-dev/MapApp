@@ -1,3 +1,4 @@
+// Libraries
 import React, { useEffect, useState } from "react";
 import { Image, Skeleton } from "antd";
 import { FaRegHeart } from "react-icons/fa";
@@ -6,7 +7,11 @@ import {
   MdOutlineStarHalf,
   MdOutlineStarBorder,
 } from "react-icons/md";
+
+// State
 import { useAppContext } from "../../state/AppContext";
+
+// Styles
 import styles from "./ListCard.module.css";
 
 const ListCard = ({ place }) => {

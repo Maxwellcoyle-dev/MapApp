@@ -1,7 +1,11 @@
+// Libraries
 import React, { useEffect } from "react";
 import { Spin } from "antd";
 
+// Components
 import ListCard from "./ListCard";
+
+// Styles
 import styles from "./ListView.module.css";
 
 const ListView = ({ placesResults, isPlacesResultsLoading }) => {

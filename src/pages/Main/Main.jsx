@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from "react";
-import { useMap } from "@vis.gl/react-google-maps";
+// Libraries
+import React, { useState } from "react";
 import { MdFormatListBulleted, MdOutlineMap } from "react-icons/md";
 
-// components
+// Components
 import MapView from "../../components/Map/MapView";
 import ListView from "../../components/ListView/ListView";
 import SearchBar from "../../components/Search/SearchBar";
+import AddToList from "../../components/AddToList/AddToList";
 
-import styles from "./Main.module.css";
-
+// State
 import { useAppContext } from "../../state/AppContext";
-import { useSearchContext } from "../../state/SearchContext";
 
+// Hooks
 import useGetUserLocation from "../../hooks/useGetUserLocation";
 import usePlacesSearch from "../../hooks/google-api-hooks/usePlacesSearch";
-import AddToList from "../../components/AddToList/AddToList";
+
+// Styles
+import styles from "./Main.module.css";
 
 const Main = () => {
   const [view, setView] = useState("map");
-  const map = useMap();
 
   useGetUserLocation();
 

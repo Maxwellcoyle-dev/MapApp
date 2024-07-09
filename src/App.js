@@ -14,7 +14,6 @@ import { withAuthenticator } from "@aws-amplify/ui-react";
 // Pages
 import Main from "./pages/Main/Main";
 import MyAccount from "./pages/MyAccount";
-import MyLists from "./pages/MyLists/MyLists";
 import Manager from "./pages/Manager/Manager";
 import List from "./pages/List";
 import PlaceDetails from "./pages/PlaceDetails/PlaceDetails";
@@ -55,7 +54,6 @@ function App({ signOut, user }) {
             <Content>
               <Routes>
                 <Route path="/" element={<Main />} />
-                {/* <Route path="my-lists" element={<MyLists />} /> */}
                 <Route
                   path="/my-account"
                   element={<MyAccount signOut={signOut} />}

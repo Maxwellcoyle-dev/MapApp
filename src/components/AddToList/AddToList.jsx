@@ -1,8 +1,10 @@
+// Libraries
 import React, { useEffect, useState } from "react";
 import { getCurrentUser } from "aws-amplify/auth";
 import { MdClose } from "react-icons/md";
 import { Image } from "antd";
 
+// context
 import { useAppContext } from "../../state/AppContext";
 
 // hooks

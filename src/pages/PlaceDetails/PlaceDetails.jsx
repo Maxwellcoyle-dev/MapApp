@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext } from "react";
+// Libraries
+import React, { useEffect } from "react";
 import {
   MdClose,
-  MdOpenInFull,
   MdFormatListBulletedAdd,
   MdLabelOutline,
   MdOutlineStar,
@@ -14,20 +14,19 @@ import {
 } from "react-icons/md";
 import { useParams } from "react-router-dom";
 
+// Hooks
 import useGetPlaceDetails from "../../hooks/google-api-hooks/useGetPlaceDetails";
 import useClosePlaceDetails from "../../hooks/useClosePlaceDetails";
 
+// Styles
 import styles from "./PlaceDetails.module.css";
 
 const PlaceDetails = () => {
-  const [view, setView] = useState("half");
-
   const { placeId } = useParams();
 
   const handleClosePlace = useClosePlaceDetails();
 
-  const { placeData, isPlaceDataLoading, isPlaceDataError, placeDataError } =
-    useGetPlaceDetails(placeId);
+  const { placeData } = useGetPlaceDetails(placeId);
 
   useEffect(() => {
     console.log("placeData: ", placeData);

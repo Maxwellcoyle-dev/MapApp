@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+// Libraries
+import React from "react";
 import { IoRestaurantOutline } from "react-icons/io5";
 import {
   MdOutlineSportsBar,
@@ -10,9 +11,11 @@ import {
 } from "react-icons/md";
 import { BiCoffeeTogo } from "react-icons/bi";
 
-import styles from "./PlaceTypeSelector.module.css";
-
+// State
 import { useSearchContext } from "../../../state/SearchContext";
+
+// Styles
+import styles from "./PlaceTypeSelector.module.css";
 
 const types = [
   {
