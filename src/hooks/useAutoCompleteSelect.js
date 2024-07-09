@@ -1,6 +1,6 @@
 import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 import { useQueryClient } from "@tanstack/react-query";
-import { fetchPlaceDetails } from "./useGetPlace";
+import { fetchPlaceDetails } from "./google-api-hooks/useGetPlaceDetails";
 import { useMapContext } from "../state/MapContext";
 
 const useAutoCompleteSelect = () => {

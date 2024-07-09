@@ -4,7 +4,7 @@ import { Button } from "antd";
 import { MdOutlineAdd } from "react-icons/md";
 
 // hooks
-import useUserLists from "../../hooks/useUserLists";
+import useUserLists from "../../hooks/backend-hooks/useUserLists";
 
 // components
 import UserLists from "../UserLists/UserLists";

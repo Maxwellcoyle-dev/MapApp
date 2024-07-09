@@ -3,7 +3,7 @@ import { getCurrentUser } from "aws-amplify/auth";
 import { MdOutlineCreateNewFolder } from "react-icons/md";
 
 // hooks
-import useUserLists from "../../hooks/useUserLists";
+import useUserLists from "../../hooks/backend-hooks/useUserLists";
 
 // components
 import UserLists from "../../components/UserLists/UserLists";

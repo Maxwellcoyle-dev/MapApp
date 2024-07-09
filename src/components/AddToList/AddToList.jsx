@@ -6,8 +6,8 @@ import { Image } from "antd";
 import { useAppContext } from "../../state/AppContext";
 
 // hooks
-import useUserLists from "../../hooks/useUserLists";
-import useSavePlace from "../../hooks/useSavePlace";
+import useUserLists from "../../hooks/backend-hooks/useUserLists";
+import useSavePlace from "../../hooks/backend-hooks/useSavePlace";
 
 // styles & assets
 import styles from "./AddToList.module.css";

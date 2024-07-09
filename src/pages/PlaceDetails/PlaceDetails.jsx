@@ -12,14 +12,12 @@ import {
   MdOutlineLocalBar,
   MdOutlineRestaurant,
 } from "react-icons/md";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-import useGetPlace from "../../hooks/useGetPlace";
+import useGetPlaceDetails from "../../hooks/google-api-hooks/useGetPlaceDetails";
 import useClosePlaceDetails from "../../hooks/useClosePlaceDetails";
 
 import styles from "./PlaceDetails.module.css";
-
-import PhotoGallery from "../../components/PhotoGallery/PhotoGallery";
 
 const PlaceDetails = () => {
   const [view, setView] = useState("half");
@@ -29,7 +27,7 @@ const PlaceDetails = () => {
   const handleClosePlace = useClosePlaceDetails();
 
   const { placeData, isPlaceDataLoading, isPlaceDataError, placeDataError } =
-    useGetPlace(placeId);
+    useGetPlaceDetails(placeId);
 
   useEffect(() => {
     console.log("placeData: ", placeData);

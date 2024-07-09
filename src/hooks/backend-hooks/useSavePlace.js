@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCurrentUser } from "aws-amplify/auth";
 
-import { savePlace } from "../api/placeApi";
+import { savePlace } from "../../api/placeApi";
 
-import { useSearchContext } from "../state/SearchContext";
+import { useSearchContext } from "../../state/SearchContext";
 
-import useGetPlace from "../hooks/useGetPlace";
+import useGetPlace from "../google-api-hooks/useGetPlaceDetails";
 
 const useSavePlace = () => {
   const [user, setUser] = useState(null);

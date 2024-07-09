@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAppContext } from "../../state/AppContext";
 
-import useGetPlace from "../../hooks/useGetPlace";
+import useGetPlace from "../../hooks/google-api-hooks/useGetPlaceDetails";
 import useClosePlaceDetails from "../../hooks/useClosePlaceDetails";
 
 import styles from "./PlaceDetailsCard.module.css";

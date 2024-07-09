@@ -2,18 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Map, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
 
 import MapComponent from "./MapComponent";
+import PlaceDetailsCard from "../PlaceDetailsCard/PlaceDetailsCard";
 
 import { useMapContext } from "../../state/MapContext";
 import { useAppContext } from "../../state/AppContext";
 import { useSearchContext } from "../../state/SearchContext";
 
 import useMarkerClick from "../../hooks/useMakerClick";
-import usePlacesTextSearch from "../../hooks/usePlacesTextSearch";
 
 import styles from "./MapView.module.css";
-import PlaceDetailsCard from "../PlaceDetailsCard/PlaceDetailsCard";
 
-const MapView = () => {
+const MapView = ({ placesResults }) => {
   const [placeId, setPlaceId] = useState(null);
   const [showPlaceDetailsCard, setShowPlaceDetailsCard] = useState(false);
   const handleMarkerClick = useMarkerClick();
@@ -21,13 +20,6 @@ const MapView = () => {
   const { userLocation } = useAppContext();
 
   const { center, setCenter, setZoom, zoom } = useMapContext();
-
-  const {
-    placesResults,
-    isPlacesResultsLoading,
-    isPlacesResultsError,
-    placesResultsError,
-  } = usePlacesTextSearch("");
 
   const { searchQuery, setAutoCompleteResults, selectedPlace } =
     useSearchContext();
@@ -37,6 +29,10 @@ const MapView = () => {
       setCenter(userLocation);
     }
   }, [userLocation]);
+
+  useEffect(() => {
+    console.log("placesResults: ", placesResults);
+  }, [placesResults]);
 
   useEffect(() => {
     console.log("selectedPlace: ", selectedPlace);
@@ -74,9 +70,9 @@ const MapView = () => {
         options={mapOptions}
       >
         <MapComponent setCenter={setCenter} setZoom={setZoom} />
-        {placesResults?.map((marker, index) => (
+        {placesResults?.map((marker) => (
           <AdvancedMarker
-            key={index}
+            key={marker.place_id}
             position={{
               lat: marker?.geometry.location.lat(),
               lng: marker?.geometry.location.lng(),
