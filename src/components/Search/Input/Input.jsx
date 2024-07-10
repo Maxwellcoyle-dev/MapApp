@@ -12,7 +12,8 @@ import useAutocomplete from "../../../hooks/google-api-hooks/useAutocomplete";
 import styles from "./Input.module.css";
 
 const Input = () => {
-  const { searchQuery, setSearchQuery, queryInput } = useSearchContext();
+  const { searchQuery, setSearchQuery, queryInput, setPlaceType } =
+    useSearchContext();
 
   const handleInputChange = useAutocomplete();
 
@@ -28,7 +29,7 @@ const Input = () => {
 
   return (
     <div className={styles.inputContainer}>
-      {searchQuery && (
+      {queryInput && (
         <div className={styles.buttonDiv}>
           <button
             className={styles.button}

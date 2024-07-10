@@ -15,18 +15,12 @@ const usePlacesSearch = () => {
 
   const { placeType, searchQuery } = useSearchContext();
 
-  useEffect(() => {
-    if (searchQuery) {
-      setSearchType("text");
-    } else {
-      setSearchType("nearby");
-    }
-  }, [searchQuery]);
-
   const fetchPlaces = async () => {
-    if (searchType === "nearby") {
+    if (!searchQuery) {
+      console.log("Fetching nearby places");
       return nearbySearch(placesLibrary, map, placeType);
     } else {
+      console.log("Fetching text search places");
       return textSearch(placesLibrary, map, searchQuery, placeType);
     }
   };

@@ -4,7 +4,8 @@ import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 import { useSearchContext } from "../../state/SearchContext";
 
 const useAutocomplete = () => {
-  const { setAutoCompleteResults, setQueryInput } = useSearchContext();
+  const { setAutoCompleteResults, setQueryInput, setSearchQuery } =
+    useSearchContext();
 
   const [autocompleteService, setAutocompleteService] = useState(null);
 
@@ -19,6 +20,12 @@ const useAutocomplete = () => {
 
   const handleInputChange = (event) => {
     setQueryInput(event.target.value);
+
+    if (event.target.value === "") {
+      setAutoCompleteResults([]);
+      setSearchQuery("");
+    }
+
     if (autocompleteService && event.target.value) {
       autocompleteService.getPlacePredictions(
         {

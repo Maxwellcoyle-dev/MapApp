@@ -30,8 +30,9 @@ export const nearbySearch = async (
   const request = {
     location: map.getCenter(),
     radius: 5000,
-    keyword: placeType,
-    rankBy: placesLibrary.RankBy.POPULARITY,
+    type: placeType,
+    // rankBy: placesLibrary.RankBy.DISTANCE,
+    priceLevel: placesLibrary.PriceLevel.VERY_EXPENSIVE,
   };
   console.log("nearby search - getPlaces function request -- ", request);
 
