@@ -33,10 +33,11 @@ export const lambdaHandler = async (event) => {
       userId,
       listId,
       place.place_id,
+      place.name,
       place.photos[0].url
     );
   } else {
-    await addPlaceToListItem(userId, listId, place.place_id, null);
+    await addPlaceToListItem(userId, listId, place.place_id, place.name, null);
   }
 
   return {
@@ -96,11 +97,25 @@ const savePlace = async (userId, listId, placeData) => {
   }
 };
 
-const addPlaceToListItem = async (userId, listId, placeId, photoUrl) => {
-  console.log("addPlaceToUserList -- ", userId, listId, placeId, photoUrl);
+const addPlaceToListItem = async (
+  userId,
+  listId,
+  placeId,
+  placeName,
+  photoUrl
+) => {
+  console.log(
+    "addPlaceToUserList -- ",
+    userId,
+    listId,
+    placeId,
+    placeName,
+    photoUrl
+  );
 
   const placeMap = {
     placeId: { S: placeId },
+    name: { S: placeName },
   };
 
   if (photoUrl) {
