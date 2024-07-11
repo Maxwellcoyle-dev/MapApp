@@ -23,7 +23,7 @@ export const fetchPlaceDetails = async (placesLibrary, map, placeId) => {
   });
 };
 
-const useGetPlace = (placeId) => {
+const useGetPlaceDetails = (placeId) => {
   const map = useMap();
   const placesLibrary = useMapsLibrary("places");
 
@@ -49,4 +49,4 @@ const useGetPlace = (placeId) => {
   };
 };
 
-export default useGetPlace;
+export default useGetPlaceDetails;

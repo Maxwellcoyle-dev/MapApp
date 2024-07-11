@@ -1,29 +1,39 @@
+// Libraries
 import React from "react";
 import { MdOutlineSearch, MdClear } from "react-icons/md";
+
+// State
 import { useSearchContext } from "../../../state/SearchContext";
-import useInputChange from "../../../hooks/useInputChange";
-import useTextSearch from "../../../hooks/useTextSearch";
+
+// Hooks
+import useAutocomplete from "../../../hooks/google-api-hooks/useAutocomplete";
+
+// styles
 import styles from "./Input.module.css";
 
 const Input = () => {
-  const { searchQuery } = useSearchContext();
+  const { searchQuery, setSearchQuery, queryInput, setPlaceType } =
+    useSearchContext();
 
-  const handleInputChange = useInputChange();
-  const handleTextSearch = useTextSearch();
+  const handleInputChange = useAutocomplete();
 
   const handleKeyDown = (event) => {
+    // if its not enter, but a letter then update the query input
+    if (event.key !== "Enter") {
+      handleInputChange(event);
+    }
     if (event.key === "Enter") {
-      handleTextSearch(searchQuery);
+      setSearchQuery(event.target.value);
     }
   };
 
   return (
     <div className={styles.inputContainer}>
-      {searchQuery && (
+      {queryInput && (
         <div className={styles.buttonDiv}>
           <button
             className={styles.button}
-            onClick={(event) => handleTextSearch(searchQuery)}
+            onClick={(event) => setSearchQuery(event.target.value)}
           >
             <MdOutlineSearch
               style={{
@@ -50,7 +60,7 @@ const Input = () => {
       <input
         type="text"
         placeholder="Enter a location"
-        value={searchQuery}
+        value={queryInput}
         onChange={handleInputChange}
         className={styles.input}
         onKeyDown={handleKeyDown}

@@ -1,18 +1,14 @@
+// Libraries
 import React, { useEffect } from "react";
 import { Spin } from "antd";
-import usePlacesTextSearch from "../../hooks/usePlacesTextSearch";
 
+// Components
 import ListCard from "./ListCard";
+
+// Styles
 import styles from "./ListView.module.css";
 
-const ListView = () => {
-  const {
-    placesResults,
-    isPlacesResultsLoading,
-    isPlacesResultsError,
-    placesResultsError,
-  } = usePlacesTextSearch("");
-
+const ListView = ({ placesResults, isPlacesResultsLoading }) => {
   useEffect(() => {
     console.log("ListView - placesResults:", placesResults);
   }, [placesResults]);

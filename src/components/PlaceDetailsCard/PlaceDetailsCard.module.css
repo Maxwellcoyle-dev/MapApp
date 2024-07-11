@@ -3,7 +3,7 @@
   z-index: 6;
   bottom: 3.5rem;
   left: 0.5rem;
-  height: 50%;
+  height: 55%;
   background: white;
   width: 95%;
   border-radius: 1.5rem;
@@ -12,24 +12,25 @@
   transition: bottom 0.3s ease;
 }
 
-.carouselContainer {
+.imageContainer {
   position: relative;
 }
 
-.imageContainer {
-  position: relative;
+.imageDiv {
   width: 100%;
-  height: 150px; /* Set this to whatever height you want for the images */
-  overflow: hidden; /* Ensure any overflow is hidden */
+  height: auto;
+  overflow: hidden;
+  max-height: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
+  border-radius: 1rem;
 }
 
 .cardImage {
   width: 100%;
-  height: 100%;
-  object-fit: cover; /* Ensures the image covers the container while maintaining aspect ratio */
+  height: 75%;
+  object-fit: cover;
 }
 
 .iconOverlayContainer {
@@ -54,10 +55,15 @@
   font-size: 24px;
 }
 
+.contentContainer {
+  padding: 0.5rem 1rem;
+}
+
 .headerDiv {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0.5rem 0 0.25rem 0;
 }
 
 .open {
@@ -79,4 +85,9 @@
 .ratingDiv {
   display: flex;
   align-items: center;
+  padding: 0 0.5rem 0.5rem 0;
+}
+
+.ratingStar {
+  margin-left: 0.25rem;
 }

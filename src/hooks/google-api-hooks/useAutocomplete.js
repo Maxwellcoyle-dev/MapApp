@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 
-import { useMapContext } from "../state/MapContext";
-import { useSearchContext } from "../state/SearchContext";
+import { useSearchContext } from "../../state/SearchContext";
 
-const useInputChange = () => {
-  const { setAutoCompleteResults, setSearchQuery } = useSearchContext();
+const useAutocomplete = () => {
+  const { setAutoCompleteResults, setQueryInput, setSearchQuery } =
+    useSearchContext();
 
   const [autocompleteService, setAutocompleteService] = useState(null);
 
@@ -19,7 +19,13 @@ const useInputChange = () => {
   }, [placesLibrary, map]);
 
   const handleInputChange = (event) => {
-    setSearchQuery(event.target.value);
+    setQueryInput(event.target.value);
+
+    if (event.target.value === "") {
+      setAutoCompleteResults([]);
+      setSearchQuery("");
+    }
+
     if (autocompleteService && event.target.value) {
       autocompleteService.getPlacePredictions(
         {
@@ -42,4 +48,4 @@ const useInputChange = () => {
   return handleInputChange;
 };
 
-export default useInputChange;
+export default useAutocomplete;

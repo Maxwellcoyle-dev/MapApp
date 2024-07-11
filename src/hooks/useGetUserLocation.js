@@ -10,6 +10,14 @@ const useGetUserLocation = () => {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             console.log("Position received:", position);
+            // add the users location to local storage
+            localStorage.setItem(
+              "mapAppUserLocation",
+              JSON.stringify({
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+              })
+            );
             setUserLocation({
               lat: position.coords.latitude,
               lng: position.coords.longitude,

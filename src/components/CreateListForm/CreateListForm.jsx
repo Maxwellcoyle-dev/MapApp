@@ -1,11 +1,14 @@
+// Libraries
 import React, { useState } from "react";
 import { Button, Form, Input, Radio } from "antd";
 
-import useCreateList from "../../hooks/useCreateList";
+// Hooks
+import useCreateList from "../../hooks/backend-hooks/useCreateList";
 
+// Styles
 import styles from "./CreateListForm.module.css";
 
-const CreateListForm = ({ setAddNewList, userId }) => {
+const CreateListForm = ({ setAddNewList }) => {
   const [listName, setListName] = useState("");
   const [listDescription, setListDescription] = useState("");
   const [publicList, setPublicList] = useState(true);

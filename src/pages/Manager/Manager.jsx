@@ -1,10 +1,12 @@
+// Libraries
 import React, { useState } from "react";
+import { Form, Radio } from "antd";
 
-import { Form, Input, Button, Radio } from "antd";
-
+// Components
 import ListManager from "../../components/ListManager/ListManager";
 import CategoryManager from "../../components/CategoryManager/CategoryManager";
 
+// Styles
 import styles from "./Manager.module.css";
 
 const Manager = () => {

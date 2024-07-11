@@ -14,7 +14,6 @@ import { withAuthenticator } from "@aws-amplify/ui-react";
 // Pages
 import Main from "./pages/Main/Main";
 import MyAccount from "./pages/MyAccount";
-import MyLists from "./pages/MyLists/MyLists";
 import Manager from "./pages/Manager/Manager";
 import List from "./pages/List";
 import PlaceDetails from "./pages/PlaceDetails/PlaceDetails";
@@ -34,6 +33,12 @@ function App({ signOut, user }) {
   const { userLocation, setUserLocation } = useAppContext();
 
   useEffect(() => {
+    // get the mapAppUserLocation from local storage
+    const userLocation = localStorage.getItem("mapAppUserLocation");
+    if (userLocation) {
+      setUserLocation(JSON.parse(userLocation));
+    }
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setUserLocation({
@@ -45,7 +50,11 @@ function App({ signOut, user }) {
     );
   }, []);
 
-  const { user: authUser } = useUser(user.userId);
+  const { authUser } = useUser(user);
+
+  useEffect(() => {
+    console.log(authUser);
+  }, [authUser]);
 
   return (
     <SearchProvider>
@@ -55,7 +64,6 @@ function App({ signOut, user }) {
             <Content>
               <Routes>
                 <Route path="/" element={<Main />} />
-                {/* <Route path="my-lists" element={<MyLists />} /> */}
                 <Route
                   path="/my-account"
                   element={<MyAccount signOut={signOut} />}

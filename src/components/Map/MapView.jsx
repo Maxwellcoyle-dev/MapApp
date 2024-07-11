@@ -1,34 +1,40 @@
-import React, { useEffect, useState } from "react";
+// Libraries
+import React, { useEffect } from "react";
 import { Map, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
 
+// Components
 import MapComponent from "./MapComponent";
+import PlaceDetailsCard from "../PlaceDetailsCard/PlaceDetailsCard";
 
+// State
 import { useMapContext } from "../../state/MapContext";
 import { useAppContext } from "../../state/AppContext";
 import { useSearchContext } from "../../state/SearchContext";
 
+// Hooks
 import useMarkerClick from "../../hooks/useMakerClick";
-import usePlacesTextSearch from "../../hooks/usePlacesTextSearch";
 
+// Styles
 import styles from "./MapView.module.css";
-import PlaceDetailsCard from "../PlaceDetailsCard/PlaceDetailsCard";
 
-const MapView = () => {
-  const [placeId, setPlaceId] = useState(null);
-  const [showPlaceDetailsCard, setShowPlaceDetailsCard] = useState(false);
+const mapOptions = {
+  zoomControl: false,
+  mapTypeControl: false,
+  scaleControl: false,
+  streetViewControl: false,
+  rotateControl: false,
+  fullscreenControl: false,
+  gestureHandling: "greedy",
+};
+
+const MapView = ({ placesResults, setView }) => {
+  // Custom hook to handle marker click
   const handleMarkerClick = useMarkerClick();
 
+  // Get user's location from AppContext
   const { userLocation } = useAppContext();
 
   const { center, setCenter, setZoom, zoom } = useMapContext();
-
-  const {
-    placesResults,
-    isPlacesResultsLoading,
-    isPlacesResultsError,
-    placesResultsError,
-  } = usePlacesTextSearch("");
-
   const { searchQuery, setAutoCompleteResults, selectedPlace } =
     useSearchContext();
 
@@ -37,20 +43,6 @@ const MapView = () => {
       setCenter(userLocation);
     }
   }, [userLocation]);
-
-  useEffect(() => {
-    console.log("selectedPlace: ", selectedPlace);
-  }, [selectedPlace]);
-
-  const mapOptions = {
-    zoomControl: false,
-    mapTypeControl: false,
-    scaleControl: false,
-    streetViewControl: false,
-    rotateControl: false,
-    fullscreenControl: false,
-    gestureHandling: "greedy",
-  };
 
   useEffect(() => {
     if (searchQuery === "") {
@@ -74,14 +66,15 @@ const MapView = () => {
         options={mapOptions}
       >
         <MapComponent setCenter={setCenter} setZoom={setZoom} />
-        {placesResults?.map((marker, index) => (
+        {placesResults?.map((marker) => (
           <AdvancedMarker
-            key={index}
+            key={marker.place_id}
             position={{
               lat: marker?.geometry.location.lat(),
               lng: marker?.geometry.location.lng(),
             }}
             onClick={() => {
+              setView("");
               handleMarkerClick(marker);
             }}
           >
@@ -96,9 +89,7 @@ const MapView = () => {
             )}
           </AdvancedMarker>
         ))}
-        {selectedPlace?.place_id && (
-          <PlaceDetailsCard placeId={selectedPlace?.place_id} />
-        )}
+        {selectedPlace?.place_id && <PlaceDetailsCard />}
       </Map>
     </div>
   );

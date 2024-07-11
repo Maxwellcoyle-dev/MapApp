@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCurrentUser } from "aws-amplify/auth";
 
-import { createList } from "../api/listApi";
+import { createList } from "../../api/listApi";
 
 // a hook that will take in list data and create a new list using useMutation - then trigger a new query to get the updated list data using hook useUserLists.js
 // listData = { userId, listName, listDescription, public: boolean }

@@ -1,13 +1,15 @@
+// Libraries
 import React, { useEffect, useState } from "react";
 import { getCurrentUser } from "aws-amplify/auth";
 import { MdClose } from "react-icons/md";
 import { Image } from "antd";
 
+// context
 import { useAppContext } from "../../state/AppContext";
 
 // hooks
-import useUserLists from "../../hooks/useUserLists";
-import useSavePlace from "../../hooks/useSavePlace";
+import useUserLists from "../../hooks/backend-hooks/useUserLists";
+import useSavePlace from "../../hooks/backend-hooks/useSavePlace";
 
 // styles & assets
 import styles from "./AddToList.module.css";
