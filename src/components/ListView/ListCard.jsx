@@ -1,5 +1,6 @@
 // Libraries
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Image, Skeleton } from "antd";
 import { FaRegHeart } from "react-icons/fa";
 import {
@@ -18,6 +19,8 @@ const ListCard = ({ place }) => {
   const [isOpen, setIsOpen] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const { setShowAddToList } = useAppContext();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (place && place.photos && place.photos.length > 0) {
@@ -54,7 +57,10 @@ const ListCard = ({ place }) => {
       ) : (
         <>
           <div className={styles.imageContainer}>
-            <div className={styles.imageDiv}>
+            <div
+              className={styles.imageDiv}
+              onClick={() => navigate(`/place/${place.place_id}`)}
+            >
               {imageUrl ? (
                 <Image
                   src={imageUrl}
@@ -74,7 +80,10 @@ const ListCard = ({ place }) => {
               </div>
             </div>
           </div>
-          <div className={styles.headerDiv}>
+          <div
+            className={styles.headerDiv}
+            onClick={() => navigate(`/place/${place.place_id}`)}
+          >
             <h3>{place?.name}</h3>
             {isOpen !== null && (
               <p className={isOpen ? styles.open : styles.closed}>
@@ -82,7 +91,10 @@ const ListCard = ({ place }) => {
               </p>
             )}
           </div>
-          <div className={styles.infoDiv}>
+          <div
+            className={styles.infoDiv}
+            onClick={() => navigate(`/place/${place.place_id}`)}
+          >
             <div className={styles.ratingDiv}>
               <p>{place?.rating}</p>
               {[1, 2, 3, 4, 5].map((star) => {

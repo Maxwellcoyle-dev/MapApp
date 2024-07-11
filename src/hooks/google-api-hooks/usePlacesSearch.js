@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 
+import { useMapContext } from "../../state/MapContext";
 import { useSearchContext } from "../../state/SearchContext";
 
 import { textSearch } from "./place-search-functions/textSearch";
 import { nearbySearch } from "./place-search-functions/nearbySearch";
+import { useEffect } from "react";
 
 const usePlacesSearch = () => {
-  const [searchType, setSearchType] = useState("nearby");
-
   const map = useMap();
   const placesLibrary = useMapsLibrary("places");
 

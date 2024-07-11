@@ -27,7 +27,7 @@ const mapOptions = {
   gestureHandling: "greedy",
 };
 
-const MapView = ({ placesResults }) => {
+const MapView = ({ placesResults, setView }) => {
   // Custom hook to handle marker click
   const handleMarkerClick = useMarkerClick();
 
@@ -74,6 +74,7 @@ const MapView = ({ placesResults }) => {
               lng: marker?.geometry.location.lng(),
             }}
             onClick={() => {
+              setView("");
               handleMarkerClick(marker);
             }}
           >
@@ -88,9 +89,7 @@ const MapView = ({ placesResults }) => {
             )}
           </AdvancedMarker>
         ))}
-        {selectedPlace?.place_id && (
-          <PlaceDetailsCard placeId={selectedPlace?.place_id} />
-        )}
+        {selectedPlace?.place_id && <PlaceDetailsCard />}
       </Map>
     </div>
   );

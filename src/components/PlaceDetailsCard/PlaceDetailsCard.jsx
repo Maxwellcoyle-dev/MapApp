@@ -1,131 +1,148 @@
 // Libraries
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Image, Skeleton } from "antd";
 import { FaRegHeart } from "react-icons/fa";
 import {
-  MdClose,
   MdOutlineStar,
-  MdOutlineStarBorder,
   MdOutlineStarHalf,
+  MdOutlineStarBorder,
+  MdClose,
 } from "react-icons/md";
-import { Carousel, Card } from "antd";
 
 // State
 import { useAppContext } from "../../state/AppContext";
-
-// Hooks
-import useGetPlace from "../../hooks/google-api-hooks/useGetPlaceDetails";
-import useClosePlaceDetails from "../../hooks/useClosePlaceDetails";
+import { useSearchContext } from "../../state/SearchContext";
+import { useMapContext } from "../../state/MapContext";
 
 // Styles
 import styles from "./PlaceDetailsCard.module.css";
 
-const { Meta } = Card;
-
-const PlaceDetailsCard = ({ placeId }) => {
-  const [todaysHours, setTodaysHours] = useState(null);
+const PlaceDetailsCard = () => {
+  const [isOpen, setIsOpen] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
 
   const { setShowAddToList } = useAppContext();
+  const { selectedPlace, setSelectedPlace } = useSearchContext();
+  const { setZoom, setCenter } = useMapContext();
 
-  const { placeData } = useGetPlace(placeId);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("placeData: ", placeData);
+    if (
+      selectedPlace &&
+      selectedPlace.photos &&
+      selectedPlace.photos.length > 0
+    ) {
+      const image = selectedPlace.photos[0].getUrl();
+      setImageUrl(image);
+    } else {
+      setImageUrl(null);
+    }
+  }, [selectedPlace]);
 
-    if (!placeData?.current_opening_hours) return;
+  useEffect(() => {
+    let open = selectedPlace?.opening_hours?.isOpen
+      ? selectedPlace.opening_hours.isOpen()
+      : null;
+    setIsOpen(open);
+  }, [selectedPlace]);
 
-    const date = new Date();
-    const day = date.getDay();
-    const hours = placeData?.current_opening_hours?.periods?.find(
-      (period) => period?.open?.day === day
+  if (!selectedPlace) {
+    return (
+      <div>
+        <Skeleton.Image className={styles.cardImage} />
+        <Skeleton active />
+      </div>
     );
-    console.log("hours: ", hours);
-
-    const convertTo12HourFormat = (time) => {
-      let hour = parseInt(time?.slice(0, 2));
-      let minute = time?.slice(2);
-      let period = hour >= 12 ? "PM" : "AM";
-      hour = hour % 12 || 12; // Convert hour to 12-hour format
-      return `${hour}:${minute} ${period}`;
-    };
-    const todaysHours = {
-      open: convertTo12HourFormat(hours?.open?.time),
-      close: convertTo12HourFormat(hours?.close?.time),
-    };
-
-    setTodaysHours(todaysHours);
-  }, [placeData]);
-
-  const handleClosePlace = useClosePlaceDetails();
+  }
 
   return (
-    <Card
-      hoverable
-      className={styles.card}
-      cover={
-        <div className={styles.carouselContainer}>
-          <Carousel>
-            {placeData?.photos?.map((photo, index) => (
-              <div key={index} className={styles.imageContainer}>
-                <img
-                  src={photo.getUrl()}
-                  alt="example"
+    <div className={styles.card}>
+      {!selectedPlace ? (
+        <div>
+          <Skeleton.Image className={styles.cardImage} />
+          <Skeleton active />
+        </div>
+      ) : (
+        <>
+          <div className={styles.imageContainer}>
+            <div
+              className={styles.imageDiv}
+              onClick={() => navigate(`/place/${selectedPlace.place_id}`)}
+            >
+              {imageUrl ? (
+                <Image
+                  src={imageUrl}
                   className={styles.cardImage}
+                  preview={false}
                 />
-              </div>
-            ))}
-          </Carousel>
-
-          <div className={styles.iconOverlayContainer}>
-            <div
-              className={styles.iconContainer}
-              onClick={() => setShowAddToList(true)}
-            >
-              <FaRegHeart className={styles.overlayIcon} />
+              ) : (
+                <Skeleton.Image className={styles.cardImage} />
+              )}
             </div>
-            <div
-              className={styles.iconContainer}
-              onClick={() => handleClosePlace()}
-            >
-              <MdClose className={styles.overlayIcon} />
+            <div className={styles.iconOverlayContainer}>
+              <div
+                className={styles.iconContainer}
+                onClick={() => setShowAddToList(true)}
+              >
+                <FaRegHeart className={styles.overlayIcon} />
+              </div>
+              <div
+                className={styles.iconContainer}
+                onClick={() => {
+                  setSelectedPlace(null);
+                  navigate("/");
+                  setZoom(12);
+                }}
+              >
+                <MdClose className={styles.overlayIcon} />
+              </div>
             </div>
           </div>
-        </div>
-      }
-    >
-      <div className={styles.headerDiv}>
-        <h3>{placeData?.name}</h3>
-        <p>{}</p>
-        {placeData?.current_opening_hours.open_now ? (
-          <p className={styles.open}>Open</p>
-        ) : (
-          <p className={styles.closed}>Closed</p>
-        )}
-      </div>
-      <div className={styles.infoDiv}>
-        <div className={styles.ratingDiv}>
-          <p>{placeData?.rating}</p>
-          {[1, 2, 3, 4, 5].map((star) => {
-            if (placeData?.rating >= star) {
-              return <MdOutlineStar key={star} className={styles.ratingStar} />;
-            } else if (placeData?.rating >= star - 0.5) {
-              return (
-                <MdOutlineStarHalf key={star} className={styles.ratingStar} />
-              );
-            } else {
-              return (
-                <MdOutlineStarBorder key={star} className={styles.ratingStar} />
-              );
-            }
-          })}
-          <p>({placeData?.user_ratings_total} reviews)</p>
-        </div>
-        <div className={styles.hoursDiv}>
-          <p>
-            Today: {todaysHours?.open} - {todaysHours?.close}
-          </p>
-        </div>
-      </div>
-    </Card>
+          <div
+            className={styles.contentContainer}
+            onClick={() => navigate(`/place/${selectedPlace.place_id}`)}
+          >
+            <div className={styles.headerDiv}>
+              <h3>{selectedPlace?.name}</h3>
+              {isOpen !== null && (
+                <p className={isOpen ? styles.open : styles.closed}>
+                  {isOpen ? "Open" : "Closed"}
+                </p>
+              )}
+            </div>
+            <div className={styles.infoDiv}>
+              <div className={styles.ratingDiv}>
+                <p>{selectedPlace?.rating}</p>
+                {[1, 2, 3, 4, 5].map((star) => {
+                  if (selectedPlace?.rating >= star) {
+                    return (
+                      <MdOutlineStar key={star} className={styles.ratingStar} />
+                    );
+                  } else if (selectedPlace?.rating >= star - 0.5) {
+                    return (
+                      <MdOutlineStarHalf
+                        key={star}
+                        className={styles.ratingStar}
+                      />
+                    );
+                  } else {
+                    return (
+                      <MdOutlineStarBorder
+                        key={star}
+                        className={styles.ratingStar}
+                      />
+                    );
+                  }
+                })}
+                <p>({selectedPlace?.user_ratings_total} reviews)</p>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
   );
 };
 

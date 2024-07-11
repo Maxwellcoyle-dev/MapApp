@@ -33,6 +33,12 @@ function App({ signOut, user }) {
   const { userLocation, setUserLocation } = useAppContext();
 
   useEffect(() => {
+    // get the mapAppUserLocation from local storage
+    const userLocation = localStorage.getItem("mapAppUserLocation");
+    if (userLocation) {
+      setUserLocation(JSON.parse(userLocation));
+    }
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setUserLocation({
@@ -44,7 +50,11 @@ function App({ signOut, user }) {
     );
   }, []);
 
-  const { user: authUser } = useUser(user.userId);
+  const { authUser } = useUser(user);
+
+  useEffect(() => {
+    console.log(authUser);
+  }, [authUser]);
 
   return (
     <SearchProvider>

@@ -30,19 +30,21 @@ const Main = () => {
   return (
     <div className={styles.mainContainer}>
       <SearchBar />
-      <MapView placesResults={placesResults} />
+      <MapView placesResults={placesResults} setView={setView} />
       {view === "list" && (
         <ListView
           placesResults={placesResults}
           isPlacesResultsLoading={isPlacesResultsLoading}
+          setView={setView}
         />
       )}
       {showAddToList && <AddToList />}
-      {view === "map" ? (
+      {view === "map" && (
         <div className={styles.toggleButtonDiv} onClick={() => setView("list")}>
           <MdFormatListBulleted className={styles.viewToggleIcon} />
         </div>
-      ) : (
+      )}
+      {view === "list" && (
         <div className={styles.toggleButtonDiv} onClick={() => setView("map")}>
           <MdOutlineMap className={styles.viewToggleIcon} />
         </div>
