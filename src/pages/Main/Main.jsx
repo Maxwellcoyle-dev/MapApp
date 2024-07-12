@@ -1,5 +1,5 @@
 // Libraries
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MdFormatListBulleted, MdOutlineMap } from "react-icons/md";
 
 // Components
@@ -26,6 +26,10 @@ const Main = () => {
   const { placesResults, isPlacesResultsLoading } = usePlacesSearch();
 
   const { showAddToList } = useAppContext();
+
+  useEffect(() => {
+    setView("map");
+  }, []);
 
   return (
     <div className={styles.mainContainer}>

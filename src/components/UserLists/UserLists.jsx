@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import styles from "./UserLists.module.css";
 
 const UserLists = (userLists) => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    console.log(userLists);
+  }, [userLists]);
   return (
     userLists && (
       <div className={styles.listContainer}>
@@ -12,7 +17,13 @@ const UserLists = (userLists) => {
           ).toLocaleDateString();
 
           return (
-            <div className={styles.listDiv} key={list.listId.S}>
+            <div
+              className={styles.listDiv}
+              key={list.listId.S}
+              onClick={() =>
+                navigate(`/list/${list.listId.S}`, { state: list })
+              }
+            >
               <h2>{list.listName.S}</h2>
               <p>Description: {list.description?.S || "Add description"}</p>
               <p>Created on: {createdAt}</p>

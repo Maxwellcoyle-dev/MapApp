@@ -13,6 +13,10 @@ import {
   MdOutlineRestaurant,
 } from "react-icons/md";
 import { useParams } from "react-router-dom";
+import { Carousel, Image } from "antd";
+
+// Components
+import PhotoDisplay from "../../components/PhotoDisplay/PhotoDisplay";
 
 // Hooks
 import useGetPlaceDetails from "../../hooks/google-api-hooks/useGetPlaceDetails";
@@ -36,20 +40,18 @@ const PlaceDetails = () => {
     <div className={styles.placeDetailsDiv}>
       {placeData && (
         <>
-          <div className={styles.controlDiv}>
-            <div className={styles.swipeDiv}></div>
-          </div>
           <div className={styles.optionsDiv}>
-            <button className={styles.button}>
+            <div className={styles.optionsIconDiv}>
               <MdLabelOutline className={styles.icon} />
-            </button>
-            <button className={styles.button}>
+            </div>
+            <div className={styles.optionsIconDiv}>
               <MdFormatListBulletedAdd className={styles.icon} />
-            </button>
-            <button className={styles.button} onClick={handleClosePlace}>
+            </div>
+            <div className={styles.optionsIconDiv} onClick={handleClosePlace}>
               <MdClose className={styles.icon} />
-            </button>
+            </div>
           </div>
+          <PhotoDisplay placeData={placeData} />
           <div className={styles.headerDiv}>
             <h2>{placeData.name}</h2>
             {placeData.types.includes("cafe") && (
@@ -71,7 +73,7 @@ const PlaceDetails = () => {
               );
             }}
           >
-            <p>{placeData.address}</p>
+            <p>{placeData.formatted_address}</p>
             <MdDirections className={styles.directionsIcon} />
           </div>
           <div className={styles.ratingsDiv}>
