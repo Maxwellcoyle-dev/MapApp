@@ -38,6 +38,7 @@ const useSavePlace = () => {
           url: photo?.getUrl(),
         })),
       };
+      console.log("processedPlaceData: ", processedPlaceData);
       return savePlace({
         userId: user?.userId,
         listId,
