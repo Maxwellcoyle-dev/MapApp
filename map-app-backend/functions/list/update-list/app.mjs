@@ -5,6 +5,12 @@ const LISTS_TABLE = "MapAppListsTable";
 const GSI_NAME = "userIdIndex";
 const dbclient = new DynamoDBClient({ region: REGION });
 
+/*
+listName
+description
+public
+*/
+
 const headers = {
   "Access-Control-Allow-Origin": "*", // Allow all origins
   "Access-Control-Allow-Methods": "OPTIONS,PUT", // Allowed methods
@@ -13,7 +19,16 @@ const headers = {
 
 export const lambdaHandler = async (event) => {
   console.log("Event: ", event);
-  const userId = event.queryStringParameters.userId;
+
+  const body = JSON.parse(event.body);
+
+  const userId = body.userId;
+  console.log("userId -- ", userId);
+  const listId = body.listId;
+  console.log("listId -- ", listId);
+  const place = body.place;
+  console.log("place -- ", place);
+
   console.log("userId: ", userId);
 
   if (!userId) {
@@ -29,35 +44,42 @@ export const lambdaHandler = async (event) => {
 
   const params = {
     TableName: LISTS_TABLE,
-    IndexName: GSI_NAME,
-    KeyConditionExpression: "userId = :userId",
+    Key: {
+      listId: { S: listId },
+      userId: { S: userId },
+    },
+    UpdateExpression: "set #desc = :d, #listName = :ln, #public = :p",
+    ExpressionAttributeNames: {
+      "#desc": "description",
+      "#listName": "listName",
+      "#public": "public",
+    },
     ExpressionAttributeValues: {
-      ":userId": { S: userId },
+      ":d": { S: "New description value" }, // New value for description
+      ":ln": { S: "New list name value" }, // New value for listName
+      ":p": { BOOL: true }, // New value for public
     },
   };
 
+  const params = {
+    TableName: LISTS_TABLE,
+    Key: {
+      listId: { S: listId },
+      userId: { S: userId },
+    },
+    UpdateExpression:
+      "SET places = list_append(if_not_exists(places, :emptyList), :place)",
+    ExpressionAttributeValues: {
+      ":place": { L: [{ M: placeMap }] },
+      ":emptyList": { L: [] },
+    },
+  };
+  console.log("params", params);
+  const command = new UpdateItemCommand(params);
   try {
-    console.log("Scanning lists...");
-    const data = await dbclient.send(new QueryCommand(params));
-    console.log("Data: ", data);
-    console.log("data.Items: ", data.Items);
-
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({
-        message: "Lists scanned",
-        data: data.Items,
-      }),
-    };
-  } catch (error) {
-    console.error("Error scanning lists: ", error);
-    return {
-      statusCode: 500,
-      headers,
-      body: JSON.stringify({
-        message: "Error scanning lists",
-      }),
-    };
+    await dbclient.send(command);
+    console.log("Place added to user list successfully");
+  } catch (err) {
+    console.error("Error adding place to user list", err);
   }
 };
