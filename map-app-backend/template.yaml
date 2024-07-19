@@ -44,7 +44,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppUserTable
+          USER_TABLE: !Ref MapAppUserTable
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref MapAppUserTable
@@ -67,7 +67,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppUserTable
+          USER_TABLE: !Ref MapAppUserTable
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref MapAppUserTable
@@ -77,7 +77,7 @@ Resources:
         UpdateUser:
           Type: Api
           Properties:
-            Path: /user
+            Path: /user/{userId}
             Method: put
             RestApiId: !Ref MappAppAPI
   DeleteUserFunction:
@@ -261,6 +261,9 @@ Resources:
           KeyType: "HASH"
         - AttributeName: "userId"
           KeyType: "RANGE"
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
       GlobalSecondaryIndexes:
         - IndexName: listId-index
           KeySchema:
@@ -268,9 +271,9 @@ Resources:
               KeyType: HASH
           Projection:
             ProjectionType: ALL
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
   # GetPlaceFunction:
   #   Type: "AWS::Serverless::Function"
   #   Properties:
