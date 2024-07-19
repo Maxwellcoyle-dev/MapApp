@@ -25,7 +25,9 @@ const UserLists = (userLists) => {
               }
             >
               <h2>{list.listName.S}</h2>
-              <p>Description: {list.description?.S || "Add description"}</p>
+              <p>
+                {list.description?.S && `Description: ${list.description.S}`}
+              </p>
               <p>Created on: {createdAt}</p>
               <p>Number of Places: {list.places?.L.length || 0}</p>
             </div>

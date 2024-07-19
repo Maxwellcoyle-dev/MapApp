@@ -15,7 +15,6 @@ const NavBar = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.log(location.pathname);
     setCurrentTab(location.pathname);
   }, [location]);
 

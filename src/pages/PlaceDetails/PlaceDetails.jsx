@@ -13,7 +13,6 @@ import {
   MdOutlineRestaurant,
 } from "react-icons/md";
 import { useParams } from "react-router-dom";
-import { Carousel, Image } from "antd";
 
 // Components
 import PhotoDisplay from "../../components/PhotoDisplay/PhotoDisplay";

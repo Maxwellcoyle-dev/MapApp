@@ -20,10 +20,6 @@ const SearchBar = () => {
 
   const handleAutoCompleteSelect = useAutoCompleteSelect();
 
-  useEffect(() => {
-    console.log(autoCompleteResults);
-  }, [autoCompleteResults]);
-
   return (
     <div className={styles.searchBarContainer}>
       <Input />

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button, Input, List, Modal, Tag } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import useUser from "../../hooks/useUser";
+import useUser from "../../hooks/backend-hooks/useUser";
+import useManageCategories from "../../hooks/backend-hooks/useManageCategories";
 
 import styles from "./CategoryManager.module.css";
 
@@ -11,9 +12,12 @@ const CategoryManager = () => {
   const [newTagName, setNewTagName] = useState("");
   const [currentCategory, setCurrentCategory] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
   const { authUser } = useUser();
+  const { manageCategoriesMutation } = useManageCategories();
 
   useEffect(() => {
+    console.log(authUser);
     if (authUser?.data.categories) {
       setCategories(authUser.data.categories);
     }
@@ -28,19 +32,27 @@ const CategoryManager = () => {
       name: newCategoryName,
       tags: [],
     };
-    setCategories([...categories, newCategory]);
+    const updatedCategories = [...categories, newCategory];
+    manageCategoriesMutation.mutate({
+      userId: authUser.data.userId,
+      categories: updatedCategories,
+    });
     setNewCategoryName("");
   };
 
   const handleRemoveCategory = (categoryId) => {
-    setCategories(
-      categories.filter((category) => category.categoryId !== categoryId)
+    const updatedCategories = categories.filter(
+      (category) => category.categoryId !== categoryId
     );
+    manageCategoriesMutation.mutate({
+      userId: authUser.data.userId,
+      categories: updatedCategories,
+    });
   };
 
-  const handleAddTag = (category) => {
+  const handleAddTag = () => {
     const updatedCategories = categories.map((cat) => {
-      if (cat.categoryId === category.categoryId) {
+      if (cat.categoryId === currentCategory.categoryId) {
         return {
           ...cat,
           tags: [
@@ -51,7 +63,10 @@ const CategoryManager = () => {
       }
       return cat;
     });
-    setCategories(updatedCategories);
+    manageCategoriesMutation.mutate({
+      userId: authUser.data.userId,
+      categories: updatedCategories,
+    });
     setNewTagName("");
     setIsModalVisible(false);
   };
@@ -66,7 +81,10 @@ const CategoryManager = () => {
       }
       return category;
     });
-    setCategories(updatedCategories);
+    manageCategoriesMutation.mutate({
+      userId: authUser.data.userId,
+      categories: updatedCategories,
+    });
   };
 
   const showModal = (category) => {

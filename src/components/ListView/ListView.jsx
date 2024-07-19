@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Spin } from "antd";
 
 // Components
-import ListCard from "./ListCard";
+import ListCard from "../ListCard/ListCard";
 
 // Styles
 import styles from "./ListView.module.css";
