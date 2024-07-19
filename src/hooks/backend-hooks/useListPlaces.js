@@ -1,0 +1,22 @@
+import { useQuery } from "@tanstack/react-query";
+import { scanPlaces } from "../../api/placeApi";
+
+const useListPlaces = (listId) => {
+  console.log("listId", listId);
+  const {
+    data: listPlacesData,
+    error: listPlacesDataError,
+    isLoading: isListPlacesDataLoading,
+  } = useQuery({
+    queryKey: ["list places", listId],
+    queryFn: () => scanPlaces(listId),
+    retry: false,
+    enabled: !!listId,
+    refetchOnMount: false,
+    staleTime: 1000 * 60 * 60,
+  });
+
+  return { listPlacesData, listPlacesDataError, isListPlacesDataLoading };
+};
+
+export default useListPlaces;

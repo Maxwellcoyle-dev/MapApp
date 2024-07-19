@@ -254,11 +254,20 @@ Resources:
           AttributeType: "S"
         - AttributeName: "userId"
           AttributeType: "S"
+        - AttributeName: "listId"
+          AttributeType: "S"
       KeySchema:
         - AttributeName: "placeId"
           KeyType: "HASH"
         - AttributeName: "userId"
           KeyType: "RANGE"
+      GlobalSecondaryIndexes:
+        - IndexName: listId-index
+          KeySchema:
+            - AttributeName: listId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
@@ -283,27 +292,27 @@ Resources:
   #           Path: /place/{placeId}
   #           Method: get
   #           RestApiId: !Ref MappAppAPI
-  # ScanPlacesFunction:
-  #   Type: "AWS::Serverless::Function"
-  #   Properties:
-  #     Handler: app.lambdaHandler
-  #     Runtime: nodejs20.x
-  #     CodeUri: "./functions/place/scan-places"
-  #     Architectures:
-  #       - x86_64
-  #     Environment:
-  #       Variables:
-  #         TABLE_NAME: !Ref MapAppPlacesTable
-  #     Policies:
-  #       - DynamoDBReadPolicy:
-  #           TableName: !Ref MapAppPlacesTable
-  #     Events:
-  #       ScanPlaces:
-  #         Type: Api
-  #         Properties:
-  #           Path: /places
-  #           Method: get
-  #           RestApiId: !Ref MappAppAPI
+  ScanPlacesFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: "./functions/place/scan-places"
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          PLACES_TABLE: !Ref MapAppPlacesTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref MapAppPlacesTable
+      Events:
+        ScanPlaces:
+          Type: Api
+          Properties:
+            Path: /places
+            Method: get
+            RestApiId: !Ref MappAppAPI
   CreatePlaceFunction:
     Type: "AWS::Serverless::Function"
     Properties:
@@ -487,3 +496,10 @@ Outputs:
   CreatePlaceFunctionIamRole:
     Description: "Implicit IAM Role created for Create Place function"
     Value: !GetAtt CreatePlaceFunctionRole.Arn
+
+  ScanPlacesApi:
+    Description: "API Gateway endpoint URL for Scan Places function"
+    Value: !Sub "https://${MappAppAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/places/"
+  ScanPlacesFunctionArn:
+    Description: "ARN of the ScanPlaces Lambda function"
+    Value: !GetAtt ScanPlacesFunction.Arn

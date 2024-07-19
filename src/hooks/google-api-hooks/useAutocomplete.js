@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
-
 import { useSearchContext } from "../../state/SearchContext";
 
 const useAutocomplete = () => {
   const { setAutoCompleteResults, setQueryInput, setSearchQuery } =
     useSearchContext();
-
   const [autocompleteService, setAutocompleteService] = useState(null);
 
   const map = useMap();
@@ -19,20 +17,25 @@ const useAutocomplete = () => {
   }, [placesLibrary, map]);
 
   const handleInputChange = (event) => {
-    setQueryInput(event.target.value);
+    const inputValue = event.target.value;
+    setQueryInput(inputValue);
 
-    if (event.target.value === "") {
+    if (inputValue === "") {
       setAutoCompleteResults([]);
       setSearchQuery("");
+      return;
     }
 
-    if (autocompleteService && event.target.value) {
+    if (autocompleteService) {
+      const request = {
+        input: inputValue,
+        types: ["establishment"],
+        location: map.getCenter(),
+        radius: 5000, // setting a radius in meters (optional)
+      };
+
       autocompleteService.getPlacePredictions(
-        {
-          input: event.target.value,
-          types: ["establishment"],
-          locationBias: map.getCenter(),
-        },
+        request,
         (predictions, status) => {
           if (status === window.google.maps.places.PlacesServiceStatus.OK) {
             console.log("Predictions: ", predictions);

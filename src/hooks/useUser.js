@@ -4,6 +4,8 @@ import { getUser } from "../api/userApi";
 import { fetchUserAttributes } from "aws-amplify/auth";
 
 const useUser = (userData) => {
+  console.log(userData);
+
   const [userAttributes, setUserAttributes] = useState({
     email: "",
     userId: userData.userId,
