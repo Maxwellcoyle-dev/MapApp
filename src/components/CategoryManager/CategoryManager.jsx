@@ -16,12 +16,12 @@ const CategoryManager = () => {
       .catch((error) => console.error(error));
   }, []);
 
-  useEffect(() => {
-    console.log(authUser?.data.categories);
-    if (authUser?.data.categories) {
-      setCategories(authUser?.data.categories);
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   console.log(authUser?.data.categories);
+  //   if (authUser?.data.categories) {
+  //     setCategories(authUser?.data.categories);
+  //   }
+  // }, [user]);
 
   return <div>CategoryManager</div>;
 };

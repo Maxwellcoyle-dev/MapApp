@@ -202,7 +202,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppListsTable
+          LIST_TABLE: !Ref MapAppListsTable
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref MapAppListsTable

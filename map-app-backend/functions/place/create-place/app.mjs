@@ -128,6 +128,25 @@ const addPlaceToListItem = async (
       listId: { S: listId },
       userId: { S: userId },
     },
+    UpdateExpression: "set #desc = :d, #listName = :ln, #public = :p",
+    ExpressionAttributeNames: {
+      "#desc": "description",
+      "#listName": "listName",
+      "#public": "public",
+    },
+    ExpressionAttributeValues: {
+      ":d": { S: "New description value" }, // New value for description
+      ":ln": { S: "New list name value" }, // New value for listName
+      ":p": { BOOL: true }, // New value for public
+    },
+  };
+
+  const params = {
+    TableName: LISTS_TABLE,
+    Key: {
+      listId: { S: listId },
+      userId: { S: userId },
+    },
     UpdateExpression:
       "SET places = list_append(if_not_exists(places, :emptyList), :place)",
     ExpressionAttributeValues: {

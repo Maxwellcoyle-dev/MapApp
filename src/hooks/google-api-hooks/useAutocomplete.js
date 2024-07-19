@@ -34,6 +34,7 @@ const useAutocomplete = () => {
         radius: 5000, // setting a radius in meters (optional)
       };
 
+      console.log("making the request");
       autocompleteService.getPlacePredictions(
         request,
         (predictions, status) => {
