@@ -40,6 +40,7 @@ const list = {
   places: [
     {
       placeId: 1, // google place_id - reference the placeId - primary key of place table
+      photo: "url", // url to the photo
     },
   ],
   public: false, // if true, list is shareable
