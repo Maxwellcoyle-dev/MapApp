@@ -23,13 +23,10 @@ export const lambdaHandler = async (event) => {
   const body = JSON.parse(event.body);
 
   const userId = body.userId;
-  console.log("userId -- ", userId);
   const listId = body.listId;
-  console.log("listId -- ", listId);
-  const place = body.place;
-  console.log("place -- ", place);
-
-  console.log("userId: ", userId);
+  const listName = body.listName || null;
+  const description = body.description || null;
+  const public = body.public || null;
 
   if (!userId) {
     console.error("No userId is present");
@@ -42,40 +39,49 @@ export const lambdaHandler = async (event) => {
     };
   }
 
-  const params = {
-    TableName: LISTS_TABLE,
-    Key: {
-      listId: { S: listId },
-      userId: { S: userId },
-    },
-    UpdateExpression: "set #desc = :d, #listName = :ln, #public = :p",
-    ExpressionAttributeNames: {
-      "#desc": "description",
-      "#listName": "listName",
-      "#public": "public",
-    },
-    ExpressionAttributeValues: {
-      ":d": { S: "New description value" }, // New value for description
-      ":ln": { S: "New list name value" }, // New value for listName
-      ":p": { BOOL: true }, // New value for public
-    },
-  };
+const primaryKey = { "listId": { S: listId } }; 
 
-  const params = {
-    TableName: LISTS_TABLE,
-    Key: {
-      listId: { S: listId },
-      userId: { S: userId },
-    },
-    UpdateExpression:
-      "SET places = list_append(if_not_exists(places, :emptyList), :place)",
-    ExpressionAttributeValues: {
-      ":place": { L: [{ M: placeMap }] },
-      ":emptyList": { L: [] },
-    },
+const params = {
+  TableName: LISTS_TABLE,
+  Key: primaryKey,
+  UpdateExpression: "",
+  ExpressionAttributeNames: {},
+  ExpressionAttributeValues: {}
+};
+
+// Build the update expression dynamically
+const updates = [];
+if (description !== null) {
+  updates.push("#description = :d");
+  params.ExpressionAttributeNames["#description"] = "description";
+  params.ExpressionAttributeValues[":d"] = { S: description };
+}
+if (listName !== null) {
+  updates.push("#listName = :ln");
+  params.ExpressionAttributeNames["#listName"] = "listName";
+  params.ExpressionAttributeValues[":ln"] = { S: listName };
+}
+if (public !== null) {
+  updates.push("#public = :p");
+  params.ExpressionAttributeNames["#public"] = "public";
+  params.ExpressionAttributeValues[":p"] = { BOOL: public };
+}
+
+// Combine the update expressions
+if (updates.length > 0) {
+  params.UpdateExpression = "set " + updates.join(", ");
+}
+
+// Only send the update command if there are updates
+if (updates.length > 0) {
+  const run = async () => {
+    try {
+      const data = await client.send(new UpdateItemCommand(params));
+      console.log("Success", data);
+    } catch (err) {
+      console.error("Error", err);
+    }
   };
-  console.log("params", params);
-  const command = new UpdateItemCommand(params);
   try {
     await dbclient.send(command);
     console.log("Place added to user list successfully");
