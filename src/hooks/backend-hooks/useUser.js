@@ -1,22 +1,19 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getUser } from "../api/userApi";
+import { getUser } from "../../api/userApi";
 import { fetchUserAttributes } from "aws-amplify/auth";
 
-const useUser = (userData) => {
-  console.log(userData);
-
+const useUser = () => {
   const [userAttributes, setUserAttributes] = useState({
     email: "",
-    userId: userData.userId,
+    userId: "",
   });
 
   useEffect(() => {
     fetchUserAttributes()
       .then((user) => {
-        console.log(user);
         setUserAttributes((prev) => ({
-          ...prev,
+          userId: user.sub,
           email: user.email,
         }));
       })
@@ -28,7 +25,7 @@ const useUser = (userData) => {
     error: authUserError,
     isLoading: isAuthUserLoading,
   } = useQuery({
-    queryKey: ["user", userAttributes],
+    queryKey: ["user", userAttributes.userId],
     queryFn: () => getUser(userAttributes.userId, userAttributes.email),
     retry: false, // Do not retry if the user does not exist
     enabled: !!userAttributes.userId && !!userAttributes.email, // Only run the query if userId and email address are provided

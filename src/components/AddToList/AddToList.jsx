@@ -27,7 +27,7 @@ const AddToList = () => {
       .catch((error) => console.error(error));
   }, []);
 
-  const { savePlaceMutation } = useSavePlace();
+  const { savePlaceMutation, savePlaceIsLoading } = useSavePlace();
 
   const handleSavePlace = (listId) => {
     savePlaceMutation.mutate(listId);
@@ -48,7 +48,7 @@ const AddToList = () => {
         <h3>Add to list</h3>
       </div>
       <div>
-        {isListsLoading ? (
+        {isListsLoading || savePlaceIsLoading ? (
           <p>Loading...</p>
         ) : listsError ? (
           <p>{listsError.message}</p>

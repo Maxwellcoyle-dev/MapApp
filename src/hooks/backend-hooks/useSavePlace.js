@@ -5,13 +5,16 @@ import { getCurrentUser } from "aws-amplify/auth";
 import { savePlace } from "../../api/placeApi";
 
 import { useSearchContext } from "../../state/SearchContext";
+import { useAppContext } from "../../state/AppContext";
 
 import useGetPlace from "../google-api-hooks/useGetPlaceDetails";
 
 const useSavePlace = () => {
   const [user, setUser] = useState(null);
+  const [savePlaceIsLoading, setSavePlaceIsLoading] = useState(false);
 
   const { selectedPlace } = useSearchContext();
+  const { setShowAddToList } = useAppContext();
 
   const { placeData } = useGetPlace(selectedPlace?.place_id);
 
@@ -32,6 +35,7 @@ const useSavePlace = () => {
 
   const savePlaceMutation = useMutation({
     mutationFn: (listId) => {
+      setSavePlaceIsLoading(true);
       const processedPlaceData = {
         ...placeData,
         photos: placeData?.photos?.map((photo) => ({
@@ -49,12 +53,14 @@ const useSavePlace = () => {
     onSuccess: () => {
       console.log("Place saved successfully!");
       queryClient.invalidateQueries({ queryKey: ["lists", user?.userId] });
+      setShowAddToList(false);
+      setSavePlaceIsLoading(false);
     },
     // only enable if placeData, user?.userId, and listId are truthy
     enabled: !!placeData && !!user?.userId && !!selectedPlace?.listId,
   });
 
-  return { savePlaceMutation };
+  return { savePlaceMutation, savePlaceIsLoading };
 };
 
 export default useSavePlace;

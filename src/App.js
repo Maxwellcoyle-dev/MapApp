@@ -25,12 +25,12 @@ import { SearchProvider } from "./state/SearchContext";
 
 import { useAppContext } from "./state/AppContext";
 
-import useUser from "./hooks/useUser";
+import useUser from "./hooks/backend-hooks/useUser";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer } = Layout;
 
 function App({ signOut, user }) {
-  const { userLocation, setUserLocation } = useAppContext();
+  const { setUserLocation } = useAppContext();
 
   useEffect(() => {
     // get the mapAppUserLocation from local storage
@@ -53,7 +53,7 @@ function App({ signOut, user }) {
   const { authUser } = useUser(user);
 
   useEffect(() => {
-    console.log(authUser);
+    if (authUser) console.log(authUser);
   }, [authUser]);
 
   return (

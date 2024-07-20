@@ -70,12 +70,32 @@ const savePlace = async (userId, listId, placeData) => {
       userId: { S: userId },
       listId: { S: listId },
       name: { S: placeData.name },
-      location: {
+      formattedAddress: { S: placeData.formatted_address || "" },
+      formattedPhoneNumber: { S: placeData.formatted_phone_number || "" },
+      geometry: {
         M: {
-          lat: { N: placeData.geometry.location.lat.toString() },
-          long: { N: placeData.geometry.location.lng.toString() },
+          location: {
+            M: {
+              lat: { N: placeData.geometry.location.lat.toString() },
+              lng: { N: placeData.geometry.location.lng.toString() },
+            },
+          },
+          viewport: placeData.geometry.viewport
+            ? {
+                M: {
+                  south: { N: placeData.geometry.viewport.south.toString() },
+                  west: { N: placeData.geometry.viewport.west.toString() },
+                  north: { N: placeData.geometry.viewport.north.toString() },
+                  east: { N: placeData.geometry.viewport.east.toString() },
+                },
+              }
+            : { NULL: true },
         },
       },
+      types: {
+        SS: placeData.types || [],
+      },
+      rating: { N: placeData.rating ? placeData.rating.toString() : "0" },
       photos: {
         SS: placeData.photos.map((photo) => photo.url),
       },
