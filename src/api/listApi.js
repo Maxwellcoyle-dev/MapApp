@@ -15,7 +15,7 @@ export const createList = async (listData) => {
   return response.data;
 };
 
-export const updateList = async (listData) => {
-  const response = await axiosInstance.put("/list/", listData);
+export const updateList = async (listId, listData) => {
+  const response = await axiosInstance.put(`/list/${listId}`, listData);
   return response.data;
 };

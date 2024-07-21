@@ -16,6 +16,17 @@
   padding-bottom: 0;
 }
 
+.listHeaderDiv {
+  display: flex;
+}
+
+.contentDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
 .listItemContainer {
   overflow-y: scroll;
   margin-bottom: 5rem;
