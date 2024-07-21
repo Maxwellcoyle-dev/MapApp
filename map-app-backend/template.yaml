@@ -212,7 +212,7 @@ Resources:
         UpdateListApiEvent:
           Type: Api
           Properties:
-            Path: /list
+            Path: /list/{listId}
             Method: put
             RestApiId: !Ref MappAppAPI
   DeleteListFunction:
