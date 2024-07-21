@@ -26,13 +26,13 @@ export const lambdaHandler = async (event) => {
   const description = body?.description || null;
   const isPublic = body?.public || null;
 
-  if (!userId) {
-    console.error("No userId is present");
+  if (!listId) {
+    console.error("No listId is present");
     return {
       statusCode: 400,
       headers,
       body: JSON.stringify({
-        message: "userId is required",
+        message: "listId is required",
       }),
     };
   }
@@ -74,7 +74,7 @@ export const lambdaHandler = async (event) => {
   if (updates.length > 0) {
     async () => {
       try {
-        await dbclientlient.send(new UpdateItemCommand(params));
+        await dbclient.send(new UpdateItemCommand(params));
         console.log("Success", data);
       } catch (err) {
         console.error("Error", err);
