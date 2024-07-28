@@ -16,6 +16,18 @@
   padding-bottom: 0;
 }
 
+.listHeaderDiv {
+  display: flex;
+  align-items: center;
+}
+
+.contentDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
 .listItemContainer {
   overflow-y: scroll;
   margin-bottom: 5rem;

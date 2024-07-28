@@ -1,6 +1,11 @@
 // api.js
 import axiosInstance from "./axiosInstance";
 
+export const getList = async (listId) => {
+  const response = await axiosInstance.get(`/list/${listId}`);
+  return response.data;
+};
+
 export const scanLists = async (userId) => {
   const response = await axiosInstance.get(`/lists/`, {
     params: {
@@ -15,7 +20,7 @@ export const createList = async (listData) => {
   return response.data;
 };
 
-export const updateList = async (listData) => {
-  const response = await axiosInstance.put("/list/", listData);
+export const updateList = async (listId, listData) => {
+  const response = await axiosInstance.put(`/list/${listId}`, listData);
   return response.data;
 };

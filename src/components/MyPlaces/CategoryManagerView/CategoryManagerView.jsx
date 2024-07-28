@@ -1,12 +1,16 @@
+// Libraries
 import React, { useEffect, useState } from "react";
 import { Button, Input, List, Modal, Tag } from "antd";
 import { PlusOutlined, DeleteOutlined } from "@ant-design/icons";
-import useUser from "../../hooks/backend-hooks/useUser";
-import useManageCategories from "../../hooks/backend-hooks/useManageCategories";
 
-import styles from "./CategoryManager.module.css";
+// Hooks
+import useUser from "../../../hooks/backend-hooks/useUser";
+import useManageCategories from "../../../hooks/backend-hooks/useManageCategories";
 
-const CategoryManager = () => {
+// Styles
+import styles from "./CategoryManagerView.module.css";
+
+const CategoryManagerView = () => {
   const [categories, setCategories] = useState([]);
   const [newCategoryName, setNewCategoryName] = useState("");
   const [newTagName, setNewTagName] = useState("");
@@ -185,4 +189,4 @@ const CategoryManager = () => {
   );
 };
 
-export default CategoryManager;
+export default CategoryManagerView;

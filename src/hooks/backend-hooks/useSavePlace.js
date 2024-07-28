@@ -19,11 +19,6 @@ const useSavePlace = () => {
   const { placeData } = useGetPlace(selectedPlace?.place_id);
 
   useEffect(() => {
-    console.log("selectedPlace: ", selectedPlace);
-    console.log("placeData: ", placeData);
-  }, []);
-
-  useEffect(() => {
     getCurrentUser()
       .then((user) => {
         setUser(user);
@@ -36,17 +31,10 @@ const useSavePlace = () => {
   const savePlaceMutation = useMutation({
     mutationFn: (listId) => {
       setSavePlaceIsLoading(true);
-      const processedPlaceData = {
-        ...placeData,
-        photos: placeData?.photos?.map((photo) => ({
-          url: photo?.getUrl(),
-        })),
-      };
-      console.log("processedPlaceData: ", processedPlaceData);
       return savePlace({
         userId: user?.userId,
         listId,
-        place: processedPlaceData,
+        place: placeData,
       });
     },
     onError: (error) => console.error(error),

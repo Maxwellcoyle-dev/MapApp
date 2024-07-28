@@ -110,10 +110,10 @@ Resources:
             RestApiId: !Ref MappAppAPI
 
   # List table and functions
-  MapAppListsTable:
+  MapAppListTable:
     Type: "AWS::DynamoDB::Table"
     Properties:
-      TableName: "MapAppListsTable"
+      TableName: "MapAppListTable"
       AttributeDefinitions:
         - AttributeName: "listId"
           AttributeType: "S"
@@ -122,11 +122,19 @@ Resources:
       KeySchema:
         - AttributeName: "listId"
           KeyType: "HASH"
-        - AttributeName: "userId"
-          KeyType: "RANGE"
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
+      GlobalSecondaryIndexes:
+        - IndexName: userId-index
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
   GetListFunction:
     Type: "AWS::Serverless::Function"
     Properties:
@@ -137,10 +145,10 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppListsTable
+          LIST_TABLE: !Ref MapAppListTable
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref MapAppListsTable
+            TableName: !Ref MapAppListTable
       Events:
         GetList:
           Type: Api
@@ -158,10 +166,10 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppListsTable
+          LIST_TABLE: !Ref MapAppListTable
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref MapAppListsTable
+            TableName: !Ref MapAppListTable
       Events:
         ScanLists:
           Type: Api
@@ -179,12 +187,14 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppListsTable
+          LIST_TABLE: !Ref MapAppListTable
       Policies:
         - DynamoDBWritePolicy:
-            TableName: !Ref MapAppListsTable
+            TableName: !Ref MapAppListTable
         - DynamoDBReadPolicy:
-            TableName: !Ref MapAppListsTable
+            TableName: !Ref MapAppListTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppListTable
       Events:
         CreateListApiEvent:
           Type: Api
@@ -202,12 +212,10 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppListsTable
+          LIST_TABLE: !Ref MapAppListTable
       Policies:
-        - DynamoDBReadPolicy:
-            TableName: !Ref MapAppListsTable
-        - DynamoDBWritePolicy:
-            TableName: !Ref MapAppListsTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppListTable
       Events:
         UpdateListApiEvent:
           Type: Api
@@ -225,17 +233,17 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppListsTable
+          TABLE_NAME: !Ref MapAppListTable
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref MapAppListsTable
+            TableName: !Ref MapAppListTable
         - DynamoDBWritePolicy:
-            TableName: !Ref MapAppListsTable
+            TableName: !Ref MapAppListTable
         - Statement:
             Effect: Allow
             Action:
               - dynamodb:DeleteItem
-            Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/MapAppListsTable"
+            Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/MapAppListTable"
       Events:
         DeleteListApiEvent:
           Type: Api
@@ -326,7 +334,8 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppPlacesTable
+          PLACE_TABLE: !Ref MapAppPlacesTable
+          LIST_TABLE: !Ref MapAppListTable
       Policies:
         - DynamoDBWritePolicy:
             TableName: !Ref MapAppPlacesTable
@@ -431,9 +440,9 @@ Outputs:
     Value: !GetAtt DeleteUserFunctionRole.Arn
 
   # List Table outputs
-  MapAppListsTableName:
+  MapAppListTableName:
     Description: "The name of the List table"
-    Value: !Ref MapAppListsTable
+    Value: !Ref MapAppListTable
 
   GetListApi:
     Description: "API Gateway endpoint URL for Get List function"

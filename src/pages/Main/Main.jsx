@@ -4,8 +4,8 @@ import { MdFormatListBulleted, MdOutlineMap } from "react-icons/md";
 import { Outlet } from "react-router-dom";
 
 // Components
-import MapView from "../../components/Map/MapView";
-import ListView from "../../components/ListView/ListView";
+import MapView from "../../components/Main/Map/MapView";
+import MapListView from "../../components/Main/MapListView/MapListView";
 import SearchBar from "../../components/Search/SearchBar";
 import AddToList from "../../components/AddToList/AddToList";
 
@@ -34,7 +34,7 @@ const Main = () => {
       <SearchBar />
       <MapView placesResults={placesResults} setView={setView} />
       {view === "list" && (
-        <ListView
+        <MapListView
           placesResults={placesResults}
           isPlacesResultsLoading={isPlacesResultsLoading}
           setView={setView}

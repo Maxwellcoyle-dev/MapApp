@@ -1,8 +1,8 @@
 import { DynamoDBClient, QueryCommand } from "@aws-sdk/client-dynamodb";
 
 const REGION = "us-east-2";
-const LISTS_TABLE = "MapAppListsTable";
-const GSI_NAME = "userIdIndex";
+const LIST_TABLE = process.env.LIST_TABLE;
+const GSI_NAME = "userId-index";
 const dbclient = new DynamoDBClient({ region: REGION });
 
 const headers = {
@@ -28,7 +28,7 @@ export const lambdaHandler = async (event) => {
   }
 
   const params = {
-    TableName: LISTS_TABLE,
+    TableName: LIST_TABLE,
     IndexName: GSI_NAME,
     KeyConditionExpression: "userId = :userId",
     ExpressionAttributeValues: {

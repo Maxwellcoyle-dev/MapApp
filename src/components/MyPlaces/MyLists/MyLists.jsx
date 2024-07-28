@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-import styles from "./UserLists.module.css";
+import styles from "./MyLists.module.css";
 
-const UserLists = (userLists) => {
+const MyLists = (userLists) => {
   const navigate = useNavigate();
   useEffect(() => {
     console.log(userLists);
@@ -38,4 +38,4 @@ const UserLists = (userLists) => {
   );
 };
 
-export default UserLists;
+export default MyLists;

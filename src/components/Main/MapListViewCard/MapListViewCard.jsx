@@ -10,12 +10,12 @@ import {
 } from "react-icons/md";
 
 // State
-import { useAppContext } from "../../state/AppContext";
+import { useAppContext } from "../../../state/AppContext";
 
 // Styles
-import styles from "./ListCard.module.css";
+import styles from "./MapListViewCard.module.css";
 
-const ListCard = ({ place }) => {
+const MapListViewCard = ({ place }) => {
   const [isOpen, setIsOpen] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const { setShowAddToList } = useAppContext();
@@ -127,4 +127,4 @@ const ListCard = ({ place }) => {
   );
 };
 
-export default ListCard;
+export default MapListViewCard;

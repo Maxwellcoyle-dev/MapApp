@@ -4,15 +4,15 @@ import { Map, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
 
 // Components
 import MapComponent from "./MapComponent";
-import PlaceDetailsCard from "../PlaceDetailsCard/PlaceDetailsCard";
+import PlaceDetailsCard from "../../PlaceDetailsCard/PlaceDetailsCard";
 
 // State
-import { useMapContext } from "../../state/MapContext";
-import { useAppContext } from "../../state/AppContext";
-import { useSearchContext } from "../../state/SearchContext";
+import { useMapContext } from "../../../state/MapContext";
+import { useAppContext } from "../../../state/AppContext";
+import { useSearchContext } from "../../../state/SearchContext";
 
 // Hooks
-import useMarkerClick from "../../hooks/useMakerClick";
+import useMarkerClick from "../../../hooks/useMakerClick";
 
 // Styles
 import styles from "./MapView.module.css";
