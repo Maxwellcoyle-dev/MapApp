@@ -14,9 +14,9 @@ import { withAuthenticator } from "@aws-amplify/ui-react";
 // Pages
 import Main from "./pages/Main/Main";
 import MyAccount from "./pages/MyAccount";
-import Manager from "./pages/Manager/Manager";
-import List from "./pages/List/List";
-import PlaceDetails from "./pages/PlaceDetails/PlaceDetails";
+import MyPlaces from "./pages/MyPlacesPage/MyPlacesPage";
+import ListPage from "./pages/ListPage/ListPage";
+import PlacePage from "./pages/PlacePage/PlacePage";
 
 // Components
 import NavBar from "./components/NavBar/NavBar";
@@ -64,10 +64,10 @@ function App({ signOut, user }) {
             <Content>
               <Routes>
                 <Route path="/" element={<Main />}>
-                  <Route path="list/:listId" element={<List />} />
-                  <Route path="place/:placeId" element={<PlaceDetails />} />
+                  <Route path="list/:listId" element={<ListPage />} />
+                  <Route path="place/:placeId" element={<PlacePage />} />
                 </Route>
-                <Route path="manager" element={<Manager />} />
+                <Route path="my-places" element={<MyPlaces />} />
                 <Route
                   path="/my-account"
                   element={<MyAccount signOut={signOut} />}

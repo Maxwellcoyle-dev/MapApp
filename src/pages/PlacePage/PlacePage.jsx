@@ -22,9 +22,9 @@ import useGetPlaceDetails from "../../hooks/google-api-hooks/useGetPlaceDetails"
 import useClosePlaceDetails from "../../hooks/useClosePlaceDetails";
 
 // Styles
-import styles from "./PlaceDetails.module.css";
+import styles from "./PlacePage.module.css";
 
-const PlaceDetails = () => {
+const PlacePage = () => {
   const { placeId } = useParams();
 
   const handleClosePlace = useClosePlaceDetails();
@@ -103,4 +103,4 @@ const PlaceDetails = () => {
   );
 };
 
-export default PlaceDetails;
+export default PlacePage;

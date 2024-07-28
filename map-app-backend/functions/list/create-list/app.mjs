@@ -2,8 +2,8 @@ import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
 import { v4 as uuidv4 } from "uuid";
 
 const REGION = "us-east-2";
-const LISTS_TABLE = "MapAppListsTable";
-const GSI_NAME = "userIdIndex";
+const LIST_TABLE = process.env.LIST_TABLE;
+const GSI_NAME = "userId-index";
 const dbclient = new DynamoDBClient({ region: REGION });
 
 const headers = {
@@ -38,7 +38,7 @@ export const lambdaHandler = async (event) => {
   const newListId = uuidv4();
 
   const params = {
-    TableName: LISTS_TABLE,
+    TableName: LIST_TABLE,
     Item: {
       listId: { S: newListId },
       userId: { S: userId },

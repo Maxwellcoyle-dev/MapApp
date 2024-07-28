@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { Form, Radio } from "antd";
 
 // Components
-import ListManager from "../../components/ListManager/ListManager";
-import CategoryManager from "../../components/CategoryManager/CategoryManager";
+import ListsView from "../../components/MyPlaces/ListsView/ListsView";
+import CategoryManager from "../../components/MyPlaces/CategoryManagerView/CategoryManagerView";
 
 // Styles
-import styles from "./Manager.module.css";
+import styles from "./MyPlacesPage.module.css";
 
-const Manager = () => {
+const MyPlacesPage = () => {
   const [showManager, setShowManager] = useState("list-manager");
 
   return (
@@ -38,10 +38,10 @@ const Manager = () => {
           </Radio.Group>
         </Form.Item>
       </Form>
-      {showManager === "list-manager" && <ListManager />}
+      {showManager === "list-manager" && <ListsView />}
       {showManager === "category-manager" && <CategoryManager />}
     </div>
   );
 };
 
-export default Manager;
+export default MyPlacesPage;

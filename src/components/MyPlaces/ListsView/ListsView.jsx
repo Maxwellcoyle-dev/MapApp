@@ -5,17 +5,17 @@ import { Button } from "antd";
 import { MdOutlineAdd } from "react-icons/md";
 
 // hooks
-import useUserLists from "../../hooks/backend-hooks/useUserLists";
+import useUserLists from "../../../hooks/backend-hooks/useUserLists";
 
 // components
-import UserLists from "../UserLists/UserLists";
+import MyLists from "../../MyPlaces/MyLists/MyLists";
 import CreateListForm from "../CreateListForm/CreateListForm";
 
 // styles
-import styles from "./ListManager.module.css";
+import styles from "./ListsView.module.css";
 
 // component for creating a new list
-const ListManager = () => {
+const ListsView = () => {
   const [user, setUser] = useState(null);
   const [addNewList, setAddNewList] = useState(false);
 
@@ -65,10 +65,10 @@ const ListManager = () => {
       <div className={styles.listDiv}>
         {!addNewList && isListsLoading && <p>Loading...</p>}
         {!addNewList && listsError && <p>{listsError.message}</p>}
-        {!addNewList && listsData && <UserLists userLists={listsData.data} />}
+        {!addNewList && listsData && <MyLists userLists={listsData.data} />}
       </div>
     </div>
   );
 };
 
-export default ListManager;
+export default ListsView;

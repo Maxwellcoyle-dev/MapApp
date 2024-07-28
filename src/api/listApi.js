@@ -1,6 +1,11 @@
 // api.js
 import axiosInstance from "./axiosInstance";
 
+export const getList = async (listId) => {
+  const response = await axiosInstance.get(`/list/${listId}`);
+  return response.data;
+};
+
 export const scanLists = async (userId) => {
   const response = await axiosInstance.get(`/lists/`, {
     params: {

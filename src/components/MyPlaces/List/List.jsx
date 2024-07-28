@@ -3,12 +3,12 @@ import React, { useEffect } from "react";
 import { Spin } from "antd";
 
 // Components
-import ListCard from "../ListCard/ListCard";
+import ListCard from "../../MapListViewCard/MapListViewCard";
 
 // Styles
-import styles from "./ListView.module.css";
+import styles from "./List.module.css";
 
-const ListView = ({ placesResults, isPlacesResultsLoading }) => {
+const List = ({ placesResults, isPlacesResultsLoading }) => {
   useEffect(() => {
     console.log("ListView - placesResults:", placesResults);
   }, [placesResults]);
@@ -26,11 +26,14 @@ const ListView = ({ placesResults, isPlacesResultsLoading }) => {
           (result) =>
             result.photos &&
             result.photos.length > 0 && (
-              <ListCard key={result.place_id} place={result} />
+              <>
+                <p>This List Component is displayed</p>
+                <ListCard key={result.place_id} place={result} />
+              </>
             )
         )}
     </div>
   );
 };
 
-export default ListView;
+export default List;
