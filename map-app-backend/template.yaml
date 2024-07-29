@@ -223,6 +223,31 @@ Resources:
             Path: /list/{listId}
             Method: put
             RestApiId: !Ref MappAppAPI
+  RemovePlaceFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: "./functions/list/remove-place"
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          LIST_TABLE: !Ref MapAppListTable
+          PLACE_TABLE: !Ref MapAppPlacesTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppListTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppPlacesTable
+      Events:
+        UpdateListApiEvent:
+          Type: Api
+          Properties:
+            Path: /list/{listId}/remove-place/{placeId}/user/{userId}
+            Method: put
+            RestApiId: !Ref MappAppAPI
+
   DeleteListFunction:
     Type: "AWS::Serverless::Function"
     Properties:
@@ -483,6 +508,13 @@ Outputs:
   UpdateListFunctionIamRole:
     Description: "Implicit IAM Role created for Update List function"
     Value: !GetAtt UpdateListFunctionRole.Arn
+
+  RemovePlaceApi:
+    Description: "API Gateway endpoint URL for Remove Place function"
+    Value: !Sub "https://${MappAppAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/list/{listId}/remove-place/{placeId}/"
+  RemovePlaceFunctionArn:
+    Description: "ARN of the RemovePlace Lambda function"
+    Value: !GetAtt RemovePlaceFunction.Arn
 
   DeleteListApi:
     Description: "API Gateway endpoint URL for Delete List function"

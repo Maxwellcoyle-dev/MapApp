@@ -8,7 +8,7 @@ import MapListViewCard from "../MapListViewCard/MapListViewCard";
 // Styles
 import styles from "./MapListView.module.css";
 
-const List = ({ placesResults, isPlacesResultsLoading }) => {
+const MapListView = ({ placesResults, isPlacesResultsLoading }) => {
   useEffect(() => {
     console.log("ListView - placesResults:", placesResults);
   }, [placesResults]);
@@ -36,4 +36,4 @@ const List = ({ placesResults, isPlacesResultsLoading }) => {
   );
 };
 
-export default List;
+export default MapListView;

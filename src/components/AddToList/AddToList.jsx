@@ -36,8 +36,12 @@ const AddToList = () => {
   const { listsData, listsError, isListsLoading } = useUserLists(user?.userId);
 
   useEffect(() => {
-    listsData && console.log(listsData);
+    listsData && console.log("ListsData -- ", listsData);
   }, [listsData]);
+
+  if (!listsData) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className={styles.addToListContainer}>
@@ -54,30 +58,31 @@ const AddToList = () => {
           <p>{listsError.message}</p>
         ) : (
           <div className={styles.cardsContainer}>
-            {listsData?.data.map((list, index) => (
-              <div
-                key={index}
-                className={styles.cardDiv}
-                onClick={() => handleSavePlace(list.listId.S)}
-              >
-                <div className={styles.imageDiv}>
-                  <Image
-                    className={styles.image}
-                    src={
-                      list?.places?.L[0].M.photo.S
-                        ? list.places.L[0].M.photo.S
-                        : list.listPhoto?.S
-                    }
-                    fallback={fallbackImage}
-                    preview={false}
-                  />
+            {listsData &&
+              listsData?.data.map((list, index) => (
+                <div
+                  key={index}
+                  className={styles.cardDiv}
+                  onClick={() => handleSavePlace(list.listId.S)}
+                >
+                  <div className={styles.imageDiv}>
+                    <Image
+                      className={styles.image}
+                      src={
+                        list?.places?.L[0]?.M?.photo?.S
+                          ? list?.places?.L[0].M?.photo?.S
+                          : list.listPhoto?.S
+                      }
+                      fallback={fallbackImage}
+                      preview={false}
+                    />
+                  </div>
+                  <div className={styles.textDiv}>
+                    <h4>{list.listName.S}</h4>
+                    <p>{list.places?.L.length || 0} saved</p>
+                  </div>
                 </div>
-                <div className={styles.textDiv}>
-                  <h4>{list.listName.S}</h4>
-                  <p>{list.places?.L.length || 0} saved</p>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         )}
       </div>

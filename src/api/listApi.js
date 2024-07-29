@@ -24,3 +24,10 @@ export const updateList = async (listId, listData) => {
   const response = await axiosInstance.put(`/list/${listId}`, listData);
   return response.data;
 };
+
+export const removePlace = async (listId, placeId, userId) => {
+  const response = await axiosInstance.put(
+    `/list/${listId}/remove-place/${placeId}/user/${userId}`
+  );
+  return response.data;
+};

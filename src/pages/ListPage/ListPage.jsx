@@ -1,12 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Form, Input, Image, Spin } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
 
 // hooks
 import useListPlaces from "../../hooks/backend-hooks/useListPlaces";
 import useUpdateList from "../../hooks/backend-hooks/useUpdateList";
 import useGetPhotos from "../../hooks/google-api-hooks/useGetPhotos";
 import useGetList from "../../hooks/backend-hooks/useGetList";
+import useRemoveListPlace from "../../hooks/backend-hooks/useRemoveListPlace";
+import useUser from "../../hooks/backend-hooks/useUser";
 
 import styles from "./ListPage.module.css";
 
@@ -18,13 +21,18 @@ const List = () => {
   const [listName, setListName] = useState("");
   const [description, setDescription] = useState("");
 
+  // get the user
+  const { authUser } = useUser();
+
   // get state from location
   const location = useLocation();
   const { state } = location;
 
-  const { listData } = useGetList(state.listId.S);
+  const { listData, listDataIsLoading } = useGetList(state.listId.S);
 
   useEffect(() => {
+    console.log("user -- ", authUser);
+    console.log("listData -- ", listData);
     setListName(listData?.data.listName.S);
     setDescription(listData?.data.listDescription?.S);
   }, [listData]);
@@ -51,6 +59,8 @@ const List = () => {
   const { placesPhotos } = useGetPhotos(placeIds);
 
   const { updateListMutation } = useUpdateList();
+
+  const { removeListPlaceMutation } = useRemoveListPlace();
 
   // Log Checks
   useEffect(() => {
@@ -103,89 +113,113 @@ const List = () => {
     setShowEditForm(false);
   };
 
-  return (
+  if (listDataIsLoading) {
     <div className={styles.listPageContainer}>
-      {!showEditForm ? (
-        <div className={styles.listHeaderDiv}>
-          <div className={styles.contentDiv}>
-            <h1 style={{ margin: 0 }}>{listData.data.listName.S}</h1>
-            <p>{listData.data.listDescription.S}</p>
-          </div>
-          <Button onClick={() => setShowEditForm(true)}>Edit</Button>
-        </div>
-      ) : (
-        <div ref={formRef}>
-          <Form
-            initialValues={{
-              listName: listData?.data.listName.S || "",
-              description: listData.data.listDescription.S || "",
-            }}
-            onFinish={handleUpdateList}
-          >
-            <Form.Item
-              name="listName"
-              value={listName}
-              rules={[
-                { required: true, message: "Please input the list name!" },
-              ]}
-            >
-              <Input placeholder="List Name" />
-            </Form.Item>
-            <Form.Item
-              name="description"
-              rules={[
-                { required: false, message: "Please input the description!" },
-              ]}
-            >
-              <Input placeholder="Description" />
-            </Form.Item>
-            <div className={styles.formButtons}>
-              <Button type="primary" htmlType="submit">
-                Update
-              </Button>
-              <Button onClick={handleCancel} style={{ marginLeft: "10px" }}>
-                Cancel
-              </Button>
+      <Spin size="large" />
+    </div>;
+  }
+
+  if (listData) {
+    return (
+      <div className={styles.listPageContainer}>
+        {!showEditForm ? (
+          <div className={styles.listHeaderDiv}>
+            <div className={styles.contentDiv}>
+              <h1 style={{ margin: 0 }}>{listData.data.listName.S}</h1>
+              <p>{listData.data.listDescription.S}</p>
             </div>
-          </Form>
-        </div>
-      )}
-      <div className={styles.listItemContainer}>
-        {isListPlacesDataLoading ? (
-          <Spin size="large" />
+            <Button onClick={() => setShowEditForm(true)}>Edit</Button>
+          </div>
         ) : (
-          listPlacesData?.map((place, index) => {
-            console.log("place -- ", place);
-
-            const firstPhoto = placesPhotos?.[index]?.photos?.[0]?.getUrl();
-
-            return (
-              <div
-                key={place.placeId.S}
-                className={styles.listItem}
-                onClick={() => navigate(`/place/${place.placeId.S}`)}
+          <div ref={formRef}>
+            <Form
+              initialValues={{
+                listName: listData?.data.listName.S || "",
+                description: listData.data.listDescription.S || "",
+              }}
+              onFinish={handleUpdateList}
+            >
+              <Form.Item
+                name="listName"
+                value={listName}
+                rules={[
+                  { required: true, message: "Please input the list name!" },
+                ]}
               >
-                {firstPhoto ? (
-                  <Image
-                    className={styles.image}
-                    src={firstPhoto}
-                    alt={`${place.name.S} photo`}
-                  />
-                ) : (
-                  <Image
-                    className={styles.image}
-                    src="default-placeholder-image.jpg"
-                    alt="Default placeholder"
-                  />
-                )}
-                <h2>{place.name.S}</h2>
+                <Input placeholder="List Name" />
+              </Form.Item>
+              <Form.Item
+                name="description"
+                rules={[
+                  { required: false, message: "Please input the description!" },
+                ]}
+              >
+                <Input placeholder="Description" />
+              </Form.Item>
+              <div className={styles.formButtons}>
+                <Button type="primary" htmlType="submit">
+                  Update
+                </Button>
+                <Button onClick={handleCancel} style={{ marginLeft: "10px" }}>
+                  Cancel
+                </Button>
               </div>
-            );
-          })
+            </Form>
+          </div>
         )}
+        <div className={styles.listItemContainer}>
+          {isListPlacesDataLoading ? (
+            <Spin size="large" />
+          ) : (
+            listPlacesData?.map((place, index) => {
+              const firstPhoto = placesPhotos?.[index]?.photos?.[0]?.getUrl();
+              return (
+                <div
+                  key={place.placeId.S}
+                  className={styles.listItem}
+                  onClick={() => navigate(`/place/${place.placeId.S}`)}
+                >
+                  <div className={styles.cardHeader}>
+                    <Button
+                      className={styles.actionButton}
+                      icon={<DeleteOutlined />}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log("Delete place:", place.placeId.S);
+                        removeListPlaceMutation.mutate({
+                          listId: listData.data.listId.S,
+                          placeId: place.placeId.S,
+                          userId: authUser.data.userId,
+                        });
+                      }}
+                    />
+                    {/* Add more buttons/icons for sharing and tagging here */}
+                  </div>
+                  {firstPhoto ? (
+                    <Image
+                      className={styles.image}
+                      src={firstPhoto}
+                      alt={`${place.name.S} photo`}
+                    />
+                  ) : (
+                    <Image
+                      className={styles.image}
+                      src="default-placeholder-image.jpg"
+                      alt="Default placeholder"
+                    />
+                  )}
+                  <div className={styles.cardBody}>
+                    <h2>{place.name.S}</h2>
+                    {/* Render tag icons here */}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 };
 
 export default List;
