@@ -25,13 +25,12 @@ const List = () => {
   const { listData } = useGetList(state.listId.S);
 
   useEffect(() => {
-    console.log("listData -- ", listData);
+    setListName(listData?.data.listName.S);
+    setDescription(listData?.data.listDescription?.S);
   }, [listData]);
 
   useEffect(() => {
     console.log("state -- ", state);
-    setListName(state.listName.S);
-    setDescription(state?.description?.S);
   }, []);
 
   const navigate = useNavigate();
@@ -109,8 +108,8 @@ const List = () => {
       {!showEditForm ? (
         <div className={styles.listHeaderDiv}>
           <div className={styles.contentDiv}>
-            <h1 style={{ margin: 0 }}>{listName}</h1>
-            <p>{description}</p>
+            <h1 style={{ margin: 0 }}>{listData.data.listName.S}</h1>
+            <p>{listData.data.listDescription.S}</p>
           </div>
           <Button onClick={() => setShowEditForm(true)}>Edit</Button>
         </div>
@@ -118,8 +117,8 @@ const List = () => {
         <div ref={formRef}>
           <Form
             initialValues={{
-              listName: state.listName.S,
-              description: state.description?.S || "",
+              listName: listData?.data.listName.S || "",
+              description: listData.data.listDescription.S || "",
             }}
             onFinish={handleUpdateList}
           >
