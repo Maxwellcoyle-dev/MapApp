@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button, Form, Input, Image, Spin } from "antd";
-import { DeleteOutlined } from "@ant-design/icons";
+import { DeleteOutlined, PlusSquareOutlined } from "@ant-design/icons";
 
 // hooks
 import useListPlaces from "../../hooks/backend-hooks/useListPlaces";
@@ -12,10 +12,15 @@ import useRemoveListPlace from "../../hooks/backend-hooks/useRemoveListPlace";
 import useUser from "../../hooks/backend-hooks/useUser";
 
 import styles from "./ListPage.module.css";
+import AddTagView from "../../components/ListPage/AddTagView";
 
 const List = () => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [placeIds, setPlaceIds] = useState([]);
+
+  // tag manager state
+  const [showTagManager, setShowTagManager] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState(null);
 
   // form state
   const [listName, setListName] = useState("");
@@ -174,11 +179,7 @@ const List = () => {
             listPlacesData?.map((place, index) => {
               const firstPhoto = placesPhotos?.[index]?.photos?.[0]?.getUrl();
               return (
-                <div
-                  key={place.placeId.S}
-                  className={styles.listItem}
-                  onClick={() => navigate(`/place/${place.placeId.S}`)}
-                >
+                <div key={place.placeId.S} className={styles.listItem}>
                   <div className={styles.cardHeader}>
                     <Button
                       className={styles.actionButton}
@@ -193,30 +194,47 @@ const List = () => {
                         });
                       }}
                     />
+                    <Button
+                      icon={<PlusSquareOutlined />}
+                      onClick={() => {
+                        setSelectedPlace(place);
+                        setShowTagManager(true);
+                      }}
+                    >
+                      Add Tag
+                    </Button>
                     {/* Add more buttons/icons for sharing and tagging here */}
                   </div>
-                  {firstPhoto ? (
-                    <Image
-                      className={styles.image}
-                      src={firstPhoto}
-                      alt={`${place.name.S} photo`}
-                    />
-                  ) : (
-                    <Image
-                      className={styles.image}
-                      src="default-placeholder-image.jpg"
-                      alt="Default placeholder"
-                    />
-                  )}
-                  <div className={styles.cardBody}>
-                    <h2>{place.name.S}</h2>
-                    {/* Render tag icons here */}
+                  <div onClick={() => navigate(`/place/${place.placeId.S}`)}>
+                    {firstPhoto ? (
+                      <Image
+                        className={styles.image}
+                        src={firstPhoto}
+                        alt={`${place.name.S} photo`}
+                      />
+                    ) : (
+                      <Image
+                        className={styles.image}
+                        src="default-placeholder-image.jpg"
+                        alt="Default placeholder"
+                      />
+                    )}
+                    <div className={styles.cardBody}>
+                      <h2>{place.name.S}</h2>
+                      {/* Render tag icons here */}
+                    </div>
                   </div>
                 </div>
               );
             })
           )}
         </div>
+        {showTagManager && (
+          <AddTagView
+            setShowTagManager={setShowTagManager}
+            selectedPlace={selectedPlace}
+          />
+        )}
       </div>
     );
   }
