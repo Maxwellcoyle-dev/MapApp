@@ -1,94 +1,102 @@
 import React, { useState, useEffect } from "react";
-import { Button, Input, Select, Modal, Tag } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-
-// hooks
+import { Button, Tag } from "antd";
 import useUser from "../../hooks/backend-hooks/useUser";
-import useManageTags from "../../hooks/backend-hooks/useManageTags";
-
-// styles
+import useUpdatePlace from "../../hooks/backend-hooks/useUpdatePlace";
 import styles from "./AddTagView.module.css";
 
-const { Option } = Select;
+const AddTagView = ({ setShowTagManager, currentListPlace, listId }) => {
+  const [currentPlaceTags, setCurrentPlaceTags] = useState([]);
+  const [allTags, setAllTags] = useState([]);
 
-const AddTagView = ({ setShowTagManager, selectedPlace }) => {
   const { authUser } = useUser();
-  //   const { manageTagsMutation } = useManageTags();
-  const [categories, setCategories] = useState([]);
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [newTagName, setNewTagName] = useState("");
-  const [currentCategory, setCurrentCategory] = useState(null);
+  const { updatePlaceMutation } = useUpdatePlace();
 
   useEffect(() => {
-    console.log("selectedPlace -- ", selectedPlace);
-  }, [selectedPlace]);
+    if (currentListPlace?.tags?.L) {
+      const mappedTags = currentListPlace.tags.L.map((tag) => ({
+        tagId: tag.M.tagId.S,
+        categoryId: tag.M.categoryId.S,
+      }));
+      setCurrentPlaceTags(mappedTags);
+    }
+  }, [currentListPlace]);
 
   useEffect(() => {
-    console.log("authUser -- ", authUser);
-    if (authUser?.data.categories) {
-      setCategories(authUser.data.categories);
+    if (authUser?.data?.categories) {
+      setAllTags(authUser.data.categories);
     }
   }, [authUser]);
 
-  const handleAddTag = () => {
-    const newTag = {
-      tagId: Date.now().toString(),
-      tagName: newTagName,
-    };
-    const updatedCategories = categories.map((category) => {
-      if (category.categoryId === currentCategory.categoryId) {
-        return {
-          ...category,
-          tags: [...category.tags, newTag],
-        };
-      }
-      return category;
+  const handleTagClick = (categoryId, tag) => {
+    const tagExists = currentPlaceTags.some(
+      (t) => t.tagId === tag.tagId && t.categoryId === categoryId
+    );
+    if (tagExists) {
+      setCurrentPlaceTags(
+        currentPlaceTags.filter(
+          (t) => !(t.tagId === tag.tagId && t.categoryId === categoryId)
+        )
+      );
+    } else {
+      setCurrentPlaceTags([
+        ...currentPlaceTags,
+        {
+          tagId: tag.tagId,
+          categoryId: categoryId,
+        },
+      ]);
+    }
+  };
+
+  const handleSave = () => {
+    console.log("placeId", currentListPlace.placeId.S);
+    console.log("userId", authUser.data.userId);
+    const updatedTags = currentPlaceTags.map((tag) => ({
+      tagId: tag.tagId,
+      categoryId: tag.categoryId,
+    }));
+    console.log("updatedTags", updatedTags);
+    updatePlaceMutation.mutate({
+      placeId: currentListPlace.placeId.S,
+      userId: authUser.data.userId,
+      placeData: {
+        tags: updatedTags,
+      },
+      listId: listId,
     });
-    // manageTagsMutation.mutate({
-    //   userId: authUser.data.userId,
-    //   categories: updatedCategories,
-    // });
-    setNewTagName("");
-    setIsModalVisible(false);
-  };
-
-  const handleTagSelect = (tagIds) => {
-    setSelectedTags(tagIds);
-  };
-
-  const showModal = (category) => {
-    setCurrentCategory(category);
-    setIsModalVisible(true);
-  };
-
-  const handleOk = () => {
-    handleAddTag();
-  };
-
-  const handleCancel = () => {
-    setIsModalVisible(false);
+    setShowTagManager(false);
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.headerDiv}>
         <h3>Tag Manager</h3>
-        <Button onClick={() => setShowTagManager(false)}>Close </Button>
+        <Button onClick={() => setShowTagManager(false)}>Close</Button>
       </div>
-      <h4>Current Tags</h4>
-
-      <h4>Add New Tags</h4>
-      {categories.map((category) => (
+      {allTags.map((category) => (
         <div className={styles.categoryDiv} key={category.categoryId}>
           <h4>{category.name}</h4>
           <div className={styles.tagsListDiv}>
-            {category.tags.map((tag) => (
-              <Tag key={tag.tagId}>{tag.tagName}</Tag>
-            ))}
+            {category.tags.map((tag) => {
+              const isSelected = currentPlaceTags.some(
+                (t) =>
+                  t.tagId === tag.tagId && t.categoryId === category.categoryId
+              );
+              return (
+                <Tag
+                  key={tag.tagId}
+                  color={isSelected ? "blue" : "default"}
+                  onClick={() => handleTagClick(category.categoryId, tag)}
+                  className={styles.tagItem}
+                >
+                  {tag.tagName}
+                </Tag>
+              );
+            })}
           </div>
         </div>
       ))}
+      <Button onClick={handleSave}>Save</Button>
     </div>
   );
 };

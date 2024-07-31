@@ -20,7 +20,7 @@ const List = () => {
 
   // tag manager state
   const [showTagManager, setShowTagManager] = useState(false);
-  const [selectedPlace, setSelectedPlace] = useState(null);
+  const [currentListPlace, setCurrentListPlace] = useState(null);
 
   // form state
   const [listName, setListName] = useState("");
@@ -197,7 +197,7 @@ const List = () => {
                     <Button
                       icon={<PlusSquareOutlined />}
                       onClick={() => {
-                        setSelectedPlace(place);
+                        setCurrentListPlace(place);
                         setShowTagManager(true);
                       }}
                     >
@@ -232,7 +232,8 @@ const List = () => {
         {showTagManager && (
           <AddTagView
             setShowTagManager={setShowTagManager}
-            selectedPlace={selectedPlace}
+            currentListPlace={currentListPlace}
+            listId={listData.data.listId.S}
           />
         )}
       </div>

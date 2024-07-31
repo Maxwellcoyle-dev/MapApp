@@ -373,29 +373,29 @@ Resources:
             Path: /place
             Method: post
             RestApiId: !Ref MappAppAPI
-  # UpdatePlaceFunction:
-  #   Type: "AWS::Serverless::Function"
-  #   Properties:
-  #     Handler: app.lambdaHandler
-  #     Runtime: nodejs20.x
-  #     CodeUri: "./functions/place/update-place"
-  #     Architectures:
-  #       - x86_64
-  #     Environment:
-  #       Variables:
-  #         TABLE_NAME: !Ref MapAppPlacesTable
-  #     Policies:
-  #       - DynamoDBReadPolicy:
-  #           TableName: !Ref MapAppPlacesTable
-  #       - DynamoDBWritePolicy:
-  #           TableName: !Ref MapAppPlacesTable
-  #     Events:
-  #       UpdatePlaceApiEvent:
-  #         Type: Api
-  #         Properties:
-  #           Path: /place
-  #           Method: put
-  #           RestApiId: !Ref MappAppAPI
+  UpdatePlaceFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: "./functions/place/update-place"
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          PLACE_TABLE: !Ref MapAppPlacesTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref MapAppPlacesTable
+        - DynamoDBWritePolicy:
+            TableName: !Ref MapAppPlacesTable
+      Events:
+        UpdatePlaceApiEvent:
+          Type: Api
+          Properties:
+            Path: /place/{placeId}
+            Method: put
+            RestApiId: !Ref MappAppAPI
   # DeletePlaceFunction:
   #   Type: "AWS::Serverless::Function"
   #   Properties:

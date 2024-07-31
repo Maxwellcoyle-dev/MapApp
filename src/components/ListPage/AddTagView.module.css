@@ -23,3 +23,8 @@
   display: flex;
   flex-wrap: wrap;
 }
+
+.tagItem {
+  cursor: pointer;
+  margin-bottom: 5px;
+}

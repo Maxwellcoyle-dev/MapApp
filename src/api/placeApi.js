@@ -14,3 +14,11 @@ export const scanPlaces = async (listId) => {
   });
   return response.data;
 };
+
+export const updatePlace = async (placeId, userId, placeData) => {
+  const response = await axiosInstance.put(`/place/${placeId}`, {
+    userId,
+    placeData,
+  });
+  return response.data;
+};
