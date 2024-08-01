@@ -7,6 +7,7 @@ export const useAppContext = () => useContext(AppContext);
 export const AppProvider = ({ children }) => {
   const [userLocation, setUserLocation] = useState(null);
   const [showAddToList, setShowAddToList] = useState(false);
+  // const [userId, setUserId] = useState(null);
 
   return (
     <AppContext.Provider

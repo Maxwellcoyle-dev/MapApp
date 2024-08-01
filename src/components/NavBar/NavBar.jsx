@@ -15,7 +15,6 @@ const NavBar = () => {
   const location = useLocation();
 
   useEffect(() => {
-    console.log(location.pathname);
     setCurrentTab(location.pathname);
   }, [location]);
 
@@ -36,10 +35,10 @@ const NavBar = () => {
         </Link>
       </button>
       <button className={styles.button}>
-        <Link to="/manager">
+        <Link to="/my-places">
           <div
             className={
-              currentTab === "/manager"
+              currentTab === "/my-places"
                 ? styles.iconContainerSelected
                 : styles.iconContainer
             }

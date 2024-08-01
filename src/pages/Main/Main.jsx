@@ -1,12 +1,12 @@
 // Libraries
 import React, { useEffect, useState } from "react";
 import { MdFormatListBulleted, MdOutlineMap } from "react-icons/md";
+import { Outlet } from "react-router-dom";
 
 // Components
-import MapView from "../../components/Map/MapView";
-import ListView from "../../components/ListView/ListView";
+import MapView from "../../components/Main/Map/MapView";
+import MapListView from "../../components/Main/MapListView/MapListView";
 import SearchBar from "../../components/Search/SearchBar";
-import AddToList from "../../components/AddToList/AddToList";
 
 // State
 import { useAppContext } from "../../state/AppContext";
@@ -27,31 +27,31 @@ const Main = () => {
 
   const { showAddToList } = useAppContext();
 
-  useEffect(() => {
-    setView("map");
-  }, []);
-
   return (
     <div className={styles.mainContainer}>
+      <Outlet />
       <SearchBar />
       <MapView placesResults={placesResults} setView={setView} />
       {view === "list" && (
-        <ListView
+        <MapListView
           placesResults={placesResults}
           isPlacesResultsLoading={isPlacesResultsLoading}
           setView={setView}
         />
       )}
-      {showAddToList && <AddToList />}
-      {view === "map" && (
+      {view === "map" ? (
         <div className={styles.toggleButtonDiv} onClick={() => setView("list")}>
           <MdFormatListBulleted className={styles.viewToggleIcon} />
         </div>
-      )}
-      {view === "list" && (
-        <div className={styles.toggleButtonDiv} onClick={() => setView("map")}>
-          <MdOutlineMap className={styles.viewToggleIcon} />
-        </div>
+      ) : (
+        view === "list" && (
+          <div
+            className={styles.toggleButtonDiv}
+            onClick={() => setView("map")}
+          >
+            <MdOutlineMap className={styles.viewToggleIcon} />
+          </div>
+        )
       )}
     </div>
   );

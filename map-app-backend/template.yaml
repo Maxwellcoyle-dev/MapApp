@@ -44,7 +44,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppUserTable
+          USER_TABLE: !Ref MapAppUserTable
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref MapAppUserTable
@@ -67,7 +67,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppUserTable
+          USER_TABLE: !Ref MapAppUserTable
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref MapAppUserTable
@@ -77,7 +77,7 @@ Resources:
         UpdateUser:
           Type: Api
           Properties:
-            Path: /user
+            Path: /user/{userId}
             Method: put
             RestApiId: !Ref MappAppAPI
   DeleteUserFunction:
@@ -110,10 +110,10 @@ Resources:
             RestApiId: !Ref MappAppAPI
 
   # List table and functions
-  MapAppListsTable:
+  MapAppListTable:
     Type: "AWS::DynamoDB::Table"
     Properties:
-      TableName: "MapAppListsTable"
+      TableName: "MapAppListTable"
       AttributeDefinitions:
         - AttributeName: "listId"
           AttributeType: "S"
@@ -122,11 +122,19 @@ Resources:
       KeySchema:
         - AttributeName: "listId"
           KeyType: "HASH"
-        - AttributeName: "userId"
-          KeyType: "RANGE"
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
+      GlobalSecondaryIndexes:
+        - IndexName: userId-index
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
   GetListFunction:
     Type: "AWS::Serverless::Function"
     Properties:
@@ -137,10 +145,10 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppListsTable
+          LIST_TABLE: !Ref MapAppListTable
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref MapAppListsTable
+            TableName: !Ref MapAppListTable
       Events:
         GetList:
           Type: Api
@@ -158,10 +166,10 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppListsTable
+          LIST_TABLE: !Ref MapAppListTable
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref MapAppListsTable
+            TableName: !Ref MapAppListTable
       Events:
         ScanLists:
           Type: Api
@@ -179,12 +187,14 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppListsTable
+          LIST_TABLE: !Ref MapAppListTable
       Policies:
         - DynamoDBWritePolicy:
-            TableName: !Ref MapAppListsTable
+            TableName: !Ref MapAppListTable
         - DynamoDBReadPolicy:
-            TableName: !Ref MapAppListsTable
+            TableName: !Ref MapAppListTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppListTable
       Events:
         CreateListApiEvent:
           Type: Api
@@ -202,19 +212,42 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppListsTable
+          LIST_TABLE: !Ref MapAppListTable
       Policies:
-        - DynamoDBReadPolicy:
-            TableName: !Ref MapAppListsTable
-        - DynamoDBWritePolicy:
-            TableName: !Ref MapAppListsTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppListTable
       Events:
         UpdateListApiEvent:
           Type: Api
           Properties:
-            Path: /list
+            Path: /list/{listId}
             Method: put
             RestApiId: !Ref MappAppAPI
+  RemovePlaceFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: "./functions/list/remove-place"
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          LIST_TABLE: !Ref MapAppListTable
+          PLACE_TABLE: !Ref MapAppPlacesTable
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppListTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppPlacesTable
+      Events:
+        UpdateListApiEvent:
+          Type: Api
+          Properties:
+            Path: /list/{listId}/remove-place/{placeId}/user/{userId}
+            Method: put
+            RestApiId: !Ref MappAppAPI
+
   DeleteListFunction:
     Type: "AWS::Serverless::Function"
     Properties:
@@ -225,17 +258,17 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppListsTable
+          TABLE_NAME: !Ref MapAppListTable
       Policies:
         - DynamoDBReadPolicy:
-            TableName: !Ref MapAppListsTable
+            TableName: !Ref MapAppListTable
         - DynamoDBWritePolicy:
-            TableName: !Ref MapAppListsTable
+            TableName: !Ref MapAppListTable
         - Statement:
             Effect: Allow
             Action:
               - dynamodb:DeleteItem
-            Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/MapAppListsTable"
+            Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/MapAppListTable"
       Events:
         DeleteListApiEvent:
           Type: Api
@@ -254,6 +287,8 @@ Resources:
           AttributeType: "S"
         - AttributeName: "userId"
           AttributeType: "S"
+        - AttributeName: "listId"
+          AttributeType: "S"
       KeySchema:
         - AttributeName: "placeId"
           KeyType: "HASH"
@@ -262,6 +297,16 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
+      GlobalSecondaryIndexes:
+        - IndexName: listId-index
+          KeySchema:
+            - AttributeName: listId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
   # GetPlaceFunction:
   #   Type: "AWS::Serverless::Function"
   #   Properties:
@@ -283,27 +328,27 @@ Resources:
   #           Path: /place/{placeId}
   #           Method: get
   #           RestApiId: !Ref MappAppAPI
-  # ScanPlacesFunction:
-  #   Type: "AWS::Serverless::Function"
-  #   Properties:
-  #     Handler: app.lambdaHandler
-  #     Runtime: nodejs20.x
-  #     CodeUri: "./functions/place/scan-places"
-  #     Architectures:
-  #       - x86_64
-  #     Environment:
-  #       Variables:
-  #         TABLE_NAME: !Ref MapAppPlacesTable
-  #     Policies:
-  #       - DynamoDBReadPolicy:
-  #           TableName: !Ref MapAppPlacesTable
-  #     Events:
-  #       ScanPlaces:
-  #         Type: Api
-  #         Properties:
-  #           Path: /places
-  #           Method: get
-  #           RestApiId: !Ref MappAppAPI
+  ScanPlacesFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: "./functions/place/scan-places"
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          PLACES_TABLE: !Ref MapAppPlacesTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref MapAppPlacesTable
+      Events:
+        ScanPlaces:
+          Type: Api
+          Properties:
+            Path: /places
+            Method: get
+            RestApiId: !Ref MappAppAPI
   CreatePlaceFunction:
     Type: "AWS::Serverless::Function"
     Properties:
@@ -314,7 +359,8 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppPlacesTable
+          PLACE_TABLE: !Ref MapAppPlacesTable
+          LIST_TABLE: !Ref MapAppListTable
       Policies:
         - DynamoDBWritePolicy:
             TableName: !Ref MapAppPlacesTable
@@ -327,29 +373,29 @@ Resources:
             Path: /place
             Method: post
             RestApiId: !Ref MappAppAPI
-  # UpdatePlaceFunction:
-  #   Type: "AWS::Serverless::Function"
-  #   Properties:
-  #     Handler: app.lambdaHandler
-  #     Runtime: nodejs20.x
-  #     CodeUri: "./functions/place/update-place"
-  #     Architectures:
-  #       - x86_64
-  #     Environment:
-  #       Variables:
-  #         TABLE_NAME: !Ref MapAppPlacesTable
-  #     Policies:
-  #       - DynamoDBReadPolicy:
-  #           TableName: !Ref MapAppPlacesTable
-  #       - DynamoDBWritePolicy:
-  #           TableName: !Ref MapAppPlacesTable
-  #     Events:
-  #       UpdatePlaceApiEvent:
-  #         Type: Api
-  #         Properties:
-  #           Path: /place
-  #           Method: put
-  #           RestApiId: !Ref MappAppAPI
+  UpdatePlaceFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: "./functions/place/update-place"
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          PLACE_TABLE: !Ref MapAppPlacesTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref MapAppPlacesTable
+        - DynamoDBWritePolicy:
+            TableName: !Ref MapAppPlacesTable
+      Events:
+        UpdatePlaceApiEvent:
+          Type: Api
+          Properties:
+            Path: /place/{placeId}
+            Method: put
+            RestApiId: !Ref MappAppAPI
   # DeletePlaceFunction:
   #   Type: "AWS::Serverless::Function"
   #   Properties:
@@ -419,9 +465,9 @@ Outputs:
     Value: !GetAtt DeleteUserFunctionRole.Arn
 
   # List Table outputs
-  MapAppListsTableName:
+  MapAppListTableName:
     Description: "The name of the List table"
-    Value: !Ref MapAppListsTable
+    Value: !Ref MapAppListTable
 
   GetListApi:
     Description: "API Gateway endpoint URL for Get List function"
@@ -463,6 +509,13 @@ Outputs:
     Description: "Implicit IAM Role created for Update List function"
     Value: !GetAtt UpdateListFunctionRole.Arn
 
+  RemovePlaceApi:
+    Description: "API Gateway endpoint URL for Remove Place function"
+    Value: !Sub "https://${MappAppAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/list/{listId}/remove-place/{placeId}/"
+  RemovePlaceFunctionArn:
+    Description: "ARN of the RemovePlace Lambda function"
+    Value: !GetAtt RemovePlaceFunction.Arn
+
   DeleteListApi:
     Description: "API Gateway endpoint URL for Delete List function"
     Value: !Sub "https://${MappAppAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/list/"
@@ -487,3 +540,10 @@ Outputs:
   CreatePlaceFunctionIamRole:
     Description: "Implicit IAM Role created for Create Place function"
     Value: !GetAtt CreatePlaceFunctionRole.Arn
+
+  ScanPlacesApi:
+    Description: "API Gateway endpoint URL for Scan Places function"
+    Value: !Sub "https://${MappAppAPI}.execute-api.${AWS::Region}.amazonaws.com/Prod/places/"
+  ScanPlacesFunctionArn:
+    Description: "ARN of the ScanPlaces Lambda function"
+    Value: !GetAtt ScanPlacesFunction.Arn

@@ -14,23 +14,40 @@ import { withAuthenticator } from "@aws-amplify/ui-react";
 // Pages
 import Main from "./pages/Main/Main";
 import MyAccount from "./pages/MyAccount";
-import Manager from "./pages/Manager/Manager";
-import List from "./pages/List";
-import PlaceDetails from "./pages/PlaceDetails/PlaceDetails";
+import MyPlaces from "./pages/MyPlacesPage/MyPlacesPage";
+import ListPage from "./pages/ListPage/ListPage";
+import PlacePage from "./pages/PlacePage/PlacePage";
+import SignIn from "./pages/AuthPages/SignIn";
+import CreateAccount from "./pages/AuthPages/CreateAccount";
+import AddTagPage from "./pages/AddTagPage/AddTagPage";
+import SavePlace from "./pages/SavePlace/SavePlace";
+
+// Protected Route
+import ProtectedRoute from "./ProtectedRoute";
 
 // Components
 import NavBar from "./components/NavBar/NavBar";
-import { MapProvider } from "./state/MapContext"; // Import MapProvider
-import { SearchProvider } from "./state/SearchContext";
 
+// Context
+import { MapProvider } from "./state/MapContext";
+import { SearchProvider } from "./state/SearchContext";
+import { useAuthContext } from "./state/AuthContext";
 import { useAppContext } from "./state/AppContext";
 
-import useUser from "./hooks/useUser";
+import useUser from "./hooks/backend-hooks/useUser";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer } = Layout;
 
-function App({ signOut, user }) {
-  const { userLocation, setUserLocation } = useAppContext();
+function App() {
+  const { setUserLocation } = useAppContext();
+
+  const { user } = useAuthContext();
+
+  useEffect(() => {
+    console.log("User: ", user);
+  }, [user]);
+
+  const { authUser } = useUser(user);
 
   useEffect(() => {
     // get the mapAppUserLocation from local storage
@@ -50,12 +67,6 @@ function App({ signOut, user }) {
     );
   }, []);
 
-  const { authUser } = useUser(user);
-
-  useEffect(() => {
-    console.log(authUser);
-  }, [authUser]);
-
   return (
     <SearchProvider>
       <MapProvider>
@@ -63,21 +74,44 @@ function App({ signOut, user }) {
           <Layout style={{ height: "100vh", position: "relative" }}>
             <Content>
               <Routes>
-                <Route path="/" element={<Main />} />
+                <Route path="login" element={<SignIn />} />
+                <Route path="create-account" element={<CreateAccount />} />
+                <Route path="/" element={<Main />}>
+                  <Route path="list/:listId" element={<ListPage />} />
+                  <Route path="place/:placeId" element={<PlacePage />} />
+                </Route>
+                <Route
+                  path="my-places"
+                  element={
+                    <ProtectedRoute>
+                      <MyPlaces />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="add-tag/:placeId" element={<AddTagPage />} />
+                <Route
+                  path="save-place"
+                  element={
+                    <ProtectedRoute>
+                      <SavePlace />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
                   path="/my-account"
-                  element={<MyAccount signOut={signOut} />}
+                  element={
+                    <ProtectedRoute>
+                      <MyAccount />
+                    </ProtectedRoute>
+                  }
                 />
-                <Route path="manager" element={<Manager />} />
-                <Route path="list/:listId" element={<List />} />
-                <Route path="place/:placeId" element={<PlaceDetails />} />
               </Routes>
             </Content>
             <Footer
               style={{
                 position: "sticky",
                 bottom: 0,
-                zIndex: 3,
+                zIndex: 6,
                 padding: 0,
               }}
             >
@@ -90,4 +124,4 @@ function App({ signOut, user }) {
   );
 }
 
-export default withAuthenticator(App);
+export default App;

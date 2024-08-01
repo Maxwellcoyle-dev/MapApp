@@ -51,7 +51,7 @@ const list = {
 // use google places api to get more details
 const place = {
   placeId: 1, // google place_id - primary key
-  userId: user.userId, // user specific - sortkey
+  userId: user.userId, // user specific - Sort Key / Global Secondary Index
   name: "Place Name",
   location: {
     lat: 0,

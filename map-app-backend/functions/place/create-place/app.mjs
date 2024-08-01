@@ -5,8 +5,8 @@ import {
 } from "@aws-sdk/client-dynamodb";
 
 const REGION = "us-east-2";
-const PLACES_TABLE = "MapAppPlacesTable";
-const LISTS_TABLE = "MapAppListsTable";
+const PLACE_TABLE = process.env.PLACE_TABLE;
+const LIST_TABLE = process.env.LIST_TABLE;
 const dbclient = new DynamoDBClient({ region: REGION });
 
 const headers = {
@@ -25,6 +25,7 @@ export const lambdaHandler = async (event) => {
   console.log("listId -- ", listId);
   const place = body.place;
   console.log("place -- ", place);
+  console.log("place.photos -- ", place.photos);
 
   await savePlace(userId, listId, place);
 
@@ -48,41 +49,70 @@ export const lambdaHandler = async (event) => {
 };
 
 const savePlace = async (userId, listId, placeData) => {
-  console.log("savePlace -- ", userId, listId, placeData);
-
   if (
     !placeData ||
     !placeData.place_id ||
     !placeData.geometry ||
     !placeData.geometry.location ||
-    !placeData.photos ||
-    !placeData.current_opening_hours ||
-    !placeData.current_opening_hours.weekday_text
+    !placeData.photos
   ) {
     console.error("Missing required place data");
     return;
   }
 
+  const photoData = placeData.photos.map((photo) => {
+    return {
+      M: {
+        height: { N: photo.height.toString() },
+        width: { N: photo.width.toString() },
+        html_attributions: {
+          SS: photo.html_attributions.map((html) =>
+            html.replace(/<[^>]*>/g, "")
+          ),
+        }, // Removes HTML tags and stores plain text
+      },
+    };
+  });
+
   const params = {
-    TableName: PLACES_TABLE,
+    TableName: PLACE_TABLE,
     Item: {
       placeId: { S: placeData.place_id },
       userId: { S: userId },
       listId: { S: listId },
       name: { S: placeData.name },
-      location: {
+      formattedAddress: { S: placeData.formatted_address || "" },
+      formattedPhoneNumber: { S: placeData.formatted_phone_number || "" },
+      businessStatus: { S: placeData.business_status || "" },
+      icon: { S: placeData.icon || "" },
+      internationalPhoneNumber: {
+        S: placeData.international_phone_number || "",
+      },
+      url: { S: placeData.url || "" },
+      website: { S: placeData.website || "" },
+      vicinity: { S: placeData.vicinity || "" },
+      rating: { N: placeData.rating ? placeData.rating.toString() : "0" },
+      types: { SS: placeData.types || [] },
+      photoDetails: { L: photoData },
+      geometry: {
         M: {
-          lat: { N: placeData.geometry.location.lat.toString() },
-          long: { N: placeData.geometry.location.lng.toString() },
+          location: {
+            M: {
+              lat: { N: placeData.geometry.location.lat.toString() },
+              lng: { N: placeData.geometry.location.lng.toString() },
+            },
+          },
+          viewport: placeData.geometry.viewport
+            ? {
+                M: {
+                  south: { N: placeData.geometry.viewport.south.toString() },
+                  west: { N: placeData.geometry.viewport.west.toString() },
+                  north: { N: placeData.geometry.viewport.north.toString() },
+                  east: { N: placeData.geometry.viewport.east.toString() },
+                },
+              }
+            : { NULL: true },
         },
-      },
-      photos: {
-        SS: placeData.photos.map((photo) => photo.url),
-      },
-      hours: {
-        L: placeData.current_opening_hours.weekday_text.map((day) => ({
-          S: day,
-        })),
       },
     },
   };
@@ -123,10 +153,9 @@ const addPlaceToListItem = async (
   }
 
   const params = {
-    TableName: LISTS_TABLE,
+    TableName: LIST_TABLE,
     Key: {
       listId: { S: listId },
-      userId: { S: userId },
     },
     UpdateExpression:
       "SET places = list_append(if_not_exists(places, :emptyList), :place)",

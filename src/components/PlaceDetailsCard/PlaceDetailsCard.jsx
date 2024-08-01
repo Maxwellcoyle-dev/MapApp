@@ -29,6 +29,10 @@ const PlaceDetailsCard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("Place Details Card Mounting");
+  }, []);
+
+  useEffect(() => {
     if (
       selectedPlace &&
       selectedPlace.photos &&
@@ -47,6 +51,10 @@ const PlaceDetailsCard = () => {
       : null;
     setIsOpen(open);
   }, [selectedPlace]);
+
+  const handleSavePlace = () => {
+    navigate("/save-place");
+  };
 
   if (!selectedPlace) {
     return (
@@ -82,10 +90,7 @@ const PlaceDetailsCard = () => {
               )}
             </div>
             <div className={styles.iconOverlayContainer}>
-              <div
-                className={styles.iconContainer}
-                onClick={() => setShowAddToList(true)}
-              >
+              <div className={styles.iconContainer} onClick={handleSavePlace}>
                 <FaRegHeart className={styles.overlayIcon} />
               </div>
               <div

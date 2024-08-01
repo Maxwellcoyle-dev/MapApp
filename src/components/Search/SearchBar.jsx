@@ -1,5 +1,5 @@
 // Libaries
-import React from "react";
+import React, { useEffect } from "react";
 
 // Components
 import Input from "./Input/Input";
@@ -7,7 +7,7 @@ import AutoComplete from "./AutoComplete";
 import PlaceTypeSelector from "./PlaceTypeSelector/PlaceTypeSelector";
 
 // State
-import { useMapContext } from "../../state/MapContext";
+import { useSearchContext } from "../../state/SearchContext";
 
 // Hooks
 import useAutoCompleteSelect from "../../hooks/useAutoCompleteSelect";
@@ -16,7 +16,7 @@ import useAutoCompleteSelect from "../../hooks/useAutoCompleteSelect";
 import styles from "./SearchBar.module.css";
 
 const SearchBar = () => {
-  const { autoCompleteResults } = useMapContext();
+  const { autoCompleteResults } = useSearchContext();
 
   const handleAutoCompleteSelect = useAutoCompleteSelect();
 

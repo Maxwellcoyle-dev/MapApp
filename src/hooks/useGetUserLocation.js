@@ -9,7 +9,6 @@ const useGetUserLocation = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            console.log("Position received:", position);
             // add the users location to local storage
             localStorage.setItem(
               "mapAppUserLocation",
