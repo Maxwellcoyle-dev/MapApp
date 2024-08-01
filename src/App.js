@@ -53,10 +53,6 @@ function App({ signOut, user }) {
 
   const { authUser } = useUser(user);
 
-  useEffect(() => {
-    if (authUser) console.log(authUser);
-  }, [authUser]);
-
   return (
     <SearchProvider>
       <MapProvider>

@@ -12,7 +12,6 @@ import useRemoveListPlace from "../../hooks/backend-hooks/useRemoveListPlace";
 import useUser from "../../hooks/backend-hooks/useUser";
 
 import styles from "./ListPage.module.css";
-import AddTagModal from "../AddTagPage/AddTagPage";
 
 const List = () => {
   const [showEditForm, setShowEditForm] = useState(false);
@@ -36,15 +35,9 @@ const List = () => {
   const { listData, listDataIsLoading } = useGetList(state.listId.S);
 
   useEffect(() => {
-    console.log("user -- ", authUser);
-    console.log("listData -- ", listData);
     setListName(listData?.data.listName.S);
     setDescription(listData?.data.listDescription?.S);
   }, [listData]);
-
-  useEffect(() => {
-    console.log("state -- ", state);
-  }, []);
 
   const navigate = useNavigate();
 
@@ -66,21 +59,6 @@ const List = () => {
   const { updateListMutation } = useUpdateList();
 
   const { removeListPlaceMutation } = useRemoveListPlace();
-
-  // Log Checks
-  useEffect(() => {
-    console.log("placePhotos -- ", placesPhotos);
-  }, [placesPhotos]);
-
-  useEffect(() => {
-    console.log("state -- ", state);
-  }, [state]);
-
-  useEffect(() => {
-    if (listPlacesData) {
-      console.log("listPlacesData", listPlacesData);
-    }
-  }, [listPlacesData]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
