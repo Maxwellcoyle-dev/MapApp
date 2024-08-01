@@ -17,7 +17,8 @@ import MyAccount from "./pages/MyAccount";
 import MyPlaces from "./pages/MyPlacesPage/MyPlacesPage";
 import ListPage from "./pages/ListPage/ListPage";
 import PlacePage from "./pages/PlacePage/PlacePage";
-import SignIn from "./pages/authentication/SignIn";
+import SignIn from "./pages/AuthPages/SignIn";
+import CreateAccount from "./pages/AuthPages/CreateAccount";
 import AddTagPage from "./pages/AddTagPage/AddTagPage";
 import SavePlace from "./pages/SavePlace/SavePlace";
 
@@ -34,7 +35,6 @@ import { useAuthContext } from "./state/AuthContext";
 import { useAppContext } from "./state/AppContext";
 
 import useUser from "./hooks/backend-hooks/useUser";
-import CreateAccount from "./pages/authentication/CreateAccount";
 
 const { Content, Footer } = Layout;
 

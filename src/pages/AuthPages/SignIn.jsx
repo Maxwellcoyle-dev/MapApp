@@ -4,9 +4,10 @@ import {
   fetchUserAttributes,
   signInWithRedirect,
 } from "@aws-amplify/auth";
+import { Hub } from "aws-amplify";
 import { Form, Input, Button, Alert, Collapse } from "antd";
 import { GoogleOutlined } from "@ant-design/icons"; // For Google logo
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 // Context
 import { useAuthContext } from "../../state/AuthContext";
@@ -23,8 +24,14 @@ function SignIn() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
   const [showManualSignIn, setShowManualSignIn] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Location state handling
+  const from = location.state?.from?.pathname || "/";
+  console.log("from", from);
 
   const { authUser } = useUser();
 
@@ -32,6 +39,7 @@ function SignIn() {
     setLoading(true);
     setError("");
     try {
+      console.log("from", from);
       const amplifyUser = await signIn(username, password);
       const attributes = await fetchUserAttributes(amplifyUser);
       login({ ...amplifyUser, ...attributes });
@@ -53,10 +61,12 @@ function SignIn() {
   };
 
   useEffect(() => {
+    console.log("Checking authUser for redirection:", authUser);
     if (authUser && authUser.userId) {
-      navigate("/"); // Or your desired route after sign-in
+      console.log("Redirecting to", from);
+      navigate(from);
     }
-  }, [authUser, navigate]);
+  }, [authUser, navigate, from]);
 
   return (
     <div className={styles.signInContainer}>

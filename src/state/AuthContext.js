@@ -8,7 +8,7 @@ export const useAuthContext = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  const login = async (userData) => {
+  const login = async (userData, from) => {
     try {
       const attributes = await fetchUserAttributes();
       console.log("Attributes: ", attributes);

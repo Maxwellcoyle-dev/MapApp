@@ -29,6 +29,10 @@ const PlaceDetailsCard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("Place Details Card Mounting");
+  }, []);
+
+  useEffect(() => {
     if (
       selectedPlace &&
       selectedPlace.photos &&
