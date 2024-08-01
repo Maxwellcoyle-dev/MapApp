@@ -8,6 +8,7 @@ const useUser = () => {
     email: "",
     userId: "",
   });
+  const [authError, setAuthError] = useState(""); // State to track authentication errors
 
   useEffect(() => {
     fetchUserAttributes()
@@ -17,8 +18,20 @@ const useUser = () => {
           userId: user.sub,
           email: user.email,
         }));
+        setAuthError(""); // Clear any previous authentication errors
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+        if (error === "NotAuthorizedException") {
+          setAuthError(
+            "Unauthenticated access is not supported. Please log in."
+          );
+        } else {
+          setAuthError(
+            "Failed to fetch user attributes. Please try again later."
+          );
+        }
+      });
   }, []);
 
   const {
@@ -34,7 +47,7 @@ const useUser = () => {
     staleTime: 1000 * 60 * 60, // 1 hour
   });
 
-  return { authUser, authUserError, isAuthUserLoading };
+  return { authUser, authUserError, isAuthUserLoading, authError };
 };
 
 export default useUser;

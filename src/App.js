@@ -18,20 +18,35 @@ import MyPlaces from "./pages/MyPlacesPage/MyPlacesPage";
 import ListPage from "./pages/ListPage/ListPage";
 import PlacePage from "./pages/PlacePage/PlacePage";
 import AddTagPage from "./pages/AddTagPage/AddTagPage";
+import SignIn from "./pages/authentication/SignIn";
+
+// Protected Route
+import ProtectedRoute from "./ProtectedRoute";
 
 // Components
 import NavBar from "./components/NavBar/NavBar";
-import { MapProvider } from "./state/MapContext"; // Import MapProvider
-import { SearchProvider } from "./state/SearchContext";
 
+// Context
+import { MapProvider } from "./state/MapContext";
+import { SearchProvider } from "./state/SearchContext";
+import { useAuthContext } from "./state/AuthContext";
 import { useAppContext } from "./state/AppContext";
 
 import useUser from "./hooks/backend-hooks/useUser";
+import CreateAccount from "./pages/authentication/CreateAccount";
 
 const { Content, Footer } = Layout;
 
-function App({ signOut, user }) {
+function App() {
   const { setUserLocation } = useAppContext();
+
+  const { user } = useAuthContext();
+
+  useEffect(() => {
+    console.log("User: ", user);
+  }, [user]);
+
+  const { authUser } = useUser(user);
 
   useEffect(() => {
     // get the mapAppUserLocation from local storage
@@ -51,8 +66,6 @@ function App({ signOut, user }) {
     );
   }, []);
 
-  const { authUser } = useUser(user);
-
   return (
     <SearchProvider>
       <MapProvider>
@@ -60,15 +73,28 @@ function App({ signOut, user }) {
           <Layout style={{ height: "100vh", position: "relative" }}>
             <Content>
               <Routes>
+                <Route path="login" element={<SignIn />} />
+                <Route path="create-account" element={<CreateAccount />} />
                 <Route path="/" element={<Main />}>
                   <Route path="list/:listId" element={<ListPage />} />
                   <Route path="place/:placeId" element={<PlacePage />} />
                 </Route>
-                <Route path="my-places" element={<MyPlaces />} />
+                <Route
+                  path="my-places"
+                  element={
+                    <ProtectedRoute>
+                      <MyPlaces />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route path="add-tag/:placeId" element={<AddTagPage />} />
                 <Route
                   path="/my-account"
-                  element={<MyAccount signOut={signOut} />}
+                  element={
+                    <ProtectedRoute>
+                      <MyAccount />
+                    </ProtectedRoute>
+                  }
                 />
               </Routes>
             </Content>
@@ -89,4 +115,4 @@ function App({ signOut, user }) {
   );
 }
 
-export default withAuthenticator(App);
+export default App;
