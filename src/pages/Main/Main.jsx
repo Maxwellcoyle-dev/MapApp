@@ -7,7 +7,6 @@ import { Outlet } from "react-router-dom";
 import MapView from "../../components/Main/Map/MapView";
 import MapListView from "../../components/Main/MapListView/MapListView";
 import SearchBar from "../../components/Search/SearchBar";
-import AddToList from "../../components/AddToList/AddToList";
 
 // State
 import { useAppContext } from "../../state/AppContext";
@@ -40,7 +39,6 @@ const Main = () => {
           setView={setView}
         />
       )}
-      {showAddToList && <AddToList />}
       {view === "map" ? (
         <div className={styles.toggleButtonDiv} onClick={() => setView("list")}>
           <MdFormatListBulleted className={styles.viewToggleIcon} />
