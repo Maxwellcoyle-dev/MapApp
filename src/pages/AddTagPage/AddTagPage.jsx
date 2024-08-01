@@ -1,25 +1,43 @@
 import React, { useState, useEffect } from "react";
 import { Button, Tag } from "antd";
+import { useParams, useLocation, useNavigate, use } from "react-router-dom";
+
+// Hooks
 import useUser from "../../hooks/backend-hooks/useUser";
 import useUpdatePlace from "../../hooks/backend-hooks/useUpdatePlace";
-import styles from "./AddTagView.module.css";
 
-const AddTagView = ({ setShowTagManager, currentListPlace, listId }) => {
+// styles
+import styles from "./AddTagPage.module.css";
+
+const AddTagPage = () => {
   const [currentPlaceTags, setCurrentPlaceTags] = useState([]);
   const [allTags, setAllTags] = useState([]);
+  const navigate = useNavigate();
+
+  const { placeId } = useParams();
+  const location = useLocation();
+  const { state } = useLocation();
+  const { place, listId } = state;
+
+  useEffect(() => {
+    console.log("location -- ", location);
+    console.log("placeId", placeId);
+    console.log("place", place);
+    console.log("listId", listId);
+  }, [place, listId, placeId]);
 
   const { authUser } = useUser();
   const { updatePlaceMutation } = useUpdatePlace();
 
   useEffect(() => {
-    if (currentListPlace?.tags?.L) {
-      const mappedTags = currentListPlace.tags.L.map((tag) => ({
+    if (place?.tags?.L) {
+      const mappedTags = place.tags.L.map((tag) => ({
         tagId: tag.M.tagId.S,
         categoryId: tag.M.categoryId.S,
       }));
       setCurrentPlaceTags(mappedTags);
     }
-  }, [currentListPlace]);
+  }, [place]);
 
   useEffect(() => {
     if (authUser?.data?.categories) {
@@ -49,7 +67,7 @@ const AddTagView = ({ setShowTagManager, currentListPlace, listId }) => {
   };
 
   const handleSave = () => {
-    console.log("placeId", currentListPlace.placeId.S);
+    console.log("placeId", place.placeId.S);
     console.log("userId", authUser.data.userId);
     const updatedTags = currentPlaceTags.map((tag) => ({
       tagId: tag.tagId,
@@ -57,21 +75,22 @@ const AddTagView = ({ setShowTagManager, currentListPlace, listId }) => {
     }));
     console.log("updatedTags", updatedTags);
     updatePlaceMutation.mutate({
-      placeId: currentListPlace.placeId.S,
+      placeId: place.placeId.S,
       userId: authUser.data.userId,
       placeData: {
         tags: updatedTags,
       },
       listId: listId,
     });
-    setShowTagManager(false);
+    navigate(-1);
+    // close the page - return to previous page
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.headerDiv}>
         <h3>Tag Manager</h3>
-        <Button onClick={() => setShowTagManager(false)}>Close</Button>
+        <Button onClick={() => navigate(-1)}>Close</Button>
       </div>
       {allTags.map((category) => (
         <div className={styles.categoryDiv} key={category.categoryId}>
@@ -101,4 +120,4 @@ const AddTagView = ({ setShowTagManager, currentListPlace, listId }) => {
   );
 };
 
-export default AddTagView;
+export default AddTagPage;
