@@ -17,6 +17,7 @@ import MyAccount from "./pages/MyAccount";
 import MyPlaces from "./pages/MyPlacesPage/MyPlacesPage";
 import ListPage from "./pages/ListPage/ListPage";
 import PlacePage from "./pages/PlacePage/PlacePage";
+import AddTagPage from "./pages/AddTagPage/AddTagPage";
 
 // Components
 import NavBar from "./components/NavBar/NavBar";
@@ -68,6 +69,7 @@ function App({ signOut, user }) {
                   <Route path="place/:placeId" element={<PlacePage />} />
                 </Route>
                 <Route path="my-places" element={<MyPlaces />} />
+                <Route path="add-tag/:placeId" element={<AddTagPage />} />
                 <Route
                   path="/my-account"
                   element={<MyAccount signOut={signOut} />}

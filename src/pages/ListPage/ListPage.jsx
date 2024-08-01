@@ -12,7 +12,7 @@ import useRemoveListPlace from "../../hooks/backend-hooks/useRemoveListPlace";
 import useUser from "../../hooks/backend-hooks/useUser";
 
 import styles from "./ListPage.module.css";
-import AddTagView from "../../components/ListPage/AddTagView";
+import AddTagModal from "../AddTagPage/AddTagPage";
 
 const List = () => {
   const [showEditForm, setShowEditForm] = useState(false);
@@ -198,7 +198,9 @@ const List = () => {
                       icon={<PlusSquareOutlined />}
                       onClick={() => {
                         setCurrentListPlace(place);
-                        setShowTagManager(true);
+                        navigate(`/add-tag/${place.placeId.S}`, {
+                          state: { place, listId: listData.data.listId.S },
+                        });
                       }}
                     >
                       Add Tag
@@ -229,13 +231,6 @@ const List = () => {
             })
           )}
         </div>
-        {showTagManager && (
-          <AddTagView
-            setShowTagManager={setShowTagManager}
-            currentListPlace={currentListPlace}
-            listId={listData.data.listId.S}
-          />
-        )}
       </div>
     );
   }
