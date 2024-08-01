@@ -12,10 +12,10 @@ import useUserLists from "../../hooks/backend-hooks/useUserLists";
 import useSavePlace from "../../hooks/backend-hooks/useSavePlace";
 
 // styles & assets
-import styles from "./AddToList.module.css";
+import styles from "./SavePlace.module.css";
 import { fallbackImage } from "./fallbackImage";
 
-const AddToList = () => {
+const SavePlace = () => {
   const [user, setUser] = useState(null);
   const { setShowAddToList } = useAppContext();
 
@@ -90,4 +90,4 @@ const AddToList = () => {
   );
 };
 
-export default AddToList;
+export default SavePlace;

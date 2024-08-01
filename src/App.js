@@ -17,8 +17,9 @@ import MyAccount from "./pages/MyAccount";
 import MyPlaces from "./pages/MyPlacesPage/MyPlacesPage";
 import ListPage from "./pages/ListPage/ListPage";
 import PlacePage from "./pages/PlacePage/PlacePage";
-import AddTagPage from "./pages/AddTagPage/AddTagPage";
 import SignIn from "./pages/authentication/SignIn";
+import AddTagPage from "./pages/AddTagPage/AddTagPage";
+import SavePlace from "./pages/SavePlace/SavePlace";
 
 // Protected Route
 import ProtectedRoute from "./ProtectedRoute";
@@ -88,6 +89,14 @@ function App() {
                   }
                 />
                 <Route path="add-tag/:placeId" element={<AddTagPage />} />
+                <Route
+                  path="save-place"
+                  element={
+                    <ProtectedRoute>
+                      <SavePlace />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route
                   path="/my-account"
                   element={

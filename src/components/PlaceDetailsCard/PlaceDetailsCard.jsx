@@ -48,6 +48,10 @@ const PlaceDetailsCard = () => {
     setIsOpen(open);
   }, [selectedPlace]);
 
+  const handleSavePlace = () => {
+    navigate("/save-place");
+  };
+
   if (!selectedPlace) {
     return (
       <div>
@@ -82,10 +86,7 @@ const PlaceDetailsCard = () => {
               )}
             </div>
             <div className={styles.iconOverlayContainer}>
-              <div
-                className={styles.iconContainer}
-                onClick={() => setShowAddToList(true)}
-              >
+              <div className={styles.iconContainer} onClick={handleSavePlace}>
                 <FaRegHeart className={styles.overlayIcon} />
               </div>
               <div
