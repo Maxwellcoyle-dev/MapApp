@@ -1,8 +1,7 @@
-// Libraries
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Image, Skeleton } from "antd";
-import { FaRegHeart } from "react-icons/fa";
+import { FaRegHeart, FaHeart } from "react-icons/fa"; // Import FaHeart for filled heart
 import {
   MdOutlineStar,
   MdOutlineStarHalf,
@@ -10,12 +9,12 @@ import {
   MdClose,
 } from "react-icons/md";
 
-// State
 import { useAppContext } from "../../state/AppContext";
 import { useSearchContext } from "../../state/SearchContext";
 import { useMapContext } from "../../state/MapContext";
 
-// Styles
+import usePlaceIsSaved from "../../hooks/usePlaceIsSaved";
+
 import styles from "./PlaceDetailsCard.module.css";
 
 const PlaceDetailsCard = () => {
@@ -31,6 +30,10 @@ const PlaceDetailsCard = () => {
   useEffect(() => {
     console.log("Place Details Card Mounting");
   }, []);
+
+  const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(
+    selectedPlace?.place_id
+  );
 
   useEffect(() => {
     if (
@@ -91,7 +94,13 @@ const PlaceDetailsCard = () => {
             </div>
             <div className={styles.iconOverlayContainer}>
               <div className={styles.iconContainer} onClick={handleSavePlace}>
-                <FaRegHeart className={styles.overlayIcon} />
+                {isPlaceSavedLoading ? (
+                  <Skeleton.Avatar size="large" active />
+                ) : isPlaceSaved ? (
+                  <FaHeart className={styles.overlayIcon} />
+                ) : (
+                  <FaRegHeart className={styles.overlayIcon} />
+                )}
               </div>
               <div
                 className={styles.iconContainer}

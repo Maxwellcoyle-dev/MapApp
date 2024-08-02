@@ -6,6 +6,7 @@ const useListPlaces = (listId) => {
     data: listPlacesData,
     error: listPlacesDataError,
     isLoading: isListPlacesDataLoading,
+    refetch: refetchListPlaces,
   } = useQuery({
     queryKey: ["list places", listId],
     queryFn: () => scanPlaces(listId),
@@ -15,7 +16,12 @@ const useListPlaces = (listId) => {
     staleTime: 1000 * 60 * 60,
   });
 
-  return { listPlacesData, listPlacesDataError, isListPlacesDataLoading };
+  return {
+    listPlacesData,
+    listPlacesDataError,
+    isListPlacesDataLoading,
+    refetchListPlaces,
+  };
 };
 
 export default useListPlaces;

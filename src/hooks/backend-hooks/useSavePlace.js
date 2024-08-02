@@ -38,8 +38,14 @@ const useSavePlace = () => {
       });
     },
     onError: (error) => console.error(error),
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       console.log("Place saved successfully!");
+      console.log("data: ", data);
+      console.log("variables: ", variables);
+      queryClient.invalidateQueries({ queryKey: ["list", variables.listId] });
+      queryClient.invalidateQueries({
+        queryKey: ["list places", variables.listId],
+      });
       queryClient.invalidateQueries({ queryKey: ["lists", user?.userId] });
       setShowAddToList(false);
       setSavePlaceIsLoading(false);

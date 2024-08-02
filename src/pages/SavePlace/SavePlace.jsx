@@ -1,5 +1,6 @@
 // Libraries
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "aws-amplify/auth";
 import { MdClose } from "react-icons/md";
 import { Image } from "antd";
@@ -18,6 +19,8 @@ import { fallbackImage } from "./fallbackImage";
 const SavePlace = () => {
   const [user, setUser] = useState(null);
   const { setShowAddToList } = useAppContext();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getCurrentUser()
@@ -46,7 +49,7 @@ const SavePlace = () => {
   return (
     <div className={styles.addToListContainer}>
       <div className={styles.headerDiv}>
-        <div className={styles.iconDiv} onClick={() => setShowAddToList(false)}>
+        <div className={styles.iconDiv} onClick={() => navigate(-1)}>
           <MdClose />
         </div>
         <h3>Add to list</h3>

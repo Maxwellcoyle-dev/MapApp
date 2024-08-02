@@ -2,6 +2,7 @@ import {
   DynamoDBClient,
   PutItemCommand,
   UpdateItemCommand,
+  GetItemCommand,
 } from "@aws-sdk/client-dynamodb";
 
 const REGION = "us-east-2";
@@ -18,27 +19,45 @@ const headers = {
 export const lambdaHandler = async (event) => {
   console.log("event", event);
   const body = JSON.parse(event.body);
-
-  const userId = body.userId;
-  console.log("userId -- ", userId);
   const listId = body.listId;
   console.log("listId -- ", listId);
+  const userId = body.userId;
+  console.log("userId -- ", userId);
   const place = body.place;
   console.log("place -- ", place);
-  console.log("place.photos -- ", place.photos);
 
-  await savePlace(userId, listId, place);
+  // check if the place is already saved
+  const getParams = {
+    TableName: PLACE_TABLE,
+    Key: {
+      placeId: { S: place.place_id },
+      userId: { S: userId },
+    },
+  };
+  const getCommand = new GetItemCommand(getParams);
 
-  if (place.photos && place.photos.length > 0) {
-    await addPlaceToListItem(
-      userId,
-      listId,
-      place.place_id,
-      place.name,
-      place.photos[0].url
+  const getPlaceResponse = await dbclient.send(getCommand);
+  console.log("getPlaceResponse -- ", getPlaceResponse);
+
+  if (getPlaceResponse.Item) {
+    console.log(
+      "Place already saved to Place Table. Adding reference to List Item"
     );
+    const isDuplicate = await checkListForDuplicateItem(listId, place.place_id);
+    if (isDuplicate) {
+      console.log("Place already saved to this list!");
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ message: "Place already saved to this list!" }),
+      };
+    }
+    await addPlaceToListItem(userId, listId, place.place_id, place.name);
   } else {
-    await addPlaceToListItem(userId, listId, place.place_id, place.name, null);
+    console.log("Place not saved yet. Saving place to Place Table");
+    await savePlace(userId, listId, place);
+    console.log("Place saved to Place Table. Adding reference to List Item");
+    await addPlaceToListItem(userId, listId, place.place_id, place.name);
   }
 
   return {
@@ -49,37 +68,16 @@ export const lambdaHandler = async (event) => {
 };
 
 const savePlace = async (userId, listId, placeData) => {
-  if (
-    !placeData ||
-    !placeData.place_id ||
-    !placeData.geometry ||
-    !placeData.geometry.location ||
-    !placeData.photos
-  ) {
+  if (!placeData || !listId || !userId) {
     console.error("Missing required place data");
     return;
   }
-
-  const photoData = placeData.photos.map((photo) => {
-    return {
-      M: {
-        height: { N: photo.height.toString() },
-        width: { N: photo.width.toString() },
-        html_attributions: {
-          SS: photo.html_attributions.map((html) =>
-            html.replace(/<[^>]*>/g, "")
-          ),
-        }, // Removes HTML tags and stores plain text
-      },
-    };
-  });
 
   const params = {
     TableName: PLACE_TABLE,
     Item: {
       placeId: { S: placeData.place_id },
       userId: { S: userId },
-      listId: { S: listId },
       name: { S: placeData.name },
       formattedAddress: { S: placeData.formatted_address || "" },
       formattedPhoneNumber: { S: placeData.formatted_phone_number || "" },
@@ -93,7 +91,6 @@ const savePlace = async (userId, listId, placeData) => {
       vicinity: { S: placeData.vicinity || "" },
       rating: { N: placeData.rating ? placeData.rating.toString() : "0" },
       types: { SS: placeData.types || [] },
-      photoDetails: { L: photoData },
       geometry: {
         M: {
           location: {
@@ -120,37 +117,20 @@ const savePlace = async (userId, listId, placeData) => {
   console.log("params", params);
   const command = new PutItemCommand(params);
   try {
-    await dbclient.send(command);
-    console.log("Place saved successfully");
+    const savePlaceResult = await dbclient.send(command);
+    console.log("savePlaceResult -- ", savePlaceResult);
   } catch (err) {
     console.error("Error saving place", err);
   }
 };
 
-const addPlaceToListItem = async (
-  userId,
-  listId,
-  placeId,
-  placeName,
-  photoUrl
-) => {
-  console.log(
-    "addPlaceToUserList -- ",
-    userId,
-    listId,
-    placeId,
-    placeName,
-    photoUrl
-  );
+const addPlaceToListItem = async (userId, listId, placeId, placeName) => {
+  console.log("addPlaceToUserList -- ", userId, listId, placeId, placeName);
 
   const placeMap = {
     placeId: { S: placeId },
     name: { S: placeName },
   };
-
-  if (photoUrl) {
-    placeMap.photo = { S: photoUrl };
-  }
 
   const params = {
     TableName: LIST_TABLE,
@@ -168,9 +148,33 @@ const addPlaceToListItem = async (
   console.log("params", params);
   const command = new UpdateItemCommand(params);
   try {
-    await dbclient.send(command);
+    const updateListItemResponse = await dbclient.send(command);
+    console.log("updateListItemResponse -- ", updateListItemResponse);
     console.log("Place added to user list successfully");
   } catch (err) {
     console.error("Error adding place to user list", err);
+  }
+};
+
+const checkListForDuplicateItem = async (listId, placeId) => {
+  const params = {
+    TableName: LIST_TABLE,
+    Key: {
+      listId: { S: listId },
+    },
+  };
+
+  const command = new GetItemCommand(params);
+  try {
+    const listData = await dbclient.send(command);
+    console.log("listData -- ", listData);
+    if (listData.Item) {
+      const list = listData.Item;
+      const places = list.places.L;
+      const isDuplicate = places.some((place) => place.M.placeId.S === placeId);
+      return isDuplicate;
+    }
+  } catch (err) {
+    console.error("Error checking for duplicate item", err);
   }
 };

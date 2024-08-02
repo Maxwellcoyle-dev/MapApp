@@ -10,6 +10,7 @@ import useGetPhotos from "../../hooks/google-api-hooks/useGetPhotos";
 import useGetList from "../../hooks/backend-hooks/useGetList";
 import useRemoveListPlace from "../../hooks/backend-hooks/useRemoveListPlace";
 import useUser from "../../hooks/backend-hooks/useUser";
+import useDeleteList from "../../hooks/backend-hooks/useDeleteList";
 
 import styles from "./ListPage.module.css";
 
@@ -43,9 +44,8 @@ const List = () => {
 
   const formRef = useRef(null);
 
-  const { listPlacesData, isListPlacesDataLoading } = useListPlaces(
-    state.listId.S
-  );
+  const { listPlacesData, isListPlacesDataLoading, refetchListPlaces } =
+    useListPlaces(state.listId.S);
 
   useEffect(() => {
     if (listPlacesData) {
@@ -57,6 +57,7 @@ const List = () => {
   const { placesPhotos } = useGetPhotos(placeIds);
 
   const { updateListMutation } = useUpdateList();
+  const { deleteListMutation } = useDeleteList();
 
   const { removeListPlaceMutation } = useRemoveListPlace();
 
@@ -92,9 +93,24 @@ const List = () => {
     setShowEditForm(false);
   };
 
+  const handleDeleteList = () => {
+    deleteListMutation.mutate({
+      listId: state.listId.S,
+      userId: state.userId.S,
+    });
+  };
+
   const handleCancel = () => {
     setShowEditForm(false);
   };
+
+  useEffect(() => {
+    console.log("listPlacesData", listPlacesData);
+  }, [listPlacesData]);
+
+  useEffect(() => {
+    console.log("listData", listData);
+  }, [listData]);
 
   if (listDataIsLoading) {
     <div className={styles.listPageContainer}>
@@ -111,7 +127,13 @@ const List = () => {
               <h1 style={{ margin: 0 }}>{listData.data.listName.S}</h1>
               <p>{listData.data.listDescription.S}</p>
             </div>
-            <Button onClick={() => setShowEditForm(true)}>Edit</Button>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <Button onClick={() => setShowEditForm(true)}>Edit</Button>
+              <Button icon={<DeleteOutlined />} onClick={handleDeleteList}>
+                Delete
+              </Button>
+              <Button onClick={refetchListPlaces}>Refresh List</Button>
+            </div>
           </div>
         ) : (
           <div ref={formRef}>
