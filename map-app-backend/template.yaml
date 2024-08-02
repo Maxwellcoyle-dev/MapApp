@@ -258,12 +258,13 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppListTable
+          LIST_TABLE: !Ref MapAppListTable
+          PLACE_TABLE: !Ref MapAppPlacesTable
       Policies:
-        - DynamoDBReadPolicy:
+        - DynamoDBCrudPolicy:
             TableName: !Ref MapAppListTable
-        - DynamoDBWritePolicy:
-            TableName: !Ref MapAppListTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppPlacesTable
         - Statement:
             Effect: Allow
             Action:
@@ -273,8 +274,8 @@ Resources:
         DeleteListApiEvent:
           Type: Api
           Properties:
-            Path: /list
-            Method: delete
+            Path: /list/delete-list/{listId}/user/{userId}
+            Method: put
             RestApiId: !Ref MappAppAPI
 
   # # List table and functions
@@ -287,8 +288,6 @@ Resources:
           AttributeType: "S"
         - AttributeName: "userId"
           AttributeType: "S"
-        - AttributeName: "listId"
-          AttributeType: "S"
       KeySchema:
         - AttributeName: "placeId"
           KeyType: "HASH"
@@ -297,16 +296,6 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-      GlobalSecondaryIndexes:
-        - IndexName: listId-index
-          KeySchema:
-            - AttributeName: listId
-              KeyType: HASH
-          Projection:
-            ProjectionType: ALL
-          ProvisionedThroughput:
-            ReadCapacityUnits: 5
-            WriteCapacityUnits: 5
   # GetPlaceFunction:
   #   Type: "AWS::Serverless::Function"
   #   Properties:
@@ -339,9 +328,12 @@ Resources:
       Environment:
         Variables:
           PLACES_TABLE: !Ref MapAppPlacesTable
+          LIST_TABLE: !Ref MapAppListTable
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref MapAppPlacesTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref MapAppListTable
       Events:
         ScanPlaces:
           Type: Api

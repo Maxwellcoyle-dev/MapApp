@@ -31,3 +31,10 @@ export const removePlace = async (listId, placeId, userId) => {
   );
   return response.data;
 };
+
+export const deleteList = async (listId, userId) => {
+  const response = await axiosInstance.put(
+    `/list/delete-list/${listId}/user/${userId}`
+  );
+  return response.data;
+};

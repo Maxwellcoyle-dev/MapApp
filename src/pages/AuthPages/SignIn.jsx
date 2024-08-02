@@ -35,6 +35,13 @@ function SignIn() {
 
   const { authUser } = useUser();
 
+  // Temporary sollution for redirect issue. Make sure that authenticated users are not stuck on signin page.
+  useEffect(() => {
+    if (authUser) {
+      navigate(-1);
+    }
+  }, [authUser]);
+
   const handleSignIn = async () => {
     setLoading(true);
     setError("");
