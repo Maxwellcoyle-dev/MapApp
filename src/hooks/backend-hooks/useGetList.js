@@ -6,6 +6,7 @@ const useGetList = (listId) => {
   const {
     data: listData,
     error: listError,
+    isError: listDataIsError,
     isLoading: listDataIsLoading,
   } = useQuery({
     queryKey: ["list", listId],
@@ -16,7 +17,7 @@ const useGetList = (listId) => {
     staleTime: 1000 * 60 * 60,
   });
 
-  return { listData, listError, listDataIsLoading };
+  return { listData, listDataIsError, listError, listDataIsLoading };
 };
 
 export default useGetList;

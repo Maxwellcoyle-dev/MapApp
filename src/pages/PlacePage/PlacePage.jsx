@@ -2,8 +2,7 @@
 import React, { useEffect } from "react";
 import {
   MdClose,
-  MdFormatListBulletedAdd,
-  MdLabelOutline,
+  MdOutlineNewLabel,
   MdOutlineStar,
   MdOutlineStarBorder,
   MdOutlineStarHalf,
@@ -12,14 +11,14 @@ import {
   MdOutlineLocalBar,
   MdOutlineRestaurant,
 } from "react-icons/md";
-import { useParams } from "react-router-dom";
-
-// Components
-import PhotoDisplay from "../../components/PhotoDisplay/PhotoDisplay";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { Image, Skeleton, Carousel } from "antd";
+import { useParams, useNavigate } from "react-router-dom";
 
 // Hooks
 import useGetPlaceDetails from "../../hooks/google-api-hooks/useGetPlaceDetails";
 import useClosePlaceDetails from "../../hooks/useClosePlaceDetails";
+import usePlaceIsSaved from "../../hooks/usePlaceIsSaved";
 
 // Styles
 import styles from "./PlacePage.module.css";
@@ -30,6 +29,9 @@ const PlacePage = () => {
   const handleClosePlace = useClosePlaceDetails();
 
   const { placeData } = useGetPlaceDetails(placeId);
+  const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(placeId);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.log("placeData: ", placeData);
@@ -39,18 +41,46 @@ const PlacePage = () => {
     <div className={styles.placeDetailsDiv}>
       {placeData && (
         <>
-          <div className={styles.optionsDiv}>
-            <div className={styles.optionsIconDiv}>
-              <MdLabelOutline className={styles.icon} />
-            </div>
-            <div className={styles.optionsIconDiv}>
-              <MdFormatListBulletedAdd className={styles.icon} />
-            </div>
-            <div className={styles.optionsIconDiv} onClick={handleClosePlace}>
-              <MdClose className={styles.icon} />
+          <div className={styles.carouselContainer}>
+            <Carousel className={styles.carousel}>
+              {placeData.photos?.map((photo, index) => (
+                <div key={index} className={styles.photoDiv}>
+                  <Image
+                    className={styles.mainImage}
+                    src={photo.getUrl()}
+                    alt={placeData.name}
+                  />
+                </div>
+              ))}
+            </Carousel>
+            <div className={styles.overlayIcons}>
+              {isPlaceSavedLoading ? (
+                <Skeleton.Avatar size="large" active />
+              ) : isPlaceSaved ? (
+                <div className={styles.iconDiv}>
+                  <FaHeart className={styles.overlayIcon} />
+                </div>
+              ) : (
+                <div className={styles.iconDiv}>
+                  <FaRegHeart className={styles.overlayIcon} />
+                </div>
+              )}
+              <div className={styles.iconDiv}>
+                <MdOutlineNewLabel
+                  className={styles.overlayIcon}
+                  onClick={() => {
+                    navigate(`/add-tag/${placeData.place_id}`);
+                  }}
+                />
+              </div>
+              <div className={styles.iconDiv}>
+                <MdClose
+                  className={styles.overlayIcon}
+                  onClick={handleClosePlace}
+                />
+              </div>
             </div>
           </div>
-          <PhotoDisplay placeData={placeData} />
           <div className={styles.headerDiv}>
             <h2>{placeData.name}</h2>
             {placeData.types.includes("cafe") && (
@@ -63,7 +93,6 @@ const PlacePage = () => {
               <MdOutlineLocalBar className={styles.icon} />
             )}
           </div>
-          {/* when user clicks the addressDic, open a new google maps page with the place for directions */}
           <div
             className={styles.addressDiv}
             onClick={() => {

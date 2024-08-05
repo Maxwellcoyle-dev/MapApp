@@ -296,27 +296,27 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-  # GetPlaceFunction:
-  #   Type: "AWS::Serverless::Function"
-  #   Properties:
-  #     Handler: app.lambdaHandler
-  #     Runtime: nodejs20.x
-  #     CodeUri: "./functions/place/get-place"
-  #     Architectures:
-  #       - x86_64
-  #     Environment:
-  #       Variables:
-  #         TABLE_NAME: !Ref MapAppPlacesTable
-  #     Policies:
-  #       - DynamoDBReadPolicy:
-  #           TableName: !Ref MapAppPlacesTable
-  #     Events:
-  #       GetPlace:
-  #         Type: Api
-  #         Properties:
-  #           Path: /place/{placeId}
-  #           Method: get
-  #           RestApiId: !Ref MappAppAPI
+  GetPlaceFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: "./functions/place/get-place"
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          PLACE_TABLE: !Ref MapAppPlacesTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref MapAppPlacesTable
+      Events:
+        GetPlace:
+          Type: Api
+          Properties:
+            Path: /place/{placeId}/user/{userId}
+            Method: get
+            RestApiId: !Ref MappAppAPI
   ScanPlacesFunction:
     Type: "AWS::Serverless::Function"
     Properties:

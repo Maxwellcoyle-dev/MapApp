@@ -1,7 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { Button, Form, Input, Image, Spin } from "antd";
-import { DeleteOutlined, PlusSquareOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  PlusSquareOutlined,
+  ReloadOutlined,
+} from "@ant-design/icons";
 
 // hooks
 import useListPlaces from "../../hooks/backend-hooks/useListPlaces";
@@ -12,15 +16,16 @@ import useRemoveListPlace from "../../hooks/backend-hooks/useRemoveListPlace";
 import useUser from "../../hooks/backend-hooks/useUser";
 import useDeleteList from "../../hooks/backend-hooks/useDeleteList";
 
+// components
+import ListEditForm from "../../components/ListPage/ListEditForm";
+import ListHeader from "../../components/ListPage/ListHeader/ListHeader";
+import ListItem from "../../components/ListPage/ListItem/ListItem";
+
 import styles from "./ListPage.module.css";
 
 const List = () => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [placeIds, setPlaceIds] = useState([]);
-
-  // tag manager state
-  const [showTagManager, setShowTagManager] = useState(false);
-  const [currentListPlace, setCurrentListPlace] = useState(null);
 
   // form state
   const [listName, setListName] = useState("");
@@ -28,11 +33,15 @@ const List = () => {
 
   // get the user
   const { authUser } = useUser();
+  useEffect(() => {
+    console.log("authUser: ", authUser);
+  }, [authUser]);
 
   // get state from location
   const location = useLocation();
+
   // get the listId from the location pathname "/list/8132247d-eb1e-4847-bb42-23a16062b95b"
-  const listId = location.pathname.split("/").slice(-1)[0];
+  const { listId } = useParams();
 
   const { state } = location;
 
@@ -63,13 +72,19 @@ const List = () => {
     }
   }, [listPlacesData]);
 
+  // get photos for the places
   const { placesPhotos } = useGetPhotos(placeIds);
 
+  // update list
   const { updateListMutation } = useUpdateList();
+
+  // delete list
   const { deleteListMutation } = useDeleteList();
 
+  // remove place from list
   const { removeListPlaceMutation } = useRemoveListPlace();
 
+  // close the edit list form when clicking outside of the form
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (formRef.current && !formRef.current.contains(event.target)) {
@@ -121,128 +136,60 @@ const List = () => {
     console.log("listData", listData);
   }, [listData]);
 
-  if (listDataIsLoading) {
+  return (
     <div className={styles.listPageContainer}>
-      <Spin size="large" />
-    </div>;
-  }
-
-  if (listData) {
-    return (
-      <div className={styles.listPageContainer}>
-        {!showEditForm ? (
-          <div className={styles.listHeaderDiv}>
-            <div className={styles.contentDiv}>
-              <h1 style={{ margin: 0 }}>{listData.data.listName.S}</h1>
-              <p>{listData.data.listDescription.S}</p>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <Button onClick={() => setShowEditForm(true)}>Edit</Button>
-              <Button icon={<DeleteOutlined />} onClick={handleDeleteList}>
-                Delete
-              </Button>
-              <Button onClick={refetchListPlaces}>Refresh List</Button>
-            </div>
-          </div>
+      {listData &&
+        (!showEditForm ? (
+          <ListHeader
+            listName={state?.listName.S ? state.listName.S : listName}
+            listDescription={
+              state?.listDescription.S ? state.listDescription.S : description
+            }
+            refetchListPlaces={refetchListPlaces}
+            handleDeleteList={handleDeleteList}
+            setShowEditForm={setShowEditForm}
+            styles={styles}
+          />
         ) : (
-          <div ref={formRef}>
-            <Form
-              initialValues={{
-                listName: listData?.data.listName.S || "",
-                description: listData.data.listDescription.S || "",
-              }}
-              onFinish={handleUpdateList}
-            >
-              <Form.Item
-                name="listName"
-                value={listName}
-                rules={[
-                  { required: true, message: "Please input the list name!" },
-                ]}
-              >
-                <Input placeholder="List Name" />
-              </Form.Item>
-              <Form.Item
-                name="description"
-                rules={[
-                  { required: false, message: "Please input the description!" },
-                ]}
-              >
-                <Input placeholder="Description" />
-              </Form.Item>
-              <div className={styles.formButtons}>
-                <Button type="primary" htmlType="submit">
-                  Update
-                </Button>
-                <Button onClick={handleCancel} style={{ marginLeft: "10px" }}>
-                  Cancel
-                </Button>
-              </div>
-            </Form>
-          </div>
-        )}
-        <div className={styles.listItemContainer}>
-          {isListPlacesDataLoading ? (
-            <Spin size="large" />
-          ) : (
-            listPlacesData?.map((place, index) => {
-              const firstPhoto = placesPhotos?.[index]?.photos?.[0]?.getUrl();
-              return (
-                <div key={place.placeId.S} className={styles.listItem}>
-                  <div className={styles.cardHeader}>
-                    <Button
-                      className={styles.actionButton}
-                      icon={<DeleteOutlined />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log("Delete place:", place.placeId.S);
-                        removeListPlaceMutation.mutate({
-                          listId: listData.data.listId.S,
-                          placeId: place.placeId.S,
-                          userId: authUser.data.userId,
-                        });
-                      }}
-                    />
-                    <Button
-                      icon={<PlusSquareOutlined />}
-                      onClick={() => {
-                        setCurrentListPlace(place);
-                        navigate(`/add-tag/${place.placeId.S}`, {
-                          state: { place, listId: listData.data.listId.S },
-                        });
-                      }}
-                    >
-                      Add Tag
-                    </Button>
-                    {/* Add more buttons/icons for sharing and tagging here */}
-                  </div>
-                  <div onClick={() => navigate(`/place/${place.placeId.S}`)}>
-                    {firstPhoto ? (
-                      <Image
-                        className={styles.image}
-                        src={firstPhoto}
-                        alt={`${place.name.S} photo`}
-                      />
-                    ) : (
-                      <Image
-                        className={styles.image}
-                        src="default-placeholder-image.jpg"
-                        alt="Default placeholder"
-                      />
-                    )}
-                    <div className={styles.cardBody}>
-                      <h2>{place.name.S}</h2>
-                      {/* Render tag icons here */}
-                    </div>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
+          <ListEditForm
+            formRef={formRef}
+            listData={listData}
+            styles={styles}
+            handleCancel={handleCancel}
+            handleUpdateList={handleUpdateList}
+            listName={listName}
+            description={description}
+          />
+        ))}
+      <div className={styles.refreshButtonContainer}>
+        <Button
+          onClick={refetchListPlaces}
+          icon={<ReloadOutlined />}
+          className={styles.refreshButton}
+        ></Button>
       </div>
-    );
-  }
+      <div className={styles.listItemContainer}>
+        {listData && !listPlacesData && (
+          <div className={styles.noDataMessage}>No places in this list.</div>
+        )}
+        {listData &&
+          listPlacesData?.map((place, index) => {
+            const firstPhoto = placesPhotos?.[index]?.photos?.[0]?.getUrl();
+            return (
+              <ListItem
+                key={place.placeId.S}
+                place={place}
+                firstPhoto={firstPhoto}
+                navigate={navigate}
+                removeListPlaceMutation={removeListPlaceMutation}
+                listData={listData}
+                authUser={authUser}
+              />
+            );
+          })}
+      </div>
+    </div>
+  );
 };
 
 export default List;

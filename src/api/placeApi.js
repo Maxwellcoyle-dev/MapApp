@@ -6,6 +6,11 @@ export const savePlace = async (placeData) => {
   return response.data;
 };
 
+export const getPlace = async (placeId, userId) => {
+  const response = await axiosInstance.get(`/place/${placeId}/user/${userId}`);
+  return response.data;
+};
+
 export const scanPlaces = async (listId) => {
   const response = await axiosInstance.get("/places/", {
     params: {
