@@ -31,9 +31,18 @@ const List = () => {
 
   // get state from location
   const location = useLocation();
+  // get the listId from the location pathname "/list/8132247d-eb1e-4847-bb42-23a16062b95b"
+  const listId = location.pathname.split("/").slice(-1)[0];
+
   const { state } = location;
 
-  const { listData, listDataIsLoading } = useGetList(state.listId.S);
+  useEffect(() => {
+    console.log("location: ", location);
+    console.log("listId: ", listId);
+    console.log("List state: ", state);
+  }, [state]);
+
+  const { listData, listDataIsLoading } = useGetList(listId);
 
   useEffect(() => {
     setListName(listData?.data.listName.S);
@@ -45,7 +54,7 @@ const List = () => {
   const formRef = useRef(null);
 
   const { listPlacesData, isListPlacesDataLoading, refetchListPlaces } =
-    useListPlaces(state.listId.S);
+    useListPlaces(listId);
 
   useEffect(() => {
     if (listPlacesData) {
@@ -95,8 +104,8 @@ const List = () => {
 
   const handleDeleteList = () => {
     deleteListMutation.mutate({
-      listId: state.listId.S,
-      userId: state.userId.S,
+      listId: listId,
+      userId: authUser.data.userId,
     });
   };
 

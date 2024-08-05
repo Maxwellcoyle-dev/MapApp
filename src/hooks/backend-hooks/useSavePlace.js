@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { getCurrentUser } from "aws-amplify/auth";
+import { useNavigate } from "react-router-dom";
 
 import { savePlace } from "../../api/placeApi";
 
@@ -18,6 +19,8 @@ const useSavePlace = () => {
 
   const { placeData } = useGetPlace(selectedPlace?.place_id);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     getCurrentUser()
       .then((user) => {
@@ -30,6 +33,8 @@ const useSavePlace = () => {
 
   const savePlaceMutation = useMutation({
     mutationFn: (listId) => {
+      console.log("Saving place...");
+      console.log("listId: ", listId);
       setSavePlaceIsLoading(true);
       return savePlace({
         userId: user?.userId,
@@ -42,13 +47,12 @@ const useSavePlace = () => {
       console.log("Place saved successfully!");
       console.log("data: ", data);
       console.log("variables: ", variables);
-      queryClient.invalidateQueries({ queryKey: ["list", variables.listId] });
       queryClient.invalidateQueries({
-        queryKey: ["list places", variables.listId],
+        queryKey: ["list places"],
       });
-      queryClient.invalidateQueries({ queryKey: ["lists", user?.userId] });
       setShowAddToList(false);
       setSavePlaceIsLoading(false);
+      navigate(`/list/${variables}`);
     },
     // only enable if placeData, user?.userId, and listId are truthy
     enabled: !!placeData && !!user?.userId && !!selectedPlace?.listId,
