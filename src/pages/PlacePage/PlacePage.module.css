@@ -22,8 +22,6 @@
   padding: 0.25rem;
 }
 
-
-
 .icon {
   width: 1.5rem;
   height: 1.5rem;
@@ -73,7 +71,7 @@
   justify-content: center;
   cursor: pointer;
   padding: 0.5rem;
-  background: rgba(143, 143, 143, 0.5);
+  background: rgba(31, 31, 31, 0.448);
   border-radius: 50%;
 }
 

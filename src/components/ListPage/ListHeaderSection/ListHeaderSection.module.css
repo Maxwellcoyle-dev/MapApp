@@ -1,3 +1,17 @@
+.listHeaderDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  height: fit-content;
+}
+
+.topDiv {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .listPageContainer {
   position: absolute;
   top: 0;
@@ -22,7 +36,6 @@
   background: white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  margin-bottom: 1rem;
 }
 
 .contentDiv {
@@ -89,38 +102,8 @@
   outline: none;
 }
 
-.listItemContainer {
-  overflow-y: scroll;
-  margin-bottom: 5rem;
-}
-
-.listItem {
-  margin: 1rem;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.image {
+.filterButtonContainer {
+  padding: 0.5rem 0;
   width: 100%;
-  height: auto;
-  max-height: 150px;
-  object-fit: cover;
-}
-
-.loadingContainer {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  flex-direction: column;
-}
-
-.noDataMessage {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #555;
 }
