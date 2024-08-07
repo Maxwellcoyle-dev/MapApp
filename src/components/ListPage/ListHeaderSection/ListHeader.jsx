@@ -1,10 +1,11 @@
 import React from "react";
-import { Button } from "antd";
+import { Button, Dropdown, Menu } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
   ReloadOutlined,
-  FilterOutlined,
+  ArrowLeftOutlined,
+  MenuOutlined,
 } from "@ant-design/icons";
 
 import styles from "./ListHeaderSection.module.css";
@@ -17,39 +18,55 @@ const ListHeader = ({
   refetchListPlaces,
   setShowFilterForm,
   showFilterForm,
+  handleSearch,
 }) => {
+  const items = [
+    {
+      key: "1",
+      label: (
+        <span>
+          <EditOutlined /> Edit
+        </span>
+      ),
+      onClick: () => setShowEditForm(true),
+    },
+    {
+      key: "2",
+      label: (
+        <span>
+          <DeleteOutlined /> Delete
+        </span>
+      ),
+      onClick: handleDeleteList,
+    },
+    {
+      key: "3",
+      label: (
+        <span>
+          <ReloadOutlined /> Refresh
+        </span>
+      ),
+      onClick: refetchListPlaces,
+    },
+  ];
+
   return (
     <div className={styles.listHeaderDiv}>
       <div className={styles.topDiv}>
-        <div className={styles.contentDiv}>
+        <Button icon={<ArrowLeftOutlined />} className={styles.backButton} />
+        <div className={styles.titleContainer}>
           <h1 className={styles.listTitle}>{listName}</h1>
           <p className={styles.listDescription}>{listDescription}</p>
         </div>
-        <div className={styles.actionsDiv}>
-          <Button
-            onClick={() => setShowEditForm(true)}
-            icon={<EditOutlined />}
-            className={styles.actionButton}
-          />
-          <Button
-            icon={<DeleteOutlined />}
-            onClick={handleDeleteList}
-            className={styles.actionButton}
-          />
-          <Button
-            onClick={refetchListPlaces}
-            icon={<ReloadOutlined />}
-            className={styles.actionButton}
-          ></Button>
-        </div>
-      </div>
-      <div className={styles.filterButtonContainer}>
-        <Button
-          icon={<FilterOutlined />}
-          onClick={() => setShowFilterForm(!showFilterForm)}
+        <Dropdown
+          menu={{ items }}
+          placement="bottomRight"
+          className={styles.dropdown}
         >
-          {showFilterForm ? "Hide Filters" : "Show Filters"}
-        </Button>
+          <Button>
+            <MenuOutlined />
+          </Button>
+        </Dropdown>
       </div>
     </div>
   );

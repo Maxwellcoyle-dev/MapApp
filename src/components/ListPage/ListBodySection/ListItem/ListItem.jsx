@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Image, Tag } from "antd";
+import { Tag } from "antd";
 import { MdOutlineNewLabel, MdDeleteOutline } from "react-icons/md";
 
 import styles from "./ListItem.module.css";
@@ -20,13 +20,13 @@ const ListItem = ({
     <div className={styles.listItem}>
       <div className={styles.imageDiv}>
         {firstPhoto ? (
-          <Image
+          <img
             className={styles.image}
             src={firstPhoto}
             alt={`${place.name.S} photo`}
           />
         ) : (
-          <Image
+          <img
             className={styles.image}
             src="default-placeholder-image.jpg"
             alt="Default placeholder"

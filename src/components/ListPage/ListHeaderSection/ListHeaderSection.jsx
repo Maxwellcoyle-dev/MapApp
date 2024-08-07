@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import ListHeader from "./ListHeader";
 import ListEditForm from "./ListEditForm";
 
-// Hoooks
+// Hooks
 import useUpdateList from "../../../hooks/backend-hooks/useUpdateList";
 import useDeleteList from "../../../hooks/backend-hooks/useDeleteList";
 import useUser from "../../../hooks/backend-hooks/useUser";
@@ -18,6 +18,7 @@ const ListHeaderSection = ({
   listId,
   setShowFilterForm,
   showFilterForm,
+  handleSearch,
 }) => {
   const formRef = useRef(null);
 
@@ -106,6 +107,7 @@ const ListHeaderSection = ({
             setShowEditForm={setShowEditForm}
             setShowFilterForm={setShowFilterForm}
             showFilterForm={showFilterForm}
+            handleSearch={handleSearch}
           />
         ) : (
           <ListEditForm

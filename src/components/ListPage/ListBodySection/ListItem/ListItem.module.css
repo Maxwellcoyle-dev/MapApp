@@ -4,31 +4,41 @@
   overflow: hidden;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  transition: transform 0.2s;
+}
+
+.listItem:hover {
+  transform: translateY(-5px);
 }
 
 .imageDiv {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   width: 100%;
-  height: 225px;
+  height: 0;
+  padding-bottom: 65%; /* Maintain aspect ratio */
+  position: relative;
+  overflow: hidden;
 }
 
 .image {
-  min-height: 225px;
-  min-width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center;
 }
 
 .cardOverlayDiv {
   position: absolute;
-  top: 0;
-  width: 100%;
-  padding: 0.5rem;
+  top: 0.5rem;
+  width: calc(100% - 1rem);
   display: flex;
-  gap: 0.5rem;
   justify-content: space-between;
+  padding: 0 0.5rem;
 }
 
 .btnIconDiv {
@@ -37,40 +47,42 @@
   justify-content: center;
   cursor: pointer;
   padding: 0.5rem;
-  background: rgba(31, 31, 31, 0.448);
+  background: rgba(0, 0, 0, 0.7);
   border-radius: 50%;
+  transition: background 0.3s;
+}
+
+.btnIconDiv:hover,
+.btnIconDiv:focus {
+  background: rgba(0, 0, 0, 0.9);
+  outline: none;
 }
 
 .btnIcon {
   width: 24px;
   height: 24px;
   color: white;
-  cursor: pointer;
-}
-
-.actionButton:hover {
-  color: #1890ff;
-  background: rgba(255, 255, 255, 1);
 }
 
 .cardBody {
-  cursor: pointer;
-}
-
-.image {
-  width: 100%;
-  height: auto;
-  max-height: 200px;
-  object-fit: cover;
+  padding: 1rem;
+  flex: 1;
 }
 
 .tagContainer {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  margin: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .infoContainer {
-  padding: 0.5rem;
-  background: white;
+  padding: 0.5rem 0;
+}
+
+.infoContainer h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
 }

@@ -37,6 +37,8 @@ export const handleFilter = (
 ) => {
   let filtered = listPlacesData;
 
+  console.log("Applying filters:", filters);
+
   if (filters.name) {
     filtered = filtered.filter((place) =>
       place.name.S.toLowerCase().includes(filters.name.toLowerCase())
@@ -47,17 +49,13 @@ export const handleFilter = (
     filtered = filtered.filter((place) => place.rating?.N >= filters.rating);
   }
 
-  Object.keys(filters)
-    .filter((key) => key.startsWith("categoryTags_"))
-    .forEach((key) => {
-      if (filters[key] && filters[key].length > 0) {
-        filtered = filtered.filter((place) =>
-          filters[key].every((tag) =>
-            place.tags?.L.some((t) => t.M.tagName.S === tag)
-          )
-        );
-      }
-    });
+  if (filters.tags && filters.tags.length > 0) {
+    filtered = filtered.filter((place) =>
+      filters.tags.every((tag) =>
+        place.tags?.L.some((t) => t.M.tagId.S === tag)
+      )
+    );
+  }
 
   if (filters.types && filters.types.length > 0) {
     filtered = filtered.filter((place) =>
@@ -71,6 +69,7 @@ export const handleFilter = (
     );
   }
 
+  console.log("Filtered places:", filtered);
   setFilteredPlaces(filtered);
   setShowFilterForm(false);
 };
