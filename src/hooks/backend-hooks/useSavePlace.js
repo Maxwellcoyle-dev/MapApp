@@ -52,7 +52,7 @@ const useSavePlace = () => {
       });
       setShowAddToList(false);
       setSavePlaceIsLoading(false);
-      navigate(`/list/${variables}`);
+      navigate(`/list/${variables}`, { state: { from: "addToList" } });
     },
     // only enable if placeData, user?.userId, and listId are truthy
     enabled: !!placeData && !!user?.userId && !!selectedPlace?.listId,

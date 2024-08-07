@@ -1,5 +1,6 @@
-import React from "react";
-import { Button, Dropdown, Menu } from "antd";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Button, Dropdown } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -16,10 +17,22 @@ const ListHeader = ({
   handleDeleteList,
   setShowEditForm,
   refetchListPlaces,
-  setShowFilterForm,
-  showFilterForm,
-  handleSearch,
 }) => {
+  const [backPath, setBackPath] = useState(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    console.log(location?.state?.from);
+    console.log(location);
+
+    if (location?.state?.from === "addToList") {
+      setBackPath("/");
+    } else {
+      setBackPath(-1);
+    }
+  }, [location]);
+
   const items = [
     {
       key: "1",
@@ -53,7 +66,11 @@ const ListHeader = ({
   return (
     <div className={styles.listHeaderDiv}>
       <div className={styles.topDiv}>
-        <Button icon={<ArrowLeftOutlined />} className={styles.backButton} />
+        <Button
+          icon={<ArrowLeftOutlined />}
+          className={styles.backButton}
+          onClick={() => navigate(backPath)}
+        />
         <div className={styles.titleContainer}>
           <h1 className={styles.listTitle}>{listName}</h1>
           <p className={styles.listDescription}>{listDescription}</p>

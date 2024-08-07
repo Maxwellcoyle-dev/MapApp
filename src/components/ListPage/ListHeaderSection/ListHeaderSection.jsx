@@ -41,8 +41,8 @@ const ListHeaderSection = ({
   const { refetchListPlaces } = useListPlaces(listId);
 
   useEffect(() => {
-    setListName(listData?.data.listName.S);
-    setDescription(listData?.data.listDescription?.S);
+    setListName(listData?.data?.listName?.S);
+    setDescription(listData?.data?.listDescription?.S);
   }, [listData]);
 
   // close the edit list form when clicking outside of the form
@@ -95,11 +95,11 @@ const ListHeaderSection = ({
         (!showEditForm ? (
           <ListHeader
             listName={
-              listPageState?.listName.S ? listPageState.listName.S : listName
+              listPageState?.listName?.S ? listPageState?.listName.S : listName
             }
             listDescription={
-              listPageState?.listDescription.S
-                ? listPageState.listDescription.S
+              listPageState?.listDescription?.S
+                ? listPageState?.listDescription?.S
                 : description
             }
             refetchListPlaces={refetchListPlaces}
