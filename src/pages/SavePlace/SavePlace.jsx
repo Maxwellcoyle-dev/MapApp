@@ -1,49 +1,41 @@
 // Libraries
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getCurrentUser } from "aws-amplify/auth";
+import React, { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Image, Spin } from "antd";
 import { MdClose } from "react-icons/md";
-import { Image } from "antd";
-
-// context
-import { useAppContext } from "../../state/AppContext";
 
 // hooks
 import useUserLists from "../../hooks/backend-hooks/useUserLists";
 import useSavePlace from "../../hooks/backend-hooks/useSavePlace";
+import useUser from "../../hooks/backend-hooks/useUser";
 
 // styles & assets
 import styles from "./SavePlace.module.css";
 import { fallbackImage } from "./fallbackImage";
 
 const SavePlace = () => {
-  const [user, setUser] = useState(null);
-  const { setShowAddToList } = useAppContext();
-
+  const { authUser } = useUser();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    getCurrentUser()
-      .then((user) => {
-        setUser(user);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+  const { placeId } = useParams();
+  const { listsData, listsError, isListsLoading } = useUserLists(
+    authUser?.data.userId
+  );
 
-  const { savePlaceMutation, savePlaceIsLoading } = useSavePlace();
+  const { savePlaceMutation, savePlaceIsLoading } = useSavePlace(placeId);
 
   const handleSavePlace = (listId) => {
+    console.log("listId: ", listId);
     savePlaceMutation.mutate(listId);
   };
 
-  const { listsData, listsError, isListsLoading } = useUserLists(user?.userId);
-
-  useEffect(() => {
-    listsData && console.log("ListsData -- ", listsData);
-  }, [listsData]);
-
   if (!listsData) {
-    return <p>Loading...</p>;
+    return (
+      <div className={styles.loadingDiv}>
+        <h3>Loading your lists</h3>
+        <Spin size="large" />
+      </div>
+    );
   }
 
   return (

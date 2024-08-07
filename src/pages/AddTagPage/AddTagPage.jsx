@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Button, Tag } from "antd";
-import { useParams, useLocation, useNavigate, use } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 // Hooks
 import useUser from "../../hooks/backend-hooks/useUser";
 import useUpdatePlace from "../../hooks/backend-hooks/useUpdatePlace";
+import useGetPlace from "../../hooks/backend-hooks/useGetPlace";
 
 // styles
 import styles from "./AddTagPage.module.css";
@@ -15,35 +16,53 @@ const AddTagPage = () => {
   const navigate = useNavigate();
 
   const { placeId } = useParams();
-  const location = useLocation();
-  const { state } = useLocation();
-  const { place, listId } = state;
-
-  useEffect(() => {
-    console.log("location -- ", location);
-    console.log("placeId", placeId);
-    console.log("place", place);
-    console.log("listId", listId);
-  }, [place, listId, placeId]);
 
   const { authUser } = useUser();
+
+  const { placeData } = useGetPlace(placeId, authUser?.data.userId);
+
   const { updatePlaceMutation } = useUpdatePlace();
 
   useEffect(() => {
-    if (place?.tags?.L) {
-      const mappedTags = place.tags.L.map((tag) => ({
+    console.log("placeData -- ", placeData);
+  }, [placeData]);
+
+  useEffect(() => {
+    if (placeData?.tags?.L) {
+      console.log("placeData.tags.L", placeData.tags.L);
+      const mappedTags = placeData.tags.L.map((tag) => ({
         tagId: tag.M.tagId.S,
         categoryId: tag.M.categoryId.S,
+        tagName: getTagNameById(tag.M.tagId.S, tag.M.categoryId.S),
+        categoryName: getCategoryNameById(tag.M.categoryId.S),
       }));
       setCurrentPlaceTags(mappedTags);
     }
-  }, [place]);
+  }, [placeData]);
 
   useEffect(() => {
     if (authUser?.data?.categories) {
       setAllTags(authUser.data.categories);
     }
   }, [authUser]);
+
+  const getTagNameById = (tagId, categoryId) => {
+    const category = authUser?.data?.categories.find(
+      (cat) => cat.categoryId === categoryId
+    );
+    if (category) {
+      const tag = category.tags.find((t) => t.tagId === tagId);
+      return tag ? tag.tagName : "";
+    }
+    return "";
+  };
+
+  const getCategoryNameById = (categoryId) => {
+    const category = authUser?.data?.categories.find(
+      (cat) => cat.categoryId === categoryId
+    );
+    return category ? category.name : "";
+  };
 
   const handleTagClick = (categoryId, tag) => {
     const tagExists = currentPlaceTags.some(
@@ -61,26 +80,29 @@ const AddTagPage = () => {
         {
           tagId: tag.tagId,
           categoryId: categoryId,
+          tagName: tag.tagName,
+          categoryName: getCategoryNameById(categoryId),
         },
       ]);
     }
   };
 
   const handleSave = () => {
-    console.log("placeId", place.placeId.S);
+    console.log("placeId", placeData?.placeId.S);
     console.log("userId", authUser.data.userId);
     const updatedTags = currentPlaceTags.map((tag) => ({
       tagId: tag.tagId,
       categoryId: tag.categoryId,
+      tagName: tag.tagName,
+      categoryName: tag.categoryName,
     }));
     console.log("updatedTags", updatedTags);
     updatePlaceMutation.mutate({
-      placeId: place.placeId.S,
+      placeId: placeId,
       userId: authUser.data.userId,
       placeData: {
         tags: updatedTags,
       },
-      listId: listId,
     });
     navigate(-1);
     // close the page - return to previous page

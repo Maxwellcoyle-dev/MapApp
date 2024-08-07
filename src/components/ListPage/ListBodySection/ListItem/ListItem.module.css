@@ -1,0 +1,88 @@
+.listItem {
+  margin: 1rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  transition: transform 0.2s;
+}
+
+.listItem:hover {
+  transform: translateY(-5px);
+}
+
+.imageDiv {
+  width: 100%;
+  height: 0;
+  padding-bottom: 65%; /* Maintain aspect ratio */
+  position: relative;
+  overflow: hidden;
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.cardOverlayDiv {
+  position: absolute;
+  top: 0.5rem;
+  width: calc(100% - 1rem);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 0.5rem;
+}
+
+.btnIconDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 50%;
+  transition: background 0.3s;
+}
+
+.btnIconDiv:hover,
+.btnIconDiv:focus {
+  background: rgba(0, 0, 0, 0.9);
+  outline: none;
+}
+
+.btnIcon {
+  width: 24px;
+  height: 24px;
+  color: white;
+}
+
+.cardBody {
+  padding: 1rem;
+  flex: 1;
+}
+
+.tagContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.infoContainer {
+  padding: 0.5rem 0;
+}
+
+.infoContainer h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}

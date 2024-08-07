@@ -8,7 +8,7 @@ const useListPlaces = (listId) => {
     isLoading: isListPlacesDataLoading,
     refetch: refetchListPlaces,
   } = useQuery({
-    queryKey: ["list places", listId],
+    queryKey: ["list-places", listId],
     queryFn: () => scanPlaces(listId),
     retry: false,
     enabled: !!listId,

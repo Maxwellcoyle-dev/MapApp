@@ -26,10 +26,7 @@ const MapListView = ({ placesResults, isPlacesResultsLoading }) => {
           (result) =>
             result.photos &&
             result.photos.length > 0 && (
-              <>
-                <p>This List Component is displayed</p>
-                <MapListViewCard key={result.place_id} place={result} />
-              </>
+              <MapListViewCard key={result.place_id} place={result} />
             )
         )}
     </div>

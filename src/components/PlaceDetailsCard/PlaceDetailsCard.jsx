@@ -9,7 +9,6 @@ import {
   MdClose,
 } from "react-icons/md";
 
-import { useAppContext } from "../../state/AppContext";
 import { useSearchContext } from "../../state/SearchContext";
 import { useMapContext } from "../../state/MapContext";
 
@@ -21,7 +20,6 @@ const PlaceDetailsCard = () => {
   const [isOpen, setIsOpen] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
 
-  const { setShowAddToList } = useAppContext();
   const { selectedPlace, setSelectedPlace } = useSearchContext();
   const { setZoom, setCenter } = useMapContext();
 
@@ -56,7 +54,7 @@ const PlaceDetailsCard = () => {
   }, [selectedPlace]);
 
   const handleSavePlace = () => {
-    navigate("/save-place");
+    navigate(`/save-place/${selectedPlace.place_id}`);
   };
 
   if (!selectedPlace) {

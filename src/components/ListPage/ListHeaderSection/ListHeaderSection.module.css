@@ -1,0 +1,50 @@
+.listHeaderDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+}
+
+.topDiv {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.backButton {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 1.5rem; /* Increase the size for better touch target */
+}
+
+.titleContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1; /* Ensure the title container takes available space */
+  text-align: center;
+}
+
+.listTitle {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.listDescription {
+  margin: 0;
+  font-size: 1rem;
+  color: #666;
+}
+
+.dropdown {
+  border: none;
+  background: none;
+  padding: 0;
+  font-size: 1.5rem; /* Increase the size for better touch target */
+}

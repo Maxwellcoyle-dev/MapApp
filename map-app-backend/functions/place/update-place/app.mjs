@@ -69,7 +69,9 @@ const updatePlace = async (placeId, userId, placeData) => {
         L: placeData[key].map((tag) => ({
           M: {
             tagId: { S: tag.tagId },
+            tagName: { S: tag.tagName },
             categoryId: { S: tag.categoryId },
+            categoryName: { S: tag.categoryName },
           },
         })),
       };

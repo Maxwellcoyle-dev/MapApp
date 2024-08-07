@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Image, Skeleton } from "antd";
-import { FaRegHeart } from "react-icons/fa";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 import {
   MdOutlineStar,
   MdOutlineStarHalf,
@@ -10,15 +10,19 @@ import {
 } from "react-icons/md";
 
 // State
-import { useAppContext } from "../../../state/AppContext";
+import { useSearchContext } from "../../../state/SearchContext";
+
+// hooks
+import usePlaceIsSaved from "../../../hooks/usePlaceIsSaved";
 
 // Styles
 import styles from "./MapListViewCard.module.css";
 
 const MapListViewCard = ({ place }) => {
-  const [isOpen, setIsOpen] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
-  const { setShowAddToList } = useAppContext();
+  const { setSelectedPlace } = useSearchContext();
+
+  const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(place.place_id);
 
   const navigate = useNavigate();
 
@@ -31,12 +35,10 @@ const MapListViewCard = ({ place }) => {
     }
   }, [place]);
 
-  useEffect(() => {
-    let open = place?.opening_hours?.isOpen
-      ? place.opening_hours.isOpen()
-      : null;
-    setIsOpen(open);
-  }, [place]);
+  const handleSavePlace = () => {
+    setSelectedPlace(place);
+    navigate("/save-place");
+  };
 
   if (!place) {
     return (
@@ -72,11 +74,14 @@ const MapListViewCard = ({ place }) => {
               )}
             </div>
             <div className={styles.iconOverlayContainer}>
-              <div
-                className={styles.iconContainer}
-                onClick={() => setShowAddToList(true)}
-              >
-                <FaRegHeart className={styles.overlayIcon} />
+              <div className={styles.iconContainer} onClick={handleSavePlace}>
+                {isPlaceSavedLoading ? (
+                  <Skeleton.Avatar size="large" active />
+                ) : isPlaceSaved ? (
+                  <FaHeart className={styles.overlayIcon} />
+                ) : (
+                  <FaRegHeart className={styles.overlayIcon} />
+                )}
               </div>
             </div>
           </div>
@@ -85,11 +90,15 @@ const MapListViewCard = ({ place }) => {
             onClick={() => navigate(`/place/${place.place_id}`)}
           >
             <h3>{place?.name}</h3>
-            {isOpen !== null && (
-              <p className={isOpen ? styles.open : styles.closed}>
-                {isOpen ? "Open" : "Closed"}
+            {/* {place?.opening_hours !== null && (
+              <p
+                className={
+                  place.opening_hours.open_now ? styles.open : styles.closed
+                }
+              >
+                {place.opening_hours.open_now ? "Open" : "Closed"}
               </p>
-            )}
+            )} */}
           </div>
           <div
             className={styles.infoDiv}

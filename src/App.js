@@ -8,9 +8,6 @@ import { Layout } from "antd";
 // React Router
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-// Amplify
-import { withAuthenticator } from "@aws-amplify/ui-react";
-
 // Pages
 import Main from "./pages/Main/Main";
 import MyAccount from "./pages/MyAccount";
@@ -90,7 +87,7 @@ function App() {
                 />
                 <Route path="add-tag/:placeId" element={<AddTagPage />} />
                 <Route
-                  path="save-place"
+                  path="save-place/:placeId"
                   element={
                     <ProtectedRoute>
                       <SavePlace />
