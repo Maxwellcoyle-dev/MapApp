@@ -5,11 +5,11 @@ const useGetPlace = (placeId, userId) => {
   console.log("placeId: ", placeId);
   console.log("userId: ", userId);
   const {
-    data: placeData,
-    isLoading: placeDataIsLoading,
-    error: placeDataError,
+    data: savedPlaceData,
+    isLoading: savedPlaceDataIsLoading,
+    error: savedPlaceDataError,
   } = useQuery({
-    queryKey: ["place", placeId, userId],
+    queryKey: ["saved-place", placeId, userId],
     queryFn: () => getPlace(placeId, userId),
     retry: false,
     enabled: !!placeId && !!userId,
@@ -17,7 +17,7 @@ const useGetPlace = (placeId, userId) => {
     staleTime: 1000 * 60 * 60,
   });
 
-  console.log("placeData: ", placeData);
-  return { placeData, placeDataIsLoading, placeDataError };
+  console.log("saved place  data: ", savedPlaceData);
+  return { savedPlaceData, savedPlaceDataIsLoading, savedPlaceDataError };
 };
 export default useGetPlace;

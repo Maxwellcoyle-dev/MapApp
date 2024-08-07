@@ -1,5 +1,7 @@
-// Libraries
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { Image, Carousel, Spin } from "antd";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 import {
   MdClose,
   MdOutlineNewLabel,
@@ -11,66 +13,126 @@ import {
   MdOutlineLocalBar,
   MdOutlineRestaurant,
 } from "react-icons/md";
-import { FaRegHeart, FaHeart } from "react-icons/fa";
-import { Image, Skeleton, Carousel } from "antd";
-import { useParams, useNavigate } from "react-router-dom";
 
 // Hooks
-import useGetPlaceDetails from "../../hooks/google-api-hooks/useGetPlaceDetails";
+import useGetOptimalPlaceData from "../../hooks/useGetOptimalPlaceData";
 import useClosePlaceDetails from "../../hooks/useClosePlaceDetails";
 import usePlaceIsSaved from "../../hooks/usePlaceIsSaved";
+import useGetPhotos from "../../hooks/google-api-hooks/useGetPhotos";
 
 // Styles
 import styles from "./PlacePage.module.css";
 
 const PlacePage = () => {
+  const [placeIds, setPlaceIds] = useState([]);
+  const [photos, setPhotos] = useState([]);
+
   const { placeId } = useParams();
+  const navigate = useNavigate();
+
+  const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(placeId);
+
+  const { optimalPlaceData, optimalPlaceDataLoading, optimalPlaceDataError } =
+    useGetOptimalPlaceData(placeId);
+
+  const { placesPhotos } = useGetPhotos(placeIds);
 
   const handleClosePlace = useClosePlaceDetails();
 
-  const { placeData } = useGetPlaceDetails(placeId);
-  const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(placeId);
-
-  const navigate = useNavigate();
+  useEffect(() => {
+    console.log("optimalPlaceData: ", optimalPlaceData);
+  }, [optimalPlaceData]);
 
   useEffect(() => {
-    console.log("placeData: ", placeData);
-  }, [placeData]);
+    if (optimalPlaceData && !optimalPlaceData?.photos) {
+      const placeIds = [
+        optimalPlaceData?.placeId
+          ? optimalPlaceData.placeId
+          : optimalPlaceData.place_id,
+      ];
+      setPlaceIds(placeIds);
+    }
+    if (optimalPlaceData && optimalPlaceData?.photos) {
+      console.log("optimalPlaceData.photos: ", optimalPlaceData.photos);
+      const photoUrls = optimalPlaceData.photos.map((photo) => {
+        return photo.getUrl();
+      });
+      setPhotos(photoUrls);
+    }
+  }, [optimalPlaceData]);
+
+  useEffect(() => {
+    if (placesPhotos) {
+      console.log("placesPhotos: ", placesPhotos);
+      // extract the photo url from the placesPhotos array getUrl ([0].photos[0].getUrl)
+      const photoUrls = placesPhotos.map((place) => {
+        return place.photos[0].getUrl();
+      });
+      console.log("photoUrls: ", photoUrls);
+      setPhotos(photoUrls);
+    }
+  }, [placesPhotos]);
+
+  // useeffect to log photos state
+  useEffect(() => {
+    console.log("photos: ", photos);
+  }, [photos]);
+
+  if (optimalPlaceDataLoading) {
+    return (
+      <div className={styles.loadingDiv}>
+        <p>Loading place details...</p>
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  if (optimalPlaceDataError) {
+    return (
+      <div className={styles.placeDetailsDiv}>
+        <p>Error loading place details: {optimalPlaceDataError}</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.placeDetailsDiv}>
-      {placeData && (
+      {optimalPlaceData && (
         <>
           <div className={styles.carouselContainer}>
             <Carousel className={styles.carousel}>
-              {placeData.photos?.map((photo, index) => (
-                <div key={index} className={styles.photoDiv}>
-                  <Image
-                    className={styles.mainImage}
-                    src={photo.getUrl()}
-                    alt={placeData.name}
-                  />
-                </div>
-              ))}
+              {photos &&
+                photos?.map((photo, index) => (
+                  <div key={index} className={styles.photoDiv}>
+                    <Image
+                      className={styles.mainImage}
+                      src={photo}
+                      alt={optimalPlaceData?.name}
+                    />
+                  </div>
+                ))}
             </Carousel>
             <div className={styles.overlayIcons}>
-              {isPlaceSavedLoading ? (
-                <Skeleton.Avatar size="large" active />
-              ) : isPlaceSaved ? (
+              {isPlaceSaved ? (
                 <div className={styles.iconDiv}>
                   <FaHeart className={styles.overlayIcon} />
                 </div>
               ) : (
-                <div className={styles.iconDiv}>
+                <div
+                  className={styles.iconDiv}
+                  onClick={() => navigate(`/save-place/${placeId}`)}
+                >
                   <FaRegHeart className={styles.overlayIcon} />
                 </div>
               )}
               <div className={styles.iconDiv}>
                 <MdOutlineNewLabel
-                  className={styles.overlayIcon}
-                  onClick={() => {
-                    navigate(`/add-tag/${placeData.place_id}`);
-                  }}
+                  className={
+                    isPlaceSavedLoading || !isPlaceSaved
+                      ? styles.overlayIconDisabled
+                      : styles.overlayIcon
+                  }
+                  onClick={() => navigate(`/add-tag/${placeId}`)}
                 />
               </div>
               <div className={styles.iconDiv}>
@@ -82,14 +144,14 @@ const PlacePage = () => {
             </div>
           </div>
           <div className={styles.headerDiv}>
-            <h2>{placeData.name}</h2>
-            {placeData.types.includes("cafe") && (
+            <h2>{optimalPlaceData?.name}</h2>
+            {optimalPlaceData?.types?.includes("cafe") && (
               <MdOutlineLocalCafe className={styles.icon} />
             )}
-            {placeData.types.includes("restaurant") && (
+            {optimalPlaceData?.types?.includes("restaurant") && (
               <MdOutlineRestaurant className={styles.icon} />
             )}
-            {placeData.types.includes("bar") && (
+            {optimalPlaceData?.types?.includes("bar") && (
               <MdOutlineLocalBar className={styles.icon} />
             )}
           </div>
@@ -97,21 +159,21 @@ const PlacePage = () => {
             className={styles.addressDiv}
             onClick={() => {
               window.open(
-                `https://www.google.com/maps/dir/?api=1&destination=${placeData.lat},${placeData.lng}`
+                `https://www.google.com/maps/dir/?api=1&destination=${optimalPlaceData?.lat},${optimalPlaceData?.lng}`
               );
             }}
           >
-            <p>{placeData.formatted_address}</p>
+            <p>{optimalPlaceData?.formatted_address}</p>
             <MdDirections className={styles.directionsIcon} />
           </div>
           <div className={styles.ratingsDiv}>
-            <p>{placeData.rating}</p>
+            <p>{optimalPlaceData?.rating}</p>
             {[1, 2, 3, 4, 5].map((star) => {
-              if (placeData.rating >= star) {
+              if (optimalPlaceData?.rating >= star) {
                 return (
                   <MdOutlineStar key={star} className={styles.ratingStar} />
                 );
-              } else if (placeData.rating >= star - 0.5) {
+              } else if (optimalPlaceData?.rating >= star - 0.5) {
                 return (
                   <MdOutlineStarHalf key={star} className={styles.ratingStar} />
                 );
@@ -124,7 +186,7 @@ const PlacePage = () => {
                 );
               }
             })}
-            <p>({placeData.totalUserRatings} reviews)</p>
+            <p>({optimalPlaceData?.totalUserRatings} reviews)</p>
           </div>
         </>
       )}

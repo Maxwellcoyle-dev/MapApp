@@ -1,33 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getCurrentUser } from "aws-amplify/auth";
 import { useNavigate } from "react-router-dom";
 
 import { savePlace } from "../../api/placeApi";
 
-import { useSearchContext } from "../../state/SearchContext";
 import { useAppContext } from "../../state/AppContext";
 
-import useGetPlace from "../google-api-hooks/useGetPlaceDetails";
+import useGetPlaceDetails from "../google-api-hooks/useGetPlaceDetails";
+import useUser from "./useUser";
 
-const useSavePlace = () => {
-  const [user, setUser] = useState(null);
+const useSavePlace = (placeId) => {
+  if (!placeId) {
+    throw new Error("placeId is required");
+  }
+
+  const { authUser } = useUser();
   const [savePlaceIsLoading, setSavePlaceIsLoading] = useState(false);
 
-  const { selectedPlace } = useSearchContext();
   const { setShowAddToList } = useAppContext();
 
-  const { placeData } = useGetPlace(selectedPlace?.place_id);
+  const { placeData } = useGetPlaceDetails(placeId);
 
   const navigate = useNavigate();
-
-  useEffect(() => {
-    getCurrentUser()
-      .then((user) => {
-        setUser(user);
-      })
-      .catch((error) => console.error(error));
-  }, []);
 
   const queryClient = useQueryClient();
 
@@ -35,9 +29,10 @@ const useSavePlace = () => {
     mutationFn: (listId) => {
       console.log("Saving place...");
       console.log("listId: ", listId);
+      console.log("placeData: ", placeData);
       setSavePlaceIsLoading(true);
       return savePlace({
-        userId: user?.userId,
+        userId: authUser?.data.userId,
         listId,
         place: placeData,
       });
@@ -48,14 +43,12 @@ const useSavePlace = () => {
       console.log("data: ", data);
       console.log("variables: ", variables);
       queryClient.invalidateQueries({
-        queryKey: ["list places"],
+        queryKey: ["list-places", variables.listId],
       });
       setShowAddToList(false);
       setSavePlaceIsLoading(false);
       navigate(`/list/${variables}`, { state: { from: "addToList" } });
     },
-    // only enable if placeData, user?.userId, and listId are truthy
-    enabled: !!placeData && !!user?.userId && !!selectedPlace?.listId,
   });
 
   return { savePlaceMutation, savePlaceIsLoading };

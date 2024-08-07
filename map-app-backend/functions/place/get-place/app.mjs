@@ -27,11 +27,12 @@ export const lambdaHandler = async (event) => {
   const command = new GetItemCommand(params);
   try {
     const data = await dbclient.send(command);
-    console.log("Data: ", data);
+    const transformedData = transformDynamoDBData(data.Item); // Transform data here
+    console.log("Data: ", transformedData);
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(data.Item),
+      body: JSON.stringify(transformedData),
     };
   } catch (err) {
     console.error(err);
@@ -41,4 +42,24 @@ export const lambdaHandler = async (event) => {
       body: JSON.stringify(err),
     };
   }
+};
+
+const transformDynamoDBData = (dynamoData) => {
+  if (!dynamoData) return null;
+
+  const convertAttribute = (attribute) => {
+    if ("S" in attribute) return attribute.S;
+    if ("N" in attribute) return Number(attribute.N);
+    if ("SS" in attribute) return attribute.SS;
+    if ("M" in attribute) return transformDynamoDBData(attribute.M);
+    if ("L" in attribute) return attribute.L.map(convertAttribute);
+    return attribute;
+  };
+
+  const transformedData = {};
+  for (const key in dynamoData) {
+    transformedData[key] = convertAttribute(dynamoData[key]);
+  }
+
+  return transformedData;
 };

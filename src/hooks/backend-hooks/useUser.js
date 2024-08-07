@@ -13,7 +13,6 @@ const useUser = () => {
   useEffect(() => {
     fetchUserAttributes()
       .then((user) => {
-        console.log("User: ", user);
         setUserAttributes((prev) => ({
           userId: user.sub,
           email: user.email,
