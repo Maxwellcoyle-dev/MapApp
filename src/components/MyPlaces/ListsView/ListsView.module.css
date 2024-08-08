@@ -23,3 +23,11 @@
   height: 25rem;
   overflow-y: auto;
 }
+
+.loadingDiv {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
