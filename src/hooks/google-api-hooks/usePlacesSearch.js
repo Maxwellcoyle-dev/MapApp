@@ -31,7 +31,7 @@ const usePlacesSearch = () => {
     error: placesResultsError,
     refetch: refetchPlacesResults,
   } = useQuery({
-    queryKey: ["usePlaceSearch", placeType, searchQuery],
+    queryKey: ["places-search", placeType],
     queryFn: fetchPlaces,
     enabled: !!placeType,
     staleTime: 1000 * 60 * 10, // Cache the data for 10 minutes

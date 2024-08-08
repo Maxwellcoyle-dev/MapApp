@@ -1,5 +1,5 @@
 // Libraries
-import React from "react";
+import React, { useEffect } from "react";
 import { MdOutlineSearch, MdClear } from "react-icons/md";
 
 // State
@@ -12,13 +12,15 @@ import useAutocomplete from "../../../hooks/google-api-hooks/useAutocomplete";
 import styles from "./Input.module.css";
 
 const Input = () => {
-  const { searchQuery, setSearchQuery, queryInput, setPlaceType } =
-    useSearchContext();
-
+  const {
+    setSearchQuery,
+    queryInput,
+    setAutoCompleteResults,
+    autoCompleteResults,
+  } = useSearchContext();
   const handleInputChange = useAutocomplete();
 
   const handleKeyDown = (event) => {
-    // if its not enter, but a letter then update the query input
     if (event.key !== "Enter") {
       handleInputChange(event);
     }
@@ -27,32 +29,32 @@ const Input = () => {
     }
   };
 
+  // make sure to clear the autocomplete results when the input is empty
+  useEffect(() => {
+    if (queryInput === "" && autoCompleteResults.length > 0) {
+      setAutoCompleteResults([]);
+    }
+  }, [queryInput, autoCompleteResults]);
+
+  const handleClearInput = () => {
+    handleInputChange({ target: { value: "" } });
+  };
+
   return (
     <div className={styles.inputContainer}>
       {queryInput && (
         <div className={styles.buttonDiv}>
           <button
             className={styles.button}
-            onClick={(event) => setSearchQuery(event.target.value)}
+            onClick={() => setSearchQuery(queryInput)}
           >
             <MdOutlineSearch
-              style={{
-                fontSize: "1.5rem",
-                color: "black",
-                margin: "auto",
-              }}
+              style={{ fontSize: "1.5rem", color: "black", margin: "auto" }}
             />
           </button>
-          <button
-            className={styles.button}
-            onClick={() => handleInputChange({ target: { value: "" } })}
-          >
+          <button className={styles.button} onClick={handleClearInput}>
             <MdClear
-              style={{
-                fontSize: "1.5rem",
-                color: "black",
-                margin: "auto",
-              }}
+              style={{ fontSize: "1.5rem", color: "black", margin: "auto" }}
             />
           </button>
         </div>
