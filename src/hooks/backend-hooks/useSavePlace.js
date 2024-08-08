@@ -43,7 +43,13 @@ const useSavePlace = (placeId) => {
       console.log("data: ", data);
       console.log("variables: ", variables);
       queryClient.invalidateQueries({
-        queryKey: ["list-places", variables.listId],
+        queryKey: ["list-places"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["lists"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["saved-place"],
       });
       setShowAddToList(false);
       setSavePlaceIsLoading(false);

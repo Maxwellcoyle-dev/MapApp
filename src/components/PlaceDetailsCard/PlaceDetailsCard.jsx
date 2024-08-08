@@ -20,7 +20,7 @@ const PlaceDetailsCard = () => {
   const [isOpen, setIsOpen] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
 
-  const { selectedPlace, setSelectedPlace } = useSearchContext();
+  const { selectedPlace, setSelectedPlace, setQueryInput } = useSearchContext();
   const { setZoom } = useMapContext();
 
   const navigate = useNavigate();
@@ -104,6 +104,7 @@ const PlaceDetailsCard = () => {
                 className={styles.iconContainer}
                 onClick={() => {
                   setSelectedPlace(null);
+                  setQueryInput("");
                   navigate("/");
                   setZoom(12);
                 }}

@@ -16,7 +16,7 @@ const useUpdatePlace = () => {
       console.log("Updated place:", data);
       console.log("Variables:", variables);
       queryClient.invalidateQueries({
-        queryKey: ["list places", variables.listId],
+        queryKey: ["list-places"],
       });
     },
     onError: (error) => console.error(error),

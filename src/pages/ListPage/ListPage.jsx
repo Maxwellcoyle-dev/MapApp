@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
 // components
@@ -13,6 +13,10 @@ const List = () => {
   const location = useLocation();
   const { listId } = useParams();
   const { state } = location;
+
+  useEffect(() => {
+    console.log("listPage state: ", state);
+  }, [state]);
 
   return (
     <div className={styles.listPageContainer}>

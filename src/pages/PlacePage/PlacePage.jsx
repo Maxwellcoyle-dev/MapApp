@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Image, Carousel, Spin } from "antd";
+import { Image, Carousel, Spin, Tooltip } from "antd";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import {
   MdClose,
@@ -111,16 +111,30 @@ const PlacePage = () => {
                   <FaRegHeart className={styles.overlayIcon} />
                 </div>
               )}
-              <div className={styles.iconDiv}>
-                <MdOutlineNewLabel
-                  className={
+              <Tooltip
+                title={
+                  isPlaceSavedLoading || !isPlaceSaved
+                    ? "Save the place before adding a tag"
+                    : ""
+                }
+              >
+                <div
+                  className={styles.iconDiv}
+                  onClick={
                     isPlaceSavedLoading || !isPlaceSaved
-                      ? styles.overlayIconDisabled
-                      : styles.overlayIcon
+                      ? undefined
+                      : () => navigate(`/add-tag/${placeId}`)
                   }
-                  onClick={() => navigate(`/add-tag/${placeId}`)}
-                />
-              </div>
+                >
+                  <MdOutlineNewLabel
+                    className={
+                      isPlaceSavedLoading || !isPlaceSaved
+                        ? styles.overlayIconDisabled
+                        : styles.overlayIcon
+                    }
+                  />
+                </div>
+              </Tooltip>
               <div className={styles.iconDiv}>
                 <MdClose
                   className={styles.overlayIcon}

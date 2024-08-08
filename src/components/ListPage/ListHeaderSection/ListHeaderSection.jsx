@@ -91,35 +91,34 @@ const ListHeaderSection = ({
 
   return (
     <div>
-      {listData &&
-        (!showEditForm ? (
-          <ListHeader
-            listName={
-              listPageState?.listName?.S ? listPageState?.listName.S : listName
-            }
-            listDescription={
-              listPageState?.listDescription?.S
-                ? listPageState?.listDescription?.S
-                : description
-            }
-            refetchListPlaces={refetchListPlaces}
-            handleDeleteList={handleDeleteList}
-            setShowEditForm={setShowEditForm}
-            setShowFilterForm={setShowFilterForm}
-            showFilterForm={showFilterForm}
-            handleSearch={handleSearch}
-          />
-        ) : (
-          <ListEditForm
-            formRef={formRef}
-            listData={listData}
-            styles={styles}
-            handleCancel={handleCancel}
-            handleUpdateList={handleUpdateList}
-            listName={listName}
-            description={description}
-          />
-        ))}
+      {!showEditForm ? (
+        <ListHeader
+          listName={
+            listPageState?.listName?.S ? listPageState?.listName.S : listName
+          }
+          listDescription={
+            listPageState?.listDescription?.S
+              ? listPageState?.listDescription?.S
+              : description
+          }
+          refetchListPlaces={refetchListPlaces}
+          handleDeleteList={handleDeleteList}
+          setShowEditForm={setShowEditForm}
+          setShowFilterForm={setShowFilterForm}
+          showFilterForm={showFilterForm}
+          handleSearch={handleSearch}
+        />
+      ) : (
+        <ListEditForm
+          formRef={formRef}
+          listData={listData}
+          styles={styles}
+          handleCancel={handleCancel}
+          handleUpdateList={handleUpdateList}
+          listName={listName}
+          description={description}
+        />
+      )}
     </div>
   );
 };

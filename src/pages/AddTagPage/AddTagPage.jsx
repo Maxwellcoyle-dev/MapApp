@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Tag, Skeleton } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 // Hooks
 import useUser from "../../hooks/backend-hooks/useUser";
@@ -15,27 +15,22 @@ const AddTagPage = () => {
   const [currentPlaceTags, setCurrentPlaceTags] = useState([]);
   const [allTags, setAllTags] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { state } = location;
 
   const { placeId } = useParams();
-
   const { authUser } = useUser();
-
   const { savedPlaceData } = useGetPlace(placeId, authUser?.data.userId);
-
   const { updatePlaceMutation } = useUpdatePlace();
 
   useEffect(() => {
-    console.log("savedPlaceData -- ", savedPlaceData);
-  }, [savedPlaceData]);
-
-  useEffect(() => {
     if (savedPlaceData?.tags) {
-      console.log("savedPlaceData.tags.L", savedPlaceData.tags);
+      console.log("savedPlaceData.tags", savedPlaceData.tags);
       const mappedTags = savedPlaceData.tags.map((tag) => ({
         tagId: tag.tagId,
         categoryId: tag.categoryId,
-        tagName: getTagNameById(tag.tagId, tag.categoryId),
-        categoryName: getCategoryNameById(tag.categoryId),
+        tagName: tag.tagName,
+        categoryName: tag.categoryName,
       }));
       setCurrentPlaceTags(mappedTags);
     }
@@ -47,32 +42,15 @@ const AddTagPage = () => {
     }
   }, [authUser]);
 
-  const getTagNameById = (tagId, categoryId) => {
-    const category = authUser?.data?.categories.find(
-      (cat) => cat.categoryId === categoryId
-    );
-    if (category) {
-      const tag = category.tags.find((t) => t.tagId === tagId);
-      return tag ? tag.tagName : "";
-    }
-    return "";
-  };
-
-  const getCategoryNameById = (categoryId) => {
-    const category = authUser?.data?.categories.find(
-      (cat) => cat.categoryId === categoryId
-    );
-    return category ? category.name : "";
-  };
-
-  const handleTagClick = (categoryId, tag) => {
-    const tagExists = currentPlaceTags.some(
-      (t) => t.tagId === tag.tagId && t.categoryId === categoryId
-    );
+  const handleTagClick = (category, tag) => {
+    const tagExists = currentPlaceTags.some((t) => {
+      return t.tagId === tag.tagId && t.categoryId === category.categoryId;
+    });
     if (tagExists) {
       setCurrentPlaceTags(
         currentPlaceTags.filter(
-          (t) => !(t.tagId === tag.tagId && t.categoryId === categoryId)
+          (t) =>
+            !(t.tagId === tag.tagId && t.categoryId === category.categoryId)
         )
       );
     } else {
@@ -80,33 +58,30 @@ const AddTagPage = () => {
         ...currentPlaceTags,
         {
           tagId: tag.tagId,
-          categoryId: categoryId,
+          categoryId: category.categoryId,
           tagName: tag.tagName,
-          categoryName: getCategoryNameById(categoryId),
+          categoryName: category.categoryName,
         },
       ]);
     }
   };
 
   const handleSave = () => {
-    console.log("placeId", savedPlaceData?.placeId.S);
-    console.log("userId", authUser.data.userId);
     const updatedTags = currentPlaceTags.map((tag) => ({
       tagId: tag.tagId,
       categoryId: tag.categoryId,
       tagName: tag.tagName,
       categoryName: tag.categoryName,
     }));
-    console.log("updatedTags", updatedTags);
+
     updatePlaceMutation.mutate({
       placeId: placeId,
       userId: authUser.data.userId,
-      savedPlaceData: {
+      placeData: {
         tags: updatedTags,
       },
     });
     navigate(-1);
-    // close the page - return to previous page
   };
 
   return (
@@ -114,8 +89,8 @@ const AddTagPage = () => {
       <div className={styles.headerDiv}>
         <div className={styles.topDiv}>
           <h2>
-            {savedPlaceData ? (
-              savedPlaceData.name
+            {savedPlaceData || state?.name?.S ? (
+              savedPlaceData.name || state.name.S
             ) : (
               <Skeleton title={{ width: 200 }} paragraph={false} active />
             )}
@@ -139,7 +114,7 @@ const AddTagPage = () => {
       <div className={styles.categoriesContainer}>
         {allTags.map((category) => (
           <div className={styles.categoryDiv} key={category.categoryId}>
-            <h3 className={styles.categoryName}>{category.name}</h3>
+            <h3 className={styles.categoryName}>{category.categoryName}</h3>
             <div className={styles.tagsListDiv}>
               {category.tags.map((tag) => {
                 const isSelected = currentPlaceTags.some(
@@ -151,7 +126,7 @@ const AddTagPage = () => {
                   <Tag
                     key={tag.tagId}
                     color={isSelected ? "blue" : "default"}
-                    onClick={() => handleTagClick(category.categoryId, tag)}
+                    onClick={() => handleTagClick(category, tag)}
                     className={styles.tagItem}
                   >
                     <p className={styles.tagText}>{tag.tagName}</p>

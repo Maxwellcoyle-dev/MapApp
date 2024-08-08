@@ -101,7 +101,7 @@ const getUser = async (userId) => {
         })),
         categories: data.Item.categories.L.map((category) => ({
           categoryId: category.M.categoryId.S,
-          name: category.M.name.S,
+          categoryName: category.M.categoryName.S,
           tags: category.M.tags.L.map((tag) => ({
             tagId: tag.M.tagId.S,
             tagName: tag.M.tagName.S,

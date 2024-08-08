@@ -44,7 +44,7 @@ export const createNewUser = async (userId, email) => {
       return {
         M: {
           categoryId: { S: uuidv4() },
-          name: { S: category.name.S },
+          categoryName: { S: category.categoryName.S },
           tags: { L: formattedTags },
           creationType: { S: category.creationType.S },
           createdAt: { N: `${category.createdAt.N}` },
