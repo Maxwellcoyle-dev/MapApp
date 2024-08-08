@@ -1,7 +1,7 @@
 export const defaultCategories = [
   {
     categoryId: { N: "1" },
-    name: { S: "Cuisine Type" },
+    categoryName: { S: "Cuisine Type" },
     tags: {
       L: [
         { M: { tagId: { S: "1" }, tagName: { S: "Italian" } } },
@@ -22,7 +22,7 @@ export const defaultCategories = [
   },
   {
     categoryId: { N: "2" },
-    name: { S: "Meal Type" },
+    categoryName: { S: "Meal Type" },
     tags: {
       L: [
         { M: { tagId: { S: "1" }, tagName: { S: "Breakfast" } } },
@@ -39,7 +39,7 @@ export const defaultCategories = [
   },
   {
     categoryId: { N: "3" },
-    name: { S: "Dietary Preferences" },
+    categoryName: { S: "Dietary Preferences" },
     tags: {
       L: [
         { M: { tagId: { S: "1" }, tagName: { S: "Vegetarian" } } },
@@ -55,7 +55,7 @@ export const defaultCategories = [
   },
   {
     categoryId: { N: "4" },
-    name: { S: "Ambiance" },
+    categoryName: { S: "Ambiance" },
     tags: {
       L: [
         { M: { tagId: { S: "1" }, tagName: { S: "Casual Dining" } } },
@@ -74,7 +74,7 @@ export const defaultCategories = [
   },
   {
     categoryId: { S: "5" },
-    name: { S: "Features" },
+    categoryName: { S: "Features" },
     tags: {
       L: [
         { M: { tagId: { S: "1" }, tagName: { S: "Takeout" } } },

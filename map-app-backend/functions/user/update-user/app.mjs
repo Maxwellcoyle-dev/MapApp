@@ -69,7 +69,7 @@ const updateCategories = async (userId, categories) => {
   const categoryItems = categories.map((category) => ({
     M: {
       categoryId: { S: category.categoryId },
-      name: { S: category.name },
+      categoryName: { S: category.categoryName },
       tags: {
         L: category.tags.map((tag) => ({
           M: { tagId: { S: tag.tagId }, tagName: { S: tag.tagName } },
