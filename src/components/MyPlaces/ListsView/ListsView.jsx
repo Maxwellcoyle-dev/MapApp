@@ -1,11 +1,11 @@
 // Libraries
 import React, { useState, useEffect } from "react";
-import { getCurrentUser } from "aws-amplify/auth";
-import { Button } from "antd";
+import { Button, Spin } from "antd";
 import { MdOutlineAdd } from "react-icons/md";
 
 // hooks
 import useUserLists from "../../../hooks/backend-hooks/useUserLists";
+import useUser from "../../../hooks/backend-hooks/useUser";
 
 // components
 import MyLists from "../../MyPlaces/MyLists/MyLists";
@@ -19,16 +19,11 @@ const ListsView = () => {
   const [user, setUser] = useState(null);
   const [addNewList, setAddNewList] = useState(false);
 
-  useEffect(() => {
-    getCurrentUser()
-      .then((user) => {
-        setUser(user);
-        console.log(user);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+  const { authUser } = useUser();
 
-  const { listsData, listsError, isListsLoading } = useUserLists(user?.userId);
+  const { listsData, listsError, isListsLoading } = useUserLists(
+    authUser?.data.userId
+  );
 
   useEffect(() => {
     if (isListsLoading) {
@@ -63,9 +58,13 @@ const ListsView = () => {
       )}
 
       <div className={styles.listDiv}>
-        {!addNewList && isListsLoading && <p>Loading...</p>}
-        {!addNewList && listsError && <p>{listsError.message}</p>}
-        {!addNewList && listsData && <MyLists userLists={listsData.data} />}
+        {isListsLoading && (
+          <div className={styles.loadingDiv}>
+            <Spin size="large" />
+          </div>
+        )}
+
+        {listsData && <MyLists userLists={listsData.data} />}
       </div>
     </div>
   );

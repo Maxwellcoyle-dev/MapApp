@@ -32,7 +32,24 @@
   margin: 0.5rem;
 }
 
-.applyButton {
+.mainFilterDiv {
+  height: calc(100vh - 4rem);
+}
+
+.mainBtnDiv {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin: 0.5rem 0;
+  gap: 1rem;
+}
+
+.mainButtonItem {
+  width: 100%;
+}
+
+.mainButton {
   width: 100%;
 }
 

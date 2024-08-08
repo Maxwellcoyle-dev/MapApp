@@ -35,8 +35,13 @@ const MapView = ({ placesResults }) => {
   const { userLocation } = useAppContext();
 
   const { center, setCenter, setZoom, zoom } = useMapContext();
-  const { searchQuery, setAutoCompleteResults, selectedPlace } =
+  const { searchQuery, setAutoCompleteResults, selectedPlace, searchResults } =
     useSearchContext();
+
+  useEffect(() => {
+    console.log("selecetdPlace: ", selectedPlace);
+    console.log("searchResults: ", searchResults);
+  }, [selectedPlace, searchResults]);
 
   useEffect(() => {
     if (userLocation) {

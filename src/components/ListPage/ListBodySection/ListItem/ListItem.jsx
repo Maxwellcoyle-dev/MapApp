@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Tag } from "antd";
 import { MdOutlineNewLabel, MdDeleteOutline } from "react-icons/md";
 
@@ -12,10 +12,6 @@ const ListItem = ({
   listData,
   authUser,
 }) => {
-  useEffect(() => {
-    console.log("Place:", place);
-  }, [place]);
-
   return (
     <div className={styles.listItem}>
       <div className={styles.imageDiv}>

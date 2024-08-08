@@ -21,7 +21,7 @@ const PlaceDetailsCard = () => {
   const [imageUrl, setImageUrl] = useState(null);
 
   const { selectedPlace, setSelectedPlace } = useSearchContext();
-  const { setZoom, setCenter } = useMapContext();
+  const { setZoom } = useMapContext();
 
   const navigate = useNavigate();
 

@@ -1,6 +1,6 @@
 .listContainer {
   width: 100%;
-  height: 100vh;
+  height: 75%;
   display: flex;
   flex-direction: column;
 }

@@ -16,7 +16,6 @@ import {
 
 // Hooks
 import useGetOptimalPlaceData from "../../hooks/useGetOptimalPlaceData";
-import useClosePlaceDetails from "../../hooks/useClosePlaceDetails";
 import usePlaceIsSaved from "../../hooks/usePlaceIsSaved";
 import useGetPhotos from "../../hooks/google-api-hooks/useGetPhotos";
 
@@ -37,12 +36,6 @@ const PlacePage = () => {
 
   const { placesPhotos } = useGetPhotos(placeIds);
 
-  const handleClosePlace = useClosePlaceDetails();
-
-  useEffect(() => {
-    console.log("optimalPlaceData: ", optimalPlaceData);
-  }, [optimalPlaceData]);
-
   useEffect(() => {
     if (optimalPlaceData && !optimalPlaceData?.photos) {
       const placeIds = [
@@ -53,7 +46,6 @@ const PlacePage = () => {
       setPlaceIds(placeIds);
     }
     if (optimalPlaceData && optimalPlaceData?.photos) {
-      console.log("optimalPlaceData.photos: ", optimalPlaceData.photos);
       const photoUrls = optimalPlaceData.photos.map((photo) => {
         return photo.getUrl();
       });
@@ -63,20 +55,14 @@ const PlacePage = () => {
 
   useEffect(() => {
     if (placesPhotos) {
-      console.log("placesPhotos: ", placesPhotos);
       // extract the photo url from the placesPhotos array getUrl ([0].photos[0].getUrl)
       const photoUrls = placesPhotos.map((place) => {
         return place.photos[0].getUrl();
       });
-      console.log("photoUrls: ", photoUrls);
+
       setPhotos(photoUrls);
     }
   }, [placesPhotos]);
-
-  // useeffect to log photos state
-  useEffect(() => {
-    console.log("photos: ", photos);
-  }, [photos]);
 
   if (optimalPlaceDataLoading) {
     return (
@@ -138,7 +124,7 @@ const PlacePage = () => {
               <div className={styles.iconDiv}>
                 <MdClose
                   className={styles.overlayIcon}
-                  onClick={handleClosePlace}
+                  onClick={() => navigate(-1)}
                 />
               </div>
             </div>

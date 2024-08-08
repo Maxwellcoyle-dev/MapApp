@@ -17,7 +17,6 @@ const fetchPhotos = async (placesLibrary, map, placeIds) => {
             },
             (place, status) => {
               if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-                console.log("Place details for " + placeId + ": ", place);
                 resolve(place);
               } else {
                 reject(

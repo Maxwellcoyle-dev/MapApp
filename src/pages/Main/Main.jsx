@@ -8,9 +8,6 @@ import MapView from "../../components/Main/Map/MapView";
 import MapListView from "../../components/Main/MapListView/MapListView";
 import SearchBar from "../../components/Search/SearchBar";
 
-// State
-import { useAppContext } from "../../state/AppContext";
-
 // Hooks
 import useGetUserLocation from "../../hooks/useGetUserLocation";
 import usePlacesSearch from "../../hooks/google-api-hooks/usePlacesSearch";
@@ -25,7 +22,9 @@ const Main = () => {
 
   const { placesResults, isPlacesResultsLoading } = usePlacesSearch();
 
-  const { showAddToList } = useAppContext();
+  useEffect(() => {
+    console.log("placesResults: ", placesResults);
+  }, [placesResults]);
 
   return (
     <div className={styles.mainContainer}>
