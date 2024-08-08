@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Button, Tag } from "antd";
+import { Button, Tag, Skeleton } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 import { useParams, useNavigate } from "react-router-dom";
 
 // Hooks
@@ -19,26 +20,26 @@ const AddTagPage = () => {
 
   const { authUser } = useUser();
 
-  const { placeData } = useGetPlace(placeId, authUser?.data.userId);
+  const { savedPlaceData } = useGetPlace(placeId, authUser?.data.userId);
 
   const { updatePlaceMutation } = useUpdatePlace();
 
   useEffect(() => {
-    console.log("placeData -- ", placeData);
-  }, [placeData]);
+    console.log("savedPlaceData -- ", savedPlaceData);
+  }, [savedPlaceData]);
 
   useEffect(() => {
-    if (placeData?.tags?.L) {
-      console.log("placeData.tags.L", placeData.tags.L);
-      const mappedTags = placeData.tags.L.map((tag) => ({
-        tagId: tag.M.tagId.S,
-        categoryId: tag.M.categoryId.S,
-        tagName: getTagNameById(tag.M.tagId.S, tag.M.categoryId.S),
-        categoryName: getCategoryNameById(tag.M.categoryId.S),
+    if (savedPlaceData?.tags) {
+      console.log("savedPlaceData.tags.L", savedPlaceData.tags);
+      const mappedTags = savedPlaceData.tags.map((tag) => ({
+        tagId: tag.tagId,
+        categoryId: tag.categoryId,
+        tagName: getTagNameById(tag.tagId, tag.categoryId),
+        categoryName: getCategoryNameById(tag.categoryId),
       }));
       setCurrentPlaceTags(mappedTags);
     }
-  }, [placeData]);
+  }, [savedPlaceData]);
 
   useEffect(() => {
     if (authUser?.data?.categories) {
@@ -88,7 +89,7 @@ const AddTagPage = () => {
   };
 
   const handleSave = () => {
-    console.log("placeId", placeData?.placeId.S);
+    console.log("placeId", savedPlaceData?.placeId.S);
     console.log("userId", authUser.data.userId);
     const updatedTags = currentPlaceTags.map((tag) => ({
       tagId: tag.tagId,
@@ -100,7 +101,7 @@ const AddTagPage = () => {
     updatePlaceMutation.mutate({
       placeId: placeId,
       userId: authUser.data.userId,
-      placeData: {
+      savedPlaceData: {
         tags: updatedTags,
       },
     });
@@ -111,33 +112,56 @@ const AddTagPage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.headerDiv}>
-        <h3>Tag Manager</h3>
-        <Button onClick={() => navigate(-1)}>Close</Button>
-      </div>
-      {allTags.map((category) => (
-        <div className={styles.categoryDiv} key={category.categoryId}>
-          <h4>{category.name}</h4>
-          <div className={styles.tagsListDiv}>
-            {category.tags.map((tag) => {
-              const isSelected = currentPlaceTags.some(
-                (t) =>
-                  t.tagId === tag.tagId && t.categoryId === category.categoryId
-              );
-              return (
-                <Tag
-                  key={tag.tagId}
-                  color={isSelected ? "blue" : "default"}
-                  onClick={() => handleTagClick(category.categoryId, tag)}
-                  className={styles.tagItem}
-                >
-                  {tag.tagName}
-                </Tag>
-              );
-            })}
-          </div>
+        <div className={styles.topDiv}>
+          <h2>
+            {savedPlaceData ? (
+              savedPlaceData.name
+            ) : (
+              <Skeleton title={{ width: 200 }} paragraph={false} active />
+            )}
+          </h2>
+
+          <Button onClick={() => navigate(-1)} icon={<CloseOutlined />} />
         </div>
-      ))}
-      <Button onClick={handleSave}>Save</Button>
+        <div className={styles.bottomDiv}>
+          <Button onClick={handleSave} type="primary" className={styles.button}>
+            Save
+          </Button>
+          <Button
+            danger
+            className={styles.button}
+            onClick={() => setCurrentPlaceTags([])}
+          >
+            Clear
+          </Button>
+        </div>
+      </div>
+      <div className={styles.categoriesContainer}>
+        {allTags.map((category) => (
+          <div className={styles.categoryDiv} key={category.categoryId}>
+            <h3 className={styles.categoryName}>{category.name}</h3>
+            <div className={styles.tagsListDiv}>
+              {category.tags.map((tag) => {
+                const isSelected = currentPlaceTags.some(
+                  (t) =>
+                    t.tagId === tag.tagId &&
+                    t.categoryId === category.categoryId
+                );
+                return (
+                  <Tag
+                    key={tag.tagId}
+                    color={isSelected ? "blue" : "default"}
+                    onClick={() => handleTagClick(category.categoryId, tag)}
+                    className={styles.tagItem}
+                  >
+                    <p className={styles.tagText}>{tag.tagName}</p>
+                  </Tag>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

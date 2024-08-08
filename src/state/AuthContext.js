@@ -11,7 +11,6 @@ export const AuthProvider = ({ children }) => {
   const login = async (userData, from) => {
     try {
       const attributes = await fetchUserAttributes();
-      console.log("Attributes: ", attributes);
       setUser({ ...userData, ...attributes });
     } catch (error) {
       console.error("Failed to fetch user attributes", error);

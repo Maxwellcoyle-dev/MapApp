@@ -94,10 +94,12 @@ const FilterForm = ({
   };
 
   const resetFilters = () => {
+    setSelectedTags([]);
     clearFilters();
     setNoResults(false);
     setSearchValue("");
     setAlertMessage("");
+    setShowFilterForm(false);
   };
 
   return (
@@ -201,16 +203,31 @@ const FilterForm = ({
         )}
       </div>
       {showFilterForm && (
-        <>
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              className={styles.applyButton}
-            >
-              Apply Filters
-            </Button>
-          </Form.Item>
+        <div className={styles.mainFilterDiv}>
+          <div className={styles.mainBtnDiv}>
+            <Form.Item className={styles.mainButtonItem}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className={styles.mainButton}
+              >
+                Apply Filters
+              </Button>
+            </Form.Item>
+            <Form.Item className={styles.mainButtonItem}>
+              <Button
+                danger
+                htmlType="reset"
+                className={styles.mainButton}
+                onClick={() => {
+                  resetFilters();
+                  setShowFilterForm(false);
+                }}
+              >
+                Cancel
+              </Button>
+            </Form.Item>
+          </div>
           <Form.Item label="Google Rating" name="rating">
             <Rate allowHalf />
           </Form.Item>
@@ -251,7 +268,7 @@ const FilterForm = ({
               ))}
             </Select>
           </Form.Item>
-        </>
+        </div>
       )}
     </Form>
   );

@@ -28,23 +28,12 @@ import NavBar from "./components/NavBar/NavBar";
 // Context
 import { MapProvider } from "./state/MapContext";
 import { SearchProvider } from "./state/SearchContext";
-import { useAuthContext } from "./state/AuthContext";
 import { useAppContext } from "./state/AppContext";
-
-import useUser from "./hooks/backend-hooks/useUser";
 
 const { Content, Footer } = Layout;
 
 function App() {
   const { setUserLocation } = useAppContext();
-
-  const { user } = useAuthContext();
-
-  useEffect(() => {
-    console.log("User: ", user);
-  }, [user]);
-
-  const { authUser } = useUser(user);
 
   useEffect(() => {
     // get the mapAppUserLocation from local storage
