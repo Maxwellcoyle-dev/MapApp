@@ -80,15 +80,18 @@
   justify-content: center;
   cursor: pointer;
   padding: 0.5rem;
-  background: rgba(31, 31, 31, 0.448);
+  background: white;
   border-radius: 50%;
 }
 
 .overlayIcon {
-  width: 24px;
-  height: 24px;
-  color: white;
+  font-size: 1.2rem;
+  color: black;
   cursor: pointer;
+}
+
+.heartIcon {
+  color: red;
 }
 
 .overlayIconDisabled {
@@ -98,11 +101,26 @@
   cursor: not-allowed;
 }
 
+.tagContainer {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.tagButton {
+  padding: 0.5rem;
+  border-radius: 5px;
+  border-color: blue;
+  background-color: rgb(221, 221, 213);
+  color: blue;
+  font-weight: bold;
+}
+
 .headerDiv {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px;
+  padding: 0.5rem;
 }
 
 .addressDiv {

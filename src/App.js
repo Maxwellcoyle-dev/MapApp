@@ -83,6 +83,7 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
+
                 <Route
                   path="/my-account"
                   element={

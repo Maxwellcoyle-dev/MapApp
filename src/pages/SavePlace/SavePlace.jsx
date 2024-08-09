@@ -1,5 +1,5 @@
 // Libraries
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Image, Spin } from "antd";
 import { MdClose } from "react-icons/md";
@@ -25,7 +25,6 @@ const SavePlace = () => {
   const { savePlaceMutation, savePlaceIsLoading } = useSavePlace(placeId);
 
   const handleSavePlace = (listId) => {
-    console.log("listId: ", listId);
     savePlaceMutation.mutate(listId);
   };
 

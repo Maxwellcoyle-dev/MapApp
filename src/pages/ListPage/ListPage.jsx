@@ -14,10 +14,6 @@ const List = () => {
   const { listId } = useParams();
   const { state } = location;
 
-  useEffect(() => {
-    console.log("listPage state: ", state);
-  }, [state]);
-
   return (
     <div className={styles.listPageContainer}>
       <ListHeaderSection

@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Image, Carousel, Spin, Tooltip } from "antd";
-import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { Image, Carousel, Spin, Tooltip, Modal, Button } from "antd";
 import {
-  MdClose,
-  MdOutlineNewLabel,
+  LeftOutlined,
+  HeartOutlined,
+  HeartFilled,
+  PlusOutlined,
+} from "@ant-design/icons";
+import {
   MdOutlineStar,
   MdOutlineStarBorder,
   MdOutlineStarHalf,
@@ -14,10 +17,15 @@ import {
   MdOutlineRestaurant,
 } from "react-icons/md";
 
+// Components
+import DeletePlaceModal from "../../components/DeletePlaceModal/DeletePlaceModal";
+
 // Hooks
+import useUser from "../../hooks/backend-hooks/useUser";
 import useGetOptimalPlaceData from "../../hooks/useGetOptimalPlaceData";
 import usePlaceIsSaved from "../../hooks/usePlaceIsSaved";
 import useGetPhotos from "../../hooks/google-api-hooks/useGetPhotos";
+import useUserLists from "../../hooks/backend-hooks/useUserLists";
 
 // Styles
 import styles from "./PlacePage.module.css";
@@ -25,44 +33,77 @@ import styles from "./PlacePage.module.css";
 const PlacePage = () => {
   const [placeIds, setPlaceIds] = useState([]);
   const [photos, setPhotos] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  // array to hold the lists that contain the current place
+  const [listsContainingPlace, setListsContainingPlace] = useState([]);
 
   const { placeId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { state } = location;
 
+  const { authUser } = useUser();
+  const { listsData } = useUserLists(authUser?.data.userId);
   const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(placeId);
-
   const { optimalPlaceData, optimalPlaceDataLoading, optimalPlaceDataError } =
     useGetOptimalPlaceData(placeId);
-
   const { placesPhotos } = useGetPhotos(placeIds);
 
+  // Get photos of the place - if the place is saved to dynamoDB, then call useGetPhotots with the placeIds array. If the place is not saved, then we can use the getUrl() from the place.photos array
   useEffect(() => {
     if (optimalPlaceData && !optimalPlaceData?.photos) {
+      console.log("optimalPlaceData: ", optimalPlaceData);
+
       const placeIds = [
         optimalPlaceData?.placeId
           ? optimalPlaceData.placeId
           : optimalPlaceData.place_id,
       ];
+      console.log("placeIds: ", placeIds);
       setPlaceIds(placeIds);
     }
     if (optimalPlaceData && optimalPlaceData?.photos) {
       const photoUrls = optimalPlaceData.photos.map((photo) => {
         return photo.getUrl();
       });
+      console.log("photoUrls: ", photoUrls);
       setPhotos(photoUrls);
     }
   }, [optimalPlaceData]);
 
+  // put urls into a uniform array for the carousel
   useEffect(() => {
     if (placesPhotos) {
       // extract the photo url from the placesPhotos array getUrl ([0].photos[0].getUrl)
-      const photoUrls = placesPhotos.map((place) => {
-        return place.photos[0].getUrl();
+      let urls = [];
+      placesPhotos[0].photos.map((pic) => {
+        const newUrl = pic.getUrl();
+        urls.push(newUrl);
       });
-
-      setPhotos(photoUrls);
+      setPhotos(urls);
     }
   }, [placesPhotos]);
+
+  //
+  useEffect(() => {
+    if (listsData) {
+      // create a list of lists that contain the placeId. if the place id exists in the list. then add the listId to the listIds array
+      let lists = [];
+      listsData.data.forEach((list) => {
+        list.places.L.forEach((placeItem) => {
+          if (placeItem.M.placeId.S === placeId) {
+            lists.push({ listId: list.listId.S, listName: list.listName.S });
+          }
+        });
+      });
+      setListsContainingPlace(lists);
+    }
+  }, [listsData]);
+
+  const showDeleteModal = () => {
+    setIsModalVisible(true);
+  };
 
   if (optimalPlaceDataLoading) {
     return (
@@ -88,59 +129,65 @@ const PlacePage = () => {
           <div className={styles.carouselContainer}>
             <Carousel className={styles.carousel}>
               {photos &&
-                photos?.map((photo, index) => (
+                photos?.map((picUrl, index) => (
                   <div key={index} className={styles.photoDiv}>
                     <Image
                       className={styles.mainImage}
-                      src={photo}
+                      src={picUrl}
                       alt={optimalPlaceData?.name}
                     />
                   </div>
                 ))}
             </Carousel>
             <div className={styles.overlayIcons}>
+              <div className={styles.iconDiv}>
+                <LeftOutlined
+                  className={styles.overlayIcon}
+                  onClick={() =>
+                    navigate(state?.from !== "addToList" ? -1 : "/")
+                  }
+                />
+              </div>
               {isPlaceSaved ? (
-                <div className={styles.iconDiv}>
-                  <FaHeart className={styles.overlayIcon} />
+                <div className={styles.iconDiv} onClick={showDeleteModal}>
+                  <HeartFilled
+                    className={[styles.overlayIcon, styles.heartIcon]}
+                  />
                 </div>
               ) : (
                 <div
                   className={styles.iconDiv}
                   onClick={() => navigate(`/save-place/${placeId}`)}
                 >
-                  <FaRegHeart className={styles.overlayIcon} />
+                  <HeartOutlined
+                    className={[styles.overlayIcon, styles.heartIcon]}
+                  />
                 </div>
               )}
+            </div>
+          </div>
+          <div className={styles.tagContainer}>
+            <div>
               <Tooltip
                 title={
                   isPlaceSavedLoading || !isPlaceSaved
                     ? "Save the place before adding a tag"
-                    : ""
+                    : "Click here to add a tag"
                 }
               >
-                <div
-                  className={styles.iconDiv}
+                <Button
+                  type="dashed"
+                  className={styles.tagButton}
+                  disabled={isPlaceSavedLoading || !isPlaceSaved}
                   onClick={
                     isPlaceSavedLoading || !isPlaceSaved
                       ? undefined
                       : () => navigate(`/add-tag/${placeId}`)
                   }
                 >
-                  <MdOutlineNewLabel
-                    className={
-                      isPlaceSavedLoading || !isPlaceSaved
-                        ? styles.overlayIconDisabled
-                        : styles.overlayIcon
-                    }
-                  />
-                </div>
+                  <PlusOutlined /> <p>Add Tags</p>
+                </Button>
               </Tooltip>
-              <div className={styles.iconDiv}>
-                <MdClose
-                  className={styles.overlayIcon}
-                  onClick={() => navigate(-1)}
-                />
-              </div>
             </div>
           </div>
           <div className={styles.headerDiv}>
@@ -189,6 +236,17 @@ const PlacePage = () => {
             <p>({optimalPlaceData?.totalUserRatings} reviews)</p>
           </div>
         </>
+      )}
+
+      {isModalVisible && (
+        <DeletePlaceModal
+          visible={isModalVisible}
+          onClose={() => setIsModalVisible(false)}
+          listsContainingPlace={listsContainingPlace}
+          userId={authUser?.data.userId}
+          placeName={optimalPlaceData.name}
+          placeId={optimalPlaceData.placeId}
+        />
       )}
     </div>
   );

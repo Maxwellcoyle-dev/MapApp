@@ -25,7 +25,6 @@ const AddTagPage = () => {
 
   useEffect(() => {
     if (savedPlaceData?.tags) {
-      console.log("savedPlaceData.tags", savedPlaceData.tags);
       const mappedTags = savedPlaceData.tags.map((tag) => ({
         tagId: tag.tagId,
         categoryId: tag.categoryId,

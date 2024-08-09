@@ -27,9 +27,6 @@ const useSavePlace = (placeId) => {
 
   const savePlaceMutation = useMutation({
     mutationFn: (listId) => {
-      console.log("Saving place...");
-      console.log("listId: ", listId);
-      console.log("placeData: ", placeData);
       setSavePlaceIsLoading(true);
       return savePlace({
         userId: authUser?.data.userId,
@@ -39,21 +36,24 @@ const useSavePlace = (placeId) => {
     },
     onError: (error) => console.error(error),
     onSuccess: (data, variables) => {
-      console.log("Place saved successfully!");
-      console.log("data: ", data);
-      console.log("variables: ", variables);
       queryClient.invalidateQueries({
-        queryKey: ["list-places"],
+        queryKey: ["user-lists", authUser.data.userId],
       });
       queryClient.invalidateQueries({
-        queryKey: ["lists"],
+        queryKey: [
+          "saved-place",
+          placeData.place_id || placeData.placeId,
+          authUser.data.userId,
+        ],
       });
       queryClient.invalidateQueries({
-        queryKey: ["saved-place"],
+        queryKey: ["list-places", variables.listId],
       });
       setShowAddToList(false);
       setSavePlaceIsLoading(false);
-      navigate(`/list/${variables}`, { state: { from: "addToList" } });
+      navigate(`/place/${placeData.place_id || placeData.placeId}`, {
+        state: { from: "addToList" },
+      });
     },
   });
 

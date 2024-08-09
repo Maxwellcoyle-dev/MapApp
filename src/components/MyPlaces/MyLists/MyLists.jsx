@@ -1,13 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import styles from "./MyLists.module.css";
 
 const MyLists = (userLists) => {
   const navigate = useNavigate();
-  useEffect(() => {
-    console.log(userLists);
-  }, [userLists]);
+
   return (
     userLists && (
       <div className={styles.listContainer}>

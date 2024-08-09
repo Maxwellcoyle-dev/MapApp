@@ -9,7 +9,7 @@ const useGetList = (listId) => {
     isError: listDataIsError,
     isLoading: listDataIsLoading,
   } = useQuery({
-    queryKey: ["list", listId],
+    queryKey: ["get-list", listId],
     queryFn: () => getList(listId),
     retry: false,
     enabled: !!listId,

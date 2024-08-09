@@ -22,10 +22,6 @@ const Main = () => {
 
   const { placesResults, isPlacesResultsLoading } = usePlacesSearch();
 
-  useEffect(() => {
-    console.log("placesResults: ", placesResults);
-  }, [placesResults]);
-
   return (
     <div className={styles.mainContainer}>
       <Outlet />
