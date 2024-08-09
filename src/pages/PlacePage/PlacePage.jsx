@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Image, Carousel, Spin, Tooltip, Modal, Button } from "antd";
 import {
   LeftOutlined,
@@ -40,6 +40,8 @@ const PlacePage = () => {
 
   const { placeId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const { state } = location;
 
   const { authUser } = useUser();
   const { listsData } = useUserLists(authUser?.data.userId);
@@ -141,7 +143,9 @@ const PlacePage = () => {
               <div className={styles.iconDiv}>
                 <LeftOutlined
                   className={styles.overlayIcon}
-                  onClick={() => navigate(-1)}
+                  onClick={() =>
+                    navigate(state?.from !== "addToList" ? -1 : "/")
+                  }
                 />
               </div>
               {isPlaceSaved ? (
