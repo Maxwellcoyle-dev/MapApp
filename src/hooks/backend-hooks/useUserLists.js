@@ -7,7 +7,7 @@ const useUserLists = (userId) => {
     error: listsError,
     isLoading: isListsLoading,
   } = useQuery({
-    queryKey: ["lists", userId],
+    queryKey: ["user-lists", userId],
     queryFn: () => scanLists(userId),
     retry: false,
     enabled: !!userId,

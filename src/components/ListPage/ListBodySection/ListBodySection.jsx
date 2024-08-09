@@ -37,10 +37,16 @@ const ListBodySection = ({ listId, showFilterForm, setShowFilterForm }) => {
   const { listPlacesData } = useListPlaces(listId);
   const { placesPhotos } = useGetPhotos(placeIds);
 
+  useEffect(() => {
+    console.log("listId: ", listId);
+    console.log("listData: ", listData);
+  }, [listId, listData]);
+
   // Mutations
   const { removeListPlaceMutation } = useRemoveListPlace();
 
   useEffect(() => {
+    console.log("listPlacesData: ", listPlacesData);
     if (listPlacesData) {
       const placeIds = listPlacesData.map((place) => place.placeId.S);
       setPlaceIds(placeIds);

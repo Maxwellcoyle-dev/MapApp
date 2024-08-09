@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { Tag } from "antd";
 import { MdOutlineNewLabel, MdDeleteOutline } from "react-icons/md";
 
+// Components
+import DeletePlaceModal from "../../../DeletePlaceModal/DeletePlaceModal";
+
 import styles from "./ListItem.module.css";
 
-const ListItem = ({
-  place,
-  firstPhoto,
-  navigate,
-  removeListPlaceMutation,
-  listData,
-  authUser,
-}) => {
+const ListItem = ({ place, firstPhoto, navigate, listData, authUser }) => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const handleDeleteClick = (e) => {
+    e.stopPropagation();
+    setIsModalVisible(true); // Open the modal when delete icon is clicked
+  };
+
+  const handleCloseModal = () => {
+    setIsModalVisible(false); // Close the modal after deletion or cancellation
+  };
+
   return (
     <div className={styles.listItem}>
       <div className={styles.imageDiv}>
@@ -42,18 +48,7 @@ const ListItem = ({
           <MdOutlineNewLabel className={styles.btnIcon} />
         </div>
 
-        <div
-          className={styles.btnIconDiv}
-          onClick={(e) => {
-            e.stopPropagation();
-            console.log("Delete place:", place.placeId.S);
-            removeListPlaceMutation.mutate({
-              listId: listData.data.listId.S,
-              placeId: place.placeId.S,
-              userId: authUser.data.userId,
-            });
-          }}
-        >
+        <div className={styles.btnIconDiv} onClick={handleDeleteClick}>
           <MdDeleteOutline className={styles.btnIcon} />
         </div>
       </div>
@@ -72,6 +67,22 @@ const ListItem = ({
           <h2>{place.name.S}</h2>
         </div>
       </div>
+      {/* DeletePlaceModal component */}
+      {isModalVisible && (
+        <DeletePlaceModal
+          visible={isModalVisible}
+          onClose={handleCloseModal}
+          listIds={[
+            {
+              listId: listData.data.listId.S,
+              listName: listData.data.listName.S,
+            },
+          ]} // Pass the list ID
+          userId={authUser.data.userId}
+          placeName={place.name.S}
+          placeId={place.placeId.S}
+        />
+      )}
     </div>
   );
 };

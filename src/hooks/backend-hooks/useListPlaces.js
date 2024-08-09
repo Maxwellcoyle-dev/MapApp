@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { scanPlaces } from "../../api/placeApi";
 
 const useListPlaces = (listId) => {
+  console.log("listId: ", listId);
   const {
     data: listPlacesData,
     error: listPlacesDataError,

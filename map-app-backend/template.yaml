@@ -244,7 +244,7 @@ Resources:
         UpdateListApiEvent:
           Type: Api
           Properties:
-            Path: /list/{listId}/remove-place/{placeId}/user/{userId}
+            Path: /list/remove-place
             Method: put
             RestApiId: !Ref MappAppAPI
 

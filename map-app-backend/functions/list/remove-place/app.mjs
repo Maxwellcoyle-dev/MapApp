@@ -18,11 +18,15 @@ const headers = {
 };
 
 export const lambdaHandler = async (event) => {
+  console.log("Received event:", event);
   try {
-    const { listId, placeId, userId } = event.pathParameters;
+    const { listIds, placeId, userId } = JSON.parse(event.body); // Adjust to read from the request body
+    console.log("listIds:", listIds);
 
-    // Step 1: Remove the place from the list
-    await updateListToRemovePlace(listId, placeId);
+    // Step 1: Remove the place from each list
+    for (const listId of listIds) {
+      await updateListToRemovePlace(listId, placeId);
+    }
 
     // Step 2: Check if the place exists in any other lists
     const isPlaceInOtherLists = await checkPlaceInOtherLists(userId, placeId);
@@ -36,7 +40,7 @@ export const lambdaHandler = async (event) => {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        message: `Successfully updated list and handled place deletion as necessary.`,
+        message: `Successfully updated lists and handled place deletion as necessary.`,
       }),
     };
   } catch (error) {

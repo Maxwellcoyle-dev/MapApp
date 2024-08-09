@@ -1,5 +1,5 @@
 // Libraries
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Image, Spin } from "antd";
 import { MdClose } from "react-icons/md";

@@ -1,26 +1,15 @@
 import { useState, useEffect } from "react";
-import { fetchUserAttributes } from "aws-amplify/auth";
 
 import useUserLists from "./backend-hooks/useUserLists";
+import useUser from "./backend-hooks/useUser";
 
 const usePlaceIsSaved = (placeId) => {
-  const [userId, setUserId] = useState(null);
   const [isPlaceSaved, setIsPlaceSaved] = useState(false);
   const [isPlaceSavedLoading, setIsPlaceSavedLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const user = await fetchUserAttributes();
-        setUserId(user.sub);
-      } catch (error) {
-        console.error("Error fetching user attributes", error);
-      }
-    };
-    fetchUser();
-  }, []);
+  const { authUser } = useUser();
 
-  const { listsData, isListsLoading } = useUserLists(userId);
+  const { listsData, isListsLoading } = useUserLists(authUser?.data.userId);
 
   useEffect(() => {
     if (!isListsLoading && listsData) {
