@@ -27,9 +27,6 @@ const useSavePlace = (placeId) => {
 
   const savePlaceMutation = useMutation({
     mutationFn: (listId) => {
-      console.log("Saving place...");
-      console.log("listId: ", listId);
-      console.log("placeData: ", placeData);
       setSavePlaceIsLoading(true);
       return savePlace({
         userId: authUser?.data.userId,
@@ -39,9 +36,6 @@ const useSavePlace = (placeId) => {
     },
     onError: (error) => console.error(error),
     onSuccess: (data, variables) => {
-      console.log("Place saved successfully!");
-      console.log("data: ", data);
-      console.log("variables: ", variables);
       queryClient.invalidateQueries({
         queryKey: ["user-lists", authUser.data.userId],
       });
