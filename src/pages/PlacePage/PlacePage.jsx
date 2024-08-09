@@ -53,17 +53,21 @@ const PlacePage = () => {
   // Get photos of the place - if the place is saved to dynamoDB, then call useGetPhotots with the placeIds array. If the place is not saved, then we can use the getUrl() from the place.photos array
   useEffect(() => {
     if (optimalPlaceData && !optimalPlaceData?.photos) {
+      console.log("optimalPlaceData: ", optimalPlaceData);
+
       const placeIds = [
         optimalPlaceData?.placeId
           ? optimalPlaceData.placeId
           : optimalPlaceData.place_id,
       ];
+      console.log("placeIds: ", placeIds);
       setPlaceIds(placeIds);
     }
     if (optimalPlaceData && optimalPlaceData?.photos) {
       const photoUrls = optimalPlaceData.photos.map((photo) => {
         return photo.getUrl();
       });
+      console.log("photoUrls: ", photoUrls);
       setPhotos(photoUrls);
     }
   }, [optimalPlaceData]);
@@ -72,31 +76,27 @@ const PlacePage = () => {
   useEffect(() => {
     if (placesPhotos) {
       // extract the photo url from the placesPhotos array getUrl ([0].photos[0].getUrl)
-      const photoUrls = placesPhotos.map((place) => {
-        return place.photos[0].getUrl();
+      let urls = [];
+      placesPhotos[0].photos.map((pic) => {
+        const newUrl = pic.getUrl();
+        urls.push(newUrl);
       });
-
-      setPhotos(photoUrls);
+      setPhotos(urls);
     }
   }, [placesPhotos]);
 
   //
   useEffect(() => {
     if (listsData) {
-      console.log("listsData: ", listsData);
       // create a list of lists that contain the placeId. if the place id exists in the list. then add the listId to the listIds array
       let lists = [];
       listsData.data.forEach((list) => {
-        console.log("list: ", list);
-
         list.places.L.forEach((placeItem) => {
           if (placeItem.M.placeId.S === placeId) {
-            console.log("placeId: ", placeItem);
             lists.push({ listId: list.listId.S, listName: list.listName.S });
           }
         });
       });
-      console.log("lists containing the current place -- ", lists);
       setListsContainingPlace(lists);
     }
   }, [listsData]);
@@ -129,11 +129,11 @@ const PlacePage = () => {
           <div className={styles.carouselContainer}>
             <Carousel className={styles.carousel}>
               {photos &&
-                photos?.map((photo, index) => (
+                photos?.map((picUrl, index) => (
                   <div key={index} className={styles.photoDiv}>
                     <Image
                       className={styles.mainImage}
-                      src={photo}
+                      src={picUrl}
                       alt={optimalPlaceData?.name}
                     />
                   </div>

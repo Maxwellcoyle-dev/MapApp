@@ -25,7 +25,6 @@ const SavePlace = () => {
   const { savePlaceMutation, savePlaceIsLoading } = useSavePlace(placeId);
 
   const handleSavePlace = (listId) => {
-    console.log("listId: ", listId);
     savePlaceMutation.mutate(listId);
   };
 
