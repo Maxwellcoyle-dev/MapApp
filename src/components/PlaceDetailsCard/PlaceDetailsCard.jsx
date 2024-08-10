@@ -9,16 +9,21 @@ import {
   MdClose,
 } from "react-icons/md";
 
+// Components
+import SavePlaceModal from "../SavePlaceModal/SavePlaceModal";
+
+// State
 import { useSearchContext } from "../../state/SearchContext";
 import { useMapContext } from "../../state/MapContext";
-
 import usePlaceIsSaved from "../../hooks/usePlaceIsSaved";
 
+// Styles
 import styles from "./PlaceDetailsCard.module.css";
 
 const PlaceDetailsCard = () => {
   const [isOpen, setIsOpen] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
+  const [isSavePlaceModalVisible, setIsSavePlaceModalVisible] = useState(false);
 
   const { selectedPlace, setSelectedPlace, setQueryInput } = useSearchContext();
   const { setZoom } = useMapContext();
@@ -54,7 +59,11 @@ const PlaceDetailsCard = () => {
   }, [selectedPlace]);
 
   const handleSavePlace = () => {
-    navigate(`/save-place/${selectedPlace.place_id}`);
+    setIsSavePlaceModalVisible(true);
+  };
+
+  const handleCloseSavePlaceModal = () => {
+    setIsSavePlaceModalVisible(false);
   };
 
   if (!selectedPlace) {
@@ -154,6 +163,13 @@ const PlaceDetailsCard = () => {
             </div>
           </div>
         </>
+      )}
+      {isSavePlaceModalVisible && (
+        <SavePlaceModal
+          visible={isSavePlaceModalVisible}
+          onClose={handleCloseSavePlaceModal}
+          placeId={selectedPlace?.place_id} // Pass the appropriate placeId here
+        />
       )}
     </div>
   );

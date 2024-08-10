@@ -17,7 +17,6 @@ import PlacePage from "./pages/PlacePage/PlacePage";
 import SignIn from "./pages/AuthPages/SignIn";
 import CreateAccount from "./pages/AuthPages/CreateAccount";
 import AddTagPage from "./pages/AddTagPage/AddTagPage";
-import SavePlace from "./pages/SavePlace/SavePlace";
 
 // Protected Route
 import ProtectedRoute from "./ProtectedRoute";
@@ -75,14 +74,6 @@ function App() {
                   }
                 />
                 <Route path="add-tag/:placeId" element={<AddTagPage />} />
-                <Route
-                  path="save-place/:placeId"
-                  element={
-                    <ProtectedRoute>
-                      <SavePlace />
-                    </ProtectedRoute>
-                  }
-                />
 
                 <Route
                   path="/my-account"
