@@ -6,6 +6,7 @@ import {
   HeartOutlined,
   HeartFilled,
   PlusOutlined,
+  DeleteOutlined,
 } from "@ant-design/icons";
 import {
   MdOutlineStar,
@@ -157,22 +158,25 @@ const PlacePage = () => {
                   }
                 />
               </div>
-              {isPlaceSaved ? (
-                <div className={styles.iconDiv} onClick={showDeleteModal}>
+              <div
+                className={styles.iconDiv}
+                onClick={() => setIsSavePlaceModalVisible(true)}
+              >
+                {isPlaceSaved ? (
                   <HeartFilled
                     className={[styles.overlayIcon, styles.heartIcon]}
                   />
-                </div>
-              ) : (
-                <div
-                  className={styles.iconDiv}
-                  onClick={() => setIsSavePlaceModalVisible(true)}
-                >
+                ) : (
                   <HeartOutlined
                     className={[styles.overlayIcon, styles.heartIcon]}
                   />
-                </div>
-              )}
+                )}
+              </div>
+              <div className={styles.iconDiv} onClick={showDeleteModal}>
+                <DeleteOutlined
+                  className={[styles.overlayIcon, styles.heartIcon]}
+                />
+              </div>
             </div>
           </div>
           <div className={styles.tagContainer}>

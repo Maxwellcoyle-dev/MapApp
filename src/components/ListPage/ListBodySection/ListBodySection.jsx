@@ -113,7 +113,9 @@ const ListBodySection = ({ listId, showFilterForm, setShowFilterForm }) => {
           )}
           {listData &&
             filteredPlaces.map((place, index) => {
-              const photo = placesPhotos?.[index]?.photos?.find(
+              console.log("place: ", place);
+              console.log("placesPhotos: ", placesPhotos);
+              const photo = placesPhotos?.[index]?.find(
                 (p) => p.width > p.height
               );
               const firstPhoto = photo ? photo.getUrl() : null;
