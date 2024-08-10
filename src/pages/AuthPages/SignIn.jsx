@@ -17,6 +17,7 @@ import useUser from "../../hooks/backend-hooks/useUser";
 
 // Styles
 import styles from "./Auth.module.css";
+import demoLogo from "../../assets/ap-logo-dmeo.png";
 
 function SignIn() {
   const { login } = useAuthContext();
@@ -78,11 +79,7 @@ function SignIn() {
   return (
     <div className={styles.signInContainer}>
       <header className={styles.header}>
-        <img
-          src="/path-to-your-logo.png"
-          alt="App Logo"
-          className={styles.logo}
-        />
+        <img src={demoLogo} alt="App Logo" className={styles.logo} />
         <h1>Welcome Back!</h1>
       </header>
       <div className={styles.buttonDiv}>
