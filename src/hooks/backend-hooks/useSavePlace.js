@@ -15,7 +15,6 @@ const useSavePlace = (placeId) => {
   }
 
   const { authUser } = useUser();
-  const [savePlaceIsLoading, setSavePlaceIsLoading] = useState(false);
 
   const { setShowAddToList } = useAppContext();
 
@@ -27,7 +26,6 @@ const useSavePlace = (placeId) => {
 
   const savePlaceMutation = useMutation({
     mutationFn: (listId) => {
-      setSavePlaceIsLoading(true);
       return savePlace({
         userId: authUser?.data.userId,
         listId,
@@ -50,14 +48,13 @@ const useSavePlace = (placeId) => {
         queryKey: ["list-places", variables.listId],
       });
       setShowAddToList(false);
-      setSavePlaceIsLoading(false);
       navigate(`/place/${placeData.place_id || placeData.placeId}`, {
         state: { from: "addToList" },
       });
     },
   });
 
-  return { savePlaceMutation, savePlaceIsLoading };
+  return savePlaceMutation;
 };
 
 export default useSavePlace;

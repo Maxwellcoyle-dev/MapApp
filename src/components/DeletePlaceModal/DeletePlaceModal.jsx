@@ -18,14 +18,6 @@ const DeletePlaceModal = ({
   const [removeFromAll, setRemoveFromAll] = useState(false);
 
   useEffect(() => {
-    console.log("place: ", placeName);
-    console.log("placeId: ", placeId);
-    console.log("isIdle: ", isIdle);
-    console.log("ispending: ", isPending);
-    console.log("isSuccess: ", isSuccess);
-  }, [isPending, isSuccess, isIdle, placeName, placeId]);
-
-  useEffect(() => {
     if (listIds.length === 1) {
       setSelectedLists([listIds[0].listId]);
     }
@@ -84,7 +76,7 @@ const DeletePlaceModal = ({
           type="primary"
           onClick={handleConfirm}
           disabled={
-            (listIds.length > 1 &&
+            (listIds?.length > 1 &&
               selectedLists.length === 0 &&
               !removeFromAll) ||
             isPending
@@ -95,61 +87,52 @@ const DeletePlaceModal = ({
         </Button>,
       ]}
     >
-      {isPending ? (
-        <Spin tip="Deleting place..." />
-      ) : (
-        <>
-          {listIds.length > 1 && (
-            <Form layout="vertical">
-              <Form.Item>
-                <Checkbox
-                  checked={removeFromAll}
-                  onChange={handleRemoveFromAll}
-                >
-                  Remove from all lists
-                </Checkbox>
+      <>
+        {listIds?.length > 1 && (
+          <Form layout="vertical">
+            <Form.Item>
+              <Checkbox checked={removeFromAll} onChange={handleRemoveFromAll}>
+                Remove from all lists
+              </Checkbox>
+            </Form.Item>
+
+            {!removeFromAll && (
+              <Form.Item label="Select lists to remove from:">
+                {listIds.map((list) => (
+                  <Checkbox
+                    key={list.listId}
+                    checked={selectedLists.includes(list.listId)}
+                    onChange={() => handleListSelection(list.listId)}
+                    disabled={removeFromAll || isPending}
+                  >
+                    {list.listName}
+                  </Checkbox>
+                ))}
               </Form.Item>
+            )}
+          </Form>
+        )}
 
-              {!removeFromAll && (
-                <Form.Item label="Select lists to remove from:">
-                  {listIds.map((list) => (
-                    <Checkbox
-                      key={list.listId}
-                      checked={selectedLists.includes(list.listId)}
-                      onChange={() => handleListSelection(list.listId)}
-                      disabled={removeFromAll || isPending}
-                    >
-                      {list.listName}
-                    </Checkbox>
-                  ))}
-                </Form.Item>
+        {listIds?.length === 1 && (
+          <>
+            <Text type="secondary">This place is saved in only one list:</Text>
+            <List
+              bordered
+              dataSource={listIds}
+              renderItem={(item) => (
+                <List.Item>
+                  <strong>{item.listName}</strong>
+                </List.Item>
               )}
-            </Form>
-          )}
-
-          {listIds.length === 1 && (
-            <>
-              <Text type="secondary">
-                This place is saved in only one list:
-              </Text>
-              <List
-                bordered
-                dataSource={listIds}
-                renderItem={(item) => (
-                  <List.Item>
-                    <strong>{item.listName}</strong>
-                  </List.Item>
-                )}
-                style={{
-                  marginTop: "10px",
-                  borderRadius: "4px",
-                  backgroundColor: "#fafafa",
-                }}
-              />
-            </>
-          )}
-        </>
-      )}
+              style={{
+                marginTop: "10px",
+                borderRadius: "4px",
+                backgroundColor: "#fafafa",
+              }}
+            />
+          </>
+        )}
+      </>
     </Modal>
   );
 };

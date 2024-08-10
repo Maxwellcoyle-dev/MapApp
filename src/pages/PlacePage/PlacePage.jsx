@@ -19,6 +19,7 @@ import {
 
 // Components
 import DeletePlaceModal from "../../components/DeletePlaceModal/DeletePlaceModal";
+import SavePlaceModal from "../../components/SavePlaceModal/SavePlaceModal";
 
 // Hooks
 import useUser from "../../hooks/backend-hooks/useUser";
@@ -34,6 +35,7 @@ const PlacePage = () => {
   const [placeIds, setPlaceIds] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isSavePlaceModalVisible, setIsSavePlaceModalVisible] = useState(false);
 
   // array to hold the lists that contain the current place
   const [listsContainingPlace, setListsContainingPlace] = useState([]);
@@ -75,9 +77,8 @@ const PlacePage = () => {
   // put urls into a uniform array for the carousel
   useEffect(() => {
     if (placesPhotos) {
-      // extract the photo url from the placesPhotos array getUrl ([0].photos[0].getUrl)
       let urls = [];
-      placesPhotos[0].photos.map((pic) => {
+      placesPhotos[0].map((pic) => {
         const newUrl = pic.getUrl();
         urls.push(newUrl);
       });
@@ -103,6 +104,14 @@ const PlacePage = () => {
 
   const showDeleteModal = () => {
     setIsModalVisible(true);
+  };
+
+  const handleOpenSavePlaceModal = () => {
+    setIsSavePlaceModalVisible(true);
+  };
+
+  const handleCloseSavePlaceModal = () => {
+    setIsSavePlaceModalVisible(false);
   };
 
   if (optimalPlaceDataLoading) {
@@ -157,7 +166,7 @@ const PlacePage = () => {
               ) : (
                 <div
                   className={styles.iconDiv}
-                  onClick={() => navigate(`/save-place/${placeId}`)}
+                  onClick={() => setIsSavePlaceModalVisible(true)}
                 >
                   <HeartOutlined
                     className={[styles.overlayIcon, styles.heartIcon]}
@@ -242,10 +251,17 @@ const PlacePage = () => {
         <DeletePlaceModal
           visible={isModalVisible}
           onClose={() => setIsModalVisible(false)}
-          listsContainingPlace={listsContainingPlace}
+          listIds={listsContainingPlace}
           userId={authUser?.data.userId}
           placeName={optimalPlaceData.name}
           placeId={optimalPlaceData.placeId}
+        />
+      )}
+      {isSavePlaceModalVisible && (
+        <SavePlaceModal
+          visible={isSavePlaceModalVisible}
+          onClose={handleCloseSavePlaceModal}
+          placeId={placeId} // Pass the appropriate placeId here
         />
       )}
     </div>
