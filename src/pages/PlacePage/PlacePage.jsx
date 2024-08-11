@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { Image, Carousel, Spin, Tooltip, Modal, Button } from "antd";
+import { Image, Carousel, Spin, Tooltip, Button } from "antd";
 import {
   LeftOutlined,
   HeartOutlined,
@@ -89,11 +89,11 @@ const PlacePage = () => {
 
   //
   useEffect(() => {
-    if (listsData) {
+    if (listsData?.data) {
       // create a list of lists that contain the placeId. if the place id exists in the list. then add the listId to the listIds array
       let lists = [];
       listsData.data.forEach((list) => {
-        list.places.L.forEach((placeItem) => {
+        list.places?.L?.forEach((placeItem) => {
           if (placeItem.M.placeId.S === placeId) {
             lists.push({ listId: list.listId.S, listName: list.listName.S });
           }
@@ -105,10 +105,6 @@ const PlacePage = () => {
 
   const showDeleteModal = () => {
     setIsModalVisible(true);
-  };
-
-  const handleOpenSavePlaceModal = () => {
-    setIsSavePlaceModalVisible(true);
   };
 
   const handleCloseSavePlaceModal = () => {
