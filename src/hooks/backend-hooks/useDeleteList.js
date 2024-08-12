@@ -27,7 +27,7 @@ const useDeleteList = () => {
       });
       console.log("data", data);
       console.log("variables", variables);
-      navigate("/my-places");
+      navigate("/my-lists");
     },
     onError: (error) => console.error(error),
   });

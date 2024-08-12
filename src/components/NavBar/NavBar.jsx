@@ -35,10 +35,10 @@ const NavBar = () => {
         </Link>
       </button>
       <button className={styles.button}>
-        <Link to="/my-places">
+        <Link to="/my-lists">
           <div
             className={
-              currentTab === "/my-places"
+              currentTab === "/my-lists"
                 ? styles.iconContainerSelected
                 : styles.iconContainer
             }

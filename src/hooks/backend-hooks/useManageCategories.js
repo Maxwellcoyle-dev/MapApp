@@ -4,7 +4,11 @@ import { updateUser } from "../../api/userApi";
 const useManageCategories = () => {
   const queryClient = useQueryClient();
 
-  const manageCategoriesMutation = useMutation({
+  const {
+    mutateAsync: manageCategoriesAsync,
+    isPending: manageCategoriesIsPending,
+    isSuccess: manageCategoriesIsSuccess,
+  } = useMutation({
     mutationFn: async ({ userId, categories }) => {
       console.log("userId", userId);
       console.log("categories", categories);
@@ -17,7 +21,11 @@ const useManageCategories = () => {
     onError: (error) => console.error(error),
   });
 
-  return { manageCategoriesMutation };
+  return {
+    manageCategoriesAsync,
+    manageCategoriesIsPending,
+    manageCategoriesIsSuccess,
+  };
 };
 
 export default useManageCategories;
