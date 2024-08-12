@@ -12,8 +12,6 @@ import useUser from "../../../hooks/backend-hooks/useUser";
 import useGetList from "../../../hooks/backend-hooks/useGetList";
 import useListPlaces from "../../../hooks/backend-hooks/useListPlaces";
 
-import styles from "./ListHeaderSection.module.css";
-
 const ListHeaderSection = ({ listPageState, listId }) => {
   const formRef = useRef(null);
 
