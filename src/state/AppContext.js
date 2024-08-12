@@ -11,8 +11,7 @@ export const AppProvider = ({ children }) => {
   const [showSavePlaceModal, setShowSavePlaceModal] = useState(false);
   const [showCreateListModal, setShowCreateListModal] = useState(false);
   const [showDeleteListModal, setShowDeleteListModal] = useState(false);
-  const [showManageCategoriesModal, setShowManageCategoriesModal] =
-    useState(false);
+  const [showEditListModal, setShowEditListModal] = useState(false);
 
   return (
     <AppContext.Provider
@@ -29,8 +28,8 @@ export const AppProvider = ({ children }) => {
         setShowCreateListModal,
         showDeleteListModal,
         setShowDeleteListModal,
-        showManageCategoriesModal,
-        setShowManageCategoriesModal,
+        showEditListModal,
+        setShowEditListModal,
       }}
     >
       {children}

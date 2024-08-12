@@ -78,7 +78,7 @@ const savePlace = async (userId, listId, placeData) => {
     Item: {
       placeId: { S: placeData.place_id },
       userId: { S: userId },
-      name: { S: placeData.name },
+      placeName: { S: placeData.name },
       formattedAddress: { S: placeData.formatted_address || "" },
       formattedPhoneNumber: { S: placeData.formatted_phone_number || "" },
       businessStatus: { S: placeData.business_status || "" },
@@ -86,7 +86,7 @@ const savePlace = async (userId, listId, placeData) => {
       internationalPhoneNumber: {
         S: placeData.international_phone_number || "",
       },
-      url: { S: placeData.url || "" },
+      placeUrl: { S: placeData.url || "" },
       website: { S: placeData.website || "" },
       vicinity: { S: placeData.vicinity || "" },
       rating: { N: placeData.rating ? placeData.rating.toString() : "0" },

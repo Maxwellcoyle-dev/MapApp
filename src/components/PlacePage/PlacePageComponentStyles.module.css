@@ -1,0 +1,64 @@
+.carouselContainer {
+  position: relative;
+  width: 100%;
+  height: 275px;
+}
+
+.carousel {
+  width: 100%;
+  height: 100%;
+}
+
+.photoDiv {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 275px;
+}
+
+.mainImage {
+  min-height: 275px;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.overlayIcons {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 1rem;
+  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.iconDiv {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0.5rem;
+  background: white;
+  border-radius: 50%;
+}
+
+.overlayIcon {
+  font-size: 1.2rem;
+  color: black;
+  cursor: pointer;
+}
+
+.heartIcon {
+  color: red;
+}
+
+.overlayIconDisabled {
+  width: 24px;
+  height: 24px;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: not-allowed;
+}

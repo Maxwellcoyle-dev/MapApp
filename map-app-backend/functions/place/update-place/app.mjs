@@ -60,13 +60,22 @@ const updatePlace = async (placeId, userId, placeData) => {
   const expressionAttributeValues = {};
   const updateExpressions = [];
 
-  Object.keys(placeData).forEach((key) => {
+  // Filter out placeId and userId from the placeData object
+  const filteredPlaceData = Object.keys(placeData).reduce((acc, key) => {
+    if (key !== "placeId" && key !== "userId") {
+      acc[key] = placeData[key];
+    }
+    return acc;
+  }, {});
+
+  // Construct update expressions and expression attribute values
+  Object.keys(filteredPlaceData).forEach((key) => {
     const attributeKey = `:${key}`;
 
     if (key === "tags") {
       updateExpressions.push(`${key} = ${attributeKey}`);
       expressionAttributeValues[attributeKey] = {
-        L: placeData[key].map((tag) => ({
+        L: filteredPlaceData[key].map((tag) => ({
           M: {
             tagId: { S: tag.tagId },
             tagName: { S: tag.tagName },
@@ -78,19 +87,19 @@ const updatePlace = async (placeId, userId, placeData) => {
     } else {
       updateExpressions.push(`${key} = ${attributeKey}`);
 
-      if (typeof placeData[key] === "string") {
-        expressionAttributeValues[attributeKey] = { S: placeData[key] };
-      } else if (typeof placeData[key] === "number") {
+      if (typeof filteredPlaceData[key] === "string") {
+        expressionAttributeValues[attributeKey] = { S: filteredPlaceData[key] };
+      } else if (typeof filteredPlaceData[key] === "number") {
         expressionAttributeValues[attributeKey] = {
-          N: placeData[key].toString(),
+          N: filteredPlaceData[key].toString(),
         };
-      } else if (Array.isArray(placeData[key])) {
+      } else if (Array.isArray(filteredPlaceData[key])) {
         expressionAttributeValues[attributeKey] = {
-          L: placeData[key].map((item) => ({ S: item.toString() })),
+          L: filteredPlaceData[key].map((item) => ({ S: item.toString() })),
         };
-      } else if (typeof placeData[key] === "object") {
+      } else if (typeof filteredPlaceData[key] === "object") {
         expressionAttributeValues[attributeKey] = {
-          M: AWS.DynamoDB.Converter.marshall(placeData[key]),
+          M: AWS.DynamoDB.Converter.marshall(filteredPlaceData[key]),
         };
       }
     }

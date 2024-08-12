@@ -26,7 +26,9 @@ const SavePlaceModal = ({ visible, onClose, placeId }) => {
   const [placeIds, setPlaceIds] = useState([]);
   const [selectedList, setSelectedList] = useState(null);
 
-  const { setShowCreateListModal } = useAppContext();
+  const { setShowCreateListModal, showSavePlaceModal, setShowSavePlaceModal } =
+    useAppContext();
+
   const { authUser } = useUser();
   const { listsData, listsError, isListsLoading } = useUserLists(
     authUser?.data.userId

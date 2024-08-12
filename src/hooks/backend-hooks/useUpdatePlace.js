@@ -4,7 +4,11 @@ import { updatePlace } from "../../api/placeApi";
 const useUpdatePlace = () => {
   const queryClient = useQueryClient();
 
-  const updatePlaceMutation = useMutation({
+  const {
+    mutateAsync: updatePlaceAsync,
+    isPending: updatePlaceIsPending,
+    isSuccess: updatePlaceIsSuccess,
+  } = useMutation({
     mutationFn: async ({ placeId, userId, placeData }) => {
       console.log("placeId", placeId);
       console.log("userId", userId);
@@ -22,7 +26,7 @@ const useUpdatePlace = () => {
     onError: (error) => console.error(error),
   });
 
-  return { updatePlaceMutation };
+  return { updatePlaceAsync, updatePlaceIsPending, updatePlaceIsSuccess };
 };
 
 export default useUpdatePlace;

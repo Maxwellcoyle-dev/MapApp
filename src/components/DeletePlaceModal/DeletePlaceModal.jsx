@@ -73,6 +73,7 @@ const DeletePlaceModal = ({
         </Button>,
         <Button
           key="confirm"
+          danger
           type="primary"
           onClick={handleConfirm}
           disabled={

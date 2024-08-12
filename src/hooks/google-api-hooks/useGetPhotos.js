@@ -4,9 +4,7 @@ import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 const fetchPhotos = async (placesLibrary, map, normalizedPlaceIds) => {
   if (!normalizedPlaceIds.length) throw new Error("No placeIds provided");
 
-  console.log("Fetching photos for placeIds:", normalizedPlaceIds);
   const placesService = new placesLibrary.PlacesService(map);
-  console.log("placesService initialized:", !!placesService);
 
   if (!placesService) throw new Error("Failed to create PlacesService");
 
@@ -22,7 +20,6 @@ const fetchPhotos = async (placesLibrary, map, normalizedPlaceIds) => {
             (place, status) => {
               if (status === window.google.maps.places.PlacesServiceStatus.OK) {
                 if (place && place.photos && place.photos.length > 0) {
-                  console.log(`Fetched photos for ${placeId}:`, place.photos);
                   resolve(place.photos);
                 } else {
                   console.warn(`No photos available for ${placeId}`);
@@ -48,8 +45,6 @@ const useGetPhotos = (placeIds) => {
   const placesLibrary = useMapsLibrary("places");
 
   const normalizedPlaceIds = Array.isArray(placeIds) ? placeIds : [placeIds];
-
-  console.log("normalizedPlaceIds:", normalizedPlaceIds);
 
   const {
     data: placesPhotos,
