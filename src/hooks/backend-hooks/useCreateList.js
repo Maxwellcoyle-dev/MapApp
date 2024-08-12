@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { getCurrentUser } from "aws-amplify/auth";
+
+import useUser from "./useUser";
 
 import { createList } from "../../api/listApi";
 
@@ -8,35 +8,40 @@ import { createList } from "../../api/listApi";
 // listData = { userId, listName, listDescription, public: boolean }
 
 const useCreateList = () => {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    getCurrentUser()
-      .then((user) => {
-        setUser(user);
-        console.log(user);
-      })
-      .catch((error) => console.error(error));
-  }, []);
-
+  const { authUser } = useUser();
   const queryClient = useQueryClient();
 
-  const createListMutation = useMutation({
-    mutationFn: (listData) =>
-      createList({
-        userId: user?.userId,
-        listName: listData.listName,
-        listDescription: listData.listDescription,
+  const {
+    mutateAsync: createListAsync,
+    isPending: createListIsPending,
+    isSuccess: createListIsSuccess,
+    isIdle: createListIsIdle,
+  } = useMutation({
+    mutationFn: (listData) => {
+      console.log("listData", listData);
+      return createList({
+        userId: authUser.data.userId,
+        listName: listData.name,
+        listDescription: listData.description,
         public: listData.publicList,
-      }),
+      });
+    },
     onError: (error) => console.error(error),
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       console.log("List created successfully!");
-      queryClient.invalidateQueries({ queryKey: ["lists", user?.userId] });
+      console.log("data", data);
+      queryClient.invalidateQueries({
+        queryKey: ["user-lists", authUser.data.userId],
+      });
     },
   });
 
-  return { createListMutation };
+  return {
+    createListAsync,
+    createListIsPending,
+    createListIsSuccess,
+    createListIsIdle,
+  };
 };
 
 export default useCreateList;

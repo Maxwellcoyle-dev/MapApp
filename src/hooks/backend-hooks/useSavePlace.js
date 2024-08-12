@@ -24,7 +24,12 @@ const useSavePlace = (placeId) => {
 
   const queryClient = useQueryClient();
 
-  const savePlaceMutation = useMutation({
+  const {
+    mutateAsync: savePlaceAsync,
+    isPending: savePlaceIsPending,
+    isSuccess: savePlaceIsSuccess,
+    isIdle: savePlaceIsIdle,
+  } = useMutation({
     mutationFn: (listId) => {
       return savePlace({
         userId: authUser?.data.userId,
@@ -54,7 +59,12 @@ const useSavePlace = (placeId) => {
     },
   });
 
-  return savePlaceMutation;
+  return {
+    savePlaceAsync,
+    savePlaceIsPending,
+    savePlaceIsSuccess,
+    savePlaceIsIdle,
+  };
 };
 
 export default useSavePlace;

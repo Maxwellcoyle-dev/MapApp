@@ -20,7 +20,7 @@ export const lambdaHandler = async (event) => {
   const userId = body.userId;
   const listName = body.listName;
   const listDescription = body.listDescription;
-  const publicList = body.public;
+  const publicList = body?.public || false;
   const createdAt = Date.now();
   const lastUpdatedAt = Date.now();
 

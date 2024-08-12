@@ -11,7 +11,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // Pages
 import Main from "./pages/Main/Main";
 import MyAccount from "./pages/MyAccount";
-import MyPlaces from "./pages/MyPlacesPage/MyPlacesPage";
+import MyListsPage from "./pages/MyListsPage/MyListsPage";
 import ListPage from "./pages/ListPage/ListPage";
 import PlacePage from "./pages/PlacePage/PlacePage";
 import SignIn from "./pages/AuthPages/SignIn";
@@ -28,6 +28,7 @@ import NavBar from "./components/NavBar/NavBar";
 import { MapProvider } from "./state/MapContext";
 import { SearchProvider } from "./state/SearchContext";
 import { useAppContext } from "./state/AppContext";
+import ManageCategoriesPage from "./pages/ManageCategoriesPage/ManageCategoriesPage";
 
 const { Content, Footer } = Layout;
 
@@ -66,14 +67,18 @@ function App() {
                   <Route path="place/:placeId" element={<PlacePage />} />
                 </Route>
                 <Route
-                  path="my-places"
+                  path="my-lists"
                   element={
                     <ProtectedRoute>
-                      <MyPlaces />
+                      <MyListsPage />
                     </ProtectedRoute>
                   }
                 />
                 <Route path="add-tag/:placeId" element={<AddTagPage />} />
+                <Route
+                  path="manage-categories"
+                  element={<ManageCategoriesPage />}
+                />
 
                 <Route
                   path="/my-account"

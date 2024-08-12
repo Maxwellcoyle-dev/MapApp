@@ -1,0 +1,23 @@
+.modalContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.editorDiv {
+  border-radius: 5px;
+  background-color: white;
+  height: 175px;
+}
+
+.editor {
+  height: 125px;
+}
+
+.buttonDiv {
+  display: flex;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}

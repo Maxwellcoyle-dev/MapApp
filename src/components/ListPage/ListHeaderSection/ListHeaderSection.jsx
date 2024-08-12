@@ -2,123 +2,71 @@ import React, { useState, useRef, useEffect } from "react";
 
 // Components
 import ListHeader from "./ListHeader";
-import ListEditForm from "./ListEditForm";
+import CreateListModal from "../../CreateListModal/CreateListModal";
+import DeleteListModal from "../../DeleteListModal/DeleteListModal";
 
 // Hooks
 import useUpdateList from "../../../hooks/backend-hooks/useUpdateList";
-import useDeleteList from "../../../hooks/backend-hooks/useDeleteList";
+
 import useUser from "../../../hooks/backend-hooks/useUser";
 import useGetList from "../../../hooks/backend-hooks/useGetList";
 import useListPlaces from "../../../hooks/backend-hooks/useListPlaces";
 
-import styles from "./ListHeaderSection.module.css";
-
-const ListHeaderSection = ({
-  listPageState,
-  listId,
-  setShowFilterForm,
-  showFilterForm,
-  handleSearch,
-}) => {
+const ListHeaderSection = ({ listPageState, listId }) => {
   const formRef = useRef(null);
 
-  const [showEditForm, setShowEditForm] = useState(false);
-
   // Edit List form state
-  const [listName, setListName] = useState("");
+  const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
   // get the user
   const { authUser } = useUser();
 
   const { listData } = useGetList(listId);
-
   // update list
-  const { updateListMutation } = useUpdateList();
-  // delete list
-  const { deleteListMutation } = useDeleteList();
+  const { updateListAsync, updateListIsPending, updateListIsSuccess } =
+    useUpdateList();
 
   const { refetchListPlaces } = useListPlaces(listId);
 
   useEffect(() => {
-    setListName(listData?.data?.listName?.S);
+    setName(listData?.data?.listName?.S);
     setDescription(listData?.data?.listDescription?.S);
   }, [listData]);
 
-  // close the edit list form when clicking outside of the form
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (formRef.current && !formRef.current.contains(event.target)) {
-        setShowEditForm(false);
-      }
-    };
-
-    if (showEditForm) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [showEditForm]);
-
   const handleUpdateList = (values) => {
     setDescription(values.description);
-    setListName(values.listName);
-    updateListMutation.mutate({
+    setName(values.name);
+    updateListAsync({
       listId: listPageState.listId.S,
       listData: {
-        listName: values.listName,
+        name: values.name,
         description: values.description,
+        isPublic: false,
         userId: listPageState.userId.S,
       },
     });
-    setShowEditForm(false);
-  };
-
-  const handleDeleteList = () => {
-    deleteListMutation.mutate({
-      listId: listId,
-      userId: authUser.data.userId,
-    });
-  };
-
-  const handleCancel = () => {
-    setShowEditForm(false);
   };
 
   return (
     <div>
-      {!showEditForm ? (
-        <ListHeader
-          listName={
-            listPageState?.listName?.S ? listPageState?.listName.S : listName
-          }
-          listDescription={
-            listPageState?.listDescription?.S
-              ? listPageState?.listDescription?.S
-              : description
-          }
-          refetchListPlaces={refetchListPlaces}
-          handleDeleteList={handleDeleteList}
-          setShowEditForm={setShowEditForm}
-          setShowFilterForm={setShowFilterForm}
-          showFilterForm={showFilterForm}
-          handleSearch={handleSearch}
-        />
-      ) : (
-        <ListEditForm
-          formRef={formRef}
-          listData={listData}
-          styles={styles}
-          handleCancel={handleCancel}
-          handleUpdateList={handleUpdateList}
-          listName={listName}
-          description={description}
-        />
-      )}
+      <ListHeader
+        listName={name ? name : listPageState?.listName.S}
+        listDescription={
+          description ? description : listPageState?.listDescription?.S
+        }
+        refetchListPlaces={refetchListPlaces}
+      />
+      <CreateListModal
+        formRef={formRef}
+        listName={name}
+        listDescription={description}
+        handleSubmit={handleUpdateList}
+        newList={false}
+        isPending={updateListIsPending}
+        isSuccess={updateListIsSuccess}
+      />
+      <DeleteListModal listId={listId} userId={authUser?.data.userId} />
     </div>
   );
 };

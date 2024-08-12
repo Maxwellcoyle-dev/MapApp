@@ -6,6 +6,12 @@
   height: 100%;
 }
 
+.headerDiv {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .addToListContainer {
   position: relative;
   z-index: 3;

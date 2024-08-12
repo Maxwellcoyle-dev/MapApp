@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Image, Carousel, Spin, Tooltip, Button } from "antd";
-import {
-  LeftOutlined,
-  HeartOutlined,
-  HeartFilled,
-  PlusOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 import {
   MdOutlineStar,
   MdOutlineStarBorder,
@@ -21,22 +15,27 @@ import {
 // Components
 import DeletePlaceModal from "../../components/DeletePlaceModal/DeletePlaceModal";
 import SavePlaceModal from "../../components/SavePlaceModal/SavePlaceModal";
+import PlacePageHeader from "../../components/PlacePage/PlacePageHeader";
+import NoteEditorModal from "../../components/NoteEditorModal/NoteEditorModal";
 
 // Hooks
+import useCreateList from "../../hooks/backend-hooks/useCreateList";
 import useUser from "../../hooks/backend-hooks/useUser";
 import useGetOptimalPlaceData from "../../hooks/useGetOptimalPlaceData";
 import usePlaceIsSaved from "../../hooks/usePlaceIsSaved";
 import useGetPhotos from "../../hooks/google-api-hooks/useGetPhotos";
 import useUserLists from "../../hooks/backend-hooks/useUserLists";
 
+// state
+import { useAppContext } from "../../state/AppContext";
+
 // Styles
 import styles from "./PlacePage.module.css";
 
 const PlacePage = () => {
+  const [note, setNote] = useState("");
   const [placeIds, setPlaceIds] = useState([]);
   const [photos, setPhotos] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isSavePlaceModalVisible, setIsSavePlaceModalVisible] = useState(false);
 
   // array to hold the lists that contain the current place
   const [listsContainingPlace, setListsContainingPlace] = useState([]);
@@ -46,12 +45,23 @@ const PlacePage = () => {
   const location = useLocation();
   const { state } = location;
 
+  const {
+    setShowCreateListModal,
+    showSavePlaceModal,
+    setShowSavePlaceModal,
+    showDeletePlaceModal,
+    setShowDeletePlaceModal,
+    showEditListModal,
+    setShowEditListModal,
+  } = useAppContext();
+
   const { authUser } = useUser();
   const { listsData } = useUserLists(authUser?.data.userId);
   const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(placeId);
   const { optimalPlaceData, optimalPlaceDataLoading, optimalPlaceDataError } =
     useGetOptimalPlaceData(placeId);
   const { placesPhotos } = useGetPhotos(placeIds);
+  const { createListMutation } = useCreateList();
 
   // Get photos of the place - if the place is saved to dynamoDB, then call useGetPhotots with the placeIds array. If the place is not saved, then we can use the getUrl() from the place.photos array
   useEffect(() => {
@@ -103,13 +113,13 @@ const PlacePage = () => {
     }
   }, [listsData]);
 
-  const showDeleteModal = () => {
-    setIsModalVisible(true);
-  };
-
-  const handleCloseSavePlaceModal = () => {
-    setIsSavePlaceModalVisible(false);
-  };
+  // check if there is a note, if so, update the note state
+  useEffect(() => {
+    console.log("optimalPlaceData: ", optimalPlaceData);
+    if (optimalPlaceData?.placeNote) {
+      setNote(optimalPlaceData.placeNote);
+    }
+  }, [optimalPlaceData]);
 
   if (optimalPlaceDataLoading) {
     return (
@@ -132,72 +142,33 @@ const PlacePage = () => {
     <div className={styles.placeDetailsDiv}>
       {optimalPlaceData && (
         <>
-          <div className={styles.carouselContainer}>
-            <Carousel className={styles.carousel}>
-              {photos &&
-                photos?.map((picUrl, index) => (
-                  <div key={index} className={styles.photoDiv}>
-                    <Image
-                      className={styles.mainImage}
-                      src={picUrl}
-                      alt={optimalPlaceData?.name}
-                    />
-                  </div>
-                ))}
-            </Carousel>
-            <div className={styles.overlayIcons}>
-              <div className={styles.iconDiv}>
-                <LeftOutlined
-                  className={styles.overlayIcon}
-                  onClick={() =>
-                    navigate(state?.from !== "addToList" ? -1 : "/")
-                  }
-                />
-              </div>
-              <div
-                className={styles.iconDiv}
-                onClick={() => setIsSavePlaceModalVisible(true)}
-              >
-                {isPlaceSaved ? (
-                  <HeartFilled
-                    className={[styles.overlayIcon, styles.heartIcon]}
-                  />
-                ) : (
-                  <HeartOutlined
-                    className={[styles.overlayIcon, styles.heartIcon]}
-                  />
-                )}
-              </div>
-              <div className={styles.iconDiv} onClick={showDeleteModal}>
-                <DeleteOutlined
-                  className={[styles.overlayIcon, styles.heartIcon]}
-                />
-              </div>
-            </div>
-          </div>
-          <div className={styles.tagContainer}>
-            <div>
-              <Tooltip
-                title={
+          <PlacePageHeader
+            photos={photos}
+            optimalPlaceData={optimalPlaceData}
+            backNavigation={state?.from !== "addToList" ? -1 : "/"}
+          />
+          <div className={styles.buttonDiv}>
+            <Tooltip
+              title={
+                isPlaceSavedLoading || !isPlaceSaved
+                  ? "Save the place before adding a tag"
+                  : "Click here to add a tag"
+              }
+            >
+              <Button
+                type="dashed"
+                className={styles.tagButton}
+                disabled={isPlaceSavedLoading || !isPlaceSaved}
+                onClick={
                   isPlaceSavedLoading || !isPlaceSaved
-                    ? "Save the place before adding a tag"
-                    : "Click here to add a tag"
+                    ? undefined
+                    : () => navigate(`/add-tag/${placeId}`)
                 }
               >
-                <Button
-                  type="dashed"
-                  className={styles.tagButton}
-                  disabled={isPlaceSavedLoading || !isPlaceSaved}
-                  onClick={
-                    isPlaceSavedLoading || !isPlaceSaved
-                      ? undefined
-                      : () => navigate(`/add-tag/${placeId}`)
-                  }
-                >
-                  <PlusOutlined /> <p>Add Tags</p>
-                </Button>
-              </Tooltip>
-            </div>
+                <PlusOutlined /> <p>Add Tags</p>
+              </Button>
+            </Tooltip>
+            <Button onClick={() => setShowEditListModal(true)}>Add Note</Button>
           </div>
           <div className={styles.headerDiv}>
             <h2>{optimalPlaceData?.name}</h2>
@@ -247,23 +218,28 @@ const PlacePage = () => {
         </>
       )}
 
-      {isModalVisible && (
-        <DeletePlaceModal
-          visible={isModalVisible}
-          onClose={() => setIsModalVisible(false)}
-          listIds={listsContainingPlace}
-          userId={authUser?.data.userId}
-          placeName={optimalPlaceData.name}
-          placeId={optimalPlaceData.placeId}
-        />
-      )}
-      {isSavePlaceModalVisible && (
-        <SavePlaceModal
-          visible={isSavePlaceModalVisible}
-          onClose={handleCloseSavePlaceModal}
-          placeId={placeId} // Pass the appropriate placeId here
-        />
-      )}
+      <DeletePlaceModal
+        visible={showDeletePlaceModal}
+        onClose={() => setShowDeletePlaceModal(false)}
+        listIds={listsContainingPlace}
+        userId={authUser?.data.userId}
+        placeName={optimalPlaceData.name}
+        placeId={optimalPlaceData.placeId}
+      />
+
+      <SavePlaceModal
+        visible={showSavePlaceModal}
+        onClose={() => setShowSavePlaceModal(false)}
+        placeId={placeId} // Pass the appropriate placeId here
+        isPlaceSaved={isPlaceSaved}
+      />
+      <NoteEditorModal
+        visible={showEditListModal}
+        onClose={() => setShowEditListModal(false)}
+        note={note}
+        setNote={setNote}
+        optimalPlaceData={optimalPlaceData}
+      />
     </div>
   );
 };

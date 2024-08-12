@@ -25,7 +25,7 @@ const ListItem = ({ place, firstPhoto, navigate, listData, authUser }) => {
           <img
             className={styles.image}
             src={firstPhoto}
-            alt={`${place.name.S} photo`}
+            alt={`${place.name?.S || place.placeName?.S} photo`}
           />
         ) : (
           <img
@@ -64,7 +64,7 @@ const ListItem = ({ place, firstPhoto, navigate, listData, authUser }) => {
           ))}
         </div>
         <div className={styles.infoContainer}>
-          <h2>{place.name.S}</h2>
+          <h2>{place.placeName?.S || place.name?.S}</h2>
         </div>
       </div>
       {/* DeletePlaceModal component */}
