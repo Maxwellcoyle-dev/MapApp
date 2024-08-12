@@ -1,9 +1,7 @@
 import {
   DynamoDBClient,
   GetItemCommand,
-  UpdateItemCommand,
   DeleteItemCommand,
-  QueryCommand,
   ScanCommand,
 } from "@aws-sdk/client-dynamodb";
 
@@ -28,9 +26,20 @@ export const lambdaHandler = async (event) => {
   //   use listId to get the list Item
   const listItem = await getListItem(listId);
   console.log("listItem ---", listItem);
+
+  if (!listItem.places) {
+    await deleteList(listId);
+    return {
+      statusCode: 200,
+      headers,
+      body: JSON.stringify({
+        message: `Successfully recieved request.`,
+      }),
+    };
+  }
+
   const listPlaces = listItem.places.L;
   console.log("listPlaces ---", listPlaces);
-
   // we need to check if each place in the list exists in any other list. if it does not, we will delete it
   console.log("starting Loop");
   console.log("listPlaces?.length ---", listPlaces?.length);

@@ -3,10 +3,11 @@ import React, { useState, useRef, useEffect } from "react";
 // Components
 import ListHeader from "./ListHeader";
 import CreateListModal from "../../CreateListModal/CreateListModal";
+import DeleteListModal from "../../DeleteListModal/DeleteListModal";
 
 // Hooks
 import useUpdateList from "../../../hooks/backend-hooks/useUpdateList";
-import useDeleteList from "../../../hooks/backend-hooks/useDeleteList";
+
 import useUser from "../../../hooks/backend-hooks/useUser";
 import useGetList from "../../../hooks/backend-hooks/useGetList";
 import useListPlaces from "../../../hooks/backend-hooks/useListPlaces";
@@ -27,8 +28,6 @@ const ListHeaderSection = ({ listPageState, listId }) => {
   // update list
   const { updateListAsync, updateListIsPending, updateListIsSuccess } =
     useUpdateList();
-  // delete list
-  const { deleteListMutation } = useDeleteList();
 
   const { refetchListPlaces } = useListPlaces(listId);
 
@@ -51,13 +50,6 @@ const ListHeaderSection = ({ listPageState, listId }) => {
     });
   };
 
-  const handleDeleteList = () => {
-    deleteListMutation.mutate({
-      listId: listId,
-      userId: authUser.data.userId,
-    });
-  };
-
   return (
     <div>
       <ListHeader
@@ -65,7 +57,6 @@ const ListHeaderSection = ({ listPageState, listId }) => {
         listDescription={
           description ? description : listPageState?.listDescription?.S
         }
-        handleDeleteList={handleDeleteList}
         refetchListPlaces={refetchListPlaces}
       />
       <CreateListModal
@@ -77,6 +68,7 @@ const ListHeaderSection = ({ listPageState, listId }) => {
         isPending={updateListIsPending}
         isSuccess={updateListIsSuccess}
       />
+      <DeleteListModal listId={listId} userId={authUser?.data.userId} />
     </div>
   );
 };

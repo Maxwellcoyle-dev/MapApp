@@ -14,17 +14,12 @@ import { useAppContext } from "../../../state/AppContext";
 
 import styles from "./ListHeaderSection.module.css";
 
-const ListHeader = ({
-  listName,
-  listDescription,
-  handleDeleteList,
-  refetchListPlaces,
-}) => {
+const ListHeader = ({ listName, listDescription, refetchListPlaces }) => {
   const [backPath, setBackPath] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { setShowCreateListModal } = useAppContext();
+  const { setShowCreateListModal, setShowDeleteListModal } = useAppContext();
 
   useEffect(() => {
     console.log(location?.state?.from);
@@ -54,7 +49,7 @@ const ListHeader = ({
           <DeleteOutlined /> Delete
         </span>
       ),
-      onClick: handleDeleteList,
+      onClick: () => setShowDeleteListModal(true),
     },
     {
       key: "3",

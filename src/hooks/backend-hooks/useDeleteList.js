@@ -7,7 +7,11 @@ const useDeleteList = () => {
 
   const navigate = useNavigate();
 
-  const deleteListMutation = useMutation({
+  const {
+    mutateAsync: deleteListAsync,
+    isPending: deleteListIsPending,
+    isSuccess: deleteListIsSuccess,
+  } = useMutation({
     mutationFn: async ({ listId, userId }) => {
       console.log("listId", listId);
       console.log("userId", userId);
@@ -15,8 +19,12 @@ const useDeleteList = () => {
       return deleteListResponse;
     },
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["lists", variables.userId] });
-      queryClient.invalidateQueries({ queryKey: ["list", variables.listId] });
+      queryClient.invalidateQueries({
+        queryKey: ["user-lists", variables.userId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["get-list", variables.listId],
+      });
       console.log("data", data);
       console.log("variables", variables);
       navigate("/my-places");
@@ -24,6 +32,6 @@ const useDeleteList = () => {
     onError: (error) => console.error(error),
   });
 
-  return { deleteListMutation };
+  return { deleteListAsync, deleteListIsPending, deleteListIsSuccess };
 };
 export default useDeleteList;
