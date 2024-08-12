@@ -42,12 +42,23 @@ export const lambdaHandler = async (event) => {
     console.log("Data: ", data);
     console.log("data.Items: ", data.Items);
 
+    // Process data.Items: Convert timestamps and sort the array
+    const processedItems = data.Items.map((item) => {
+      return {
+        ...item,
+        createdAt: new Date(Number(item.createdAt.N)).toISOString(),
+        lastUpdatedAt: new Date(Number(item.lastUpdatedAt.N)).toISOString(),
+      };
+    }).sort((a, b) => {
+      return new Date(b.lastUpdatedAt) - new Date(a.lastUpdatedAt);
+    });
+
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
         message: "Lists scanned",
-        data: data.Items,
+        data: processedItems,
       }),
     };
   } catch (error) {

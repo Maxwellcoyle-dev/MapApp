@@ -3,27 +3,34 @@ import React, { useState, useEffect } from "react";
 import { Button, Spin } from "antd";
 import { MdOutlineAdd } from "react-icons/md";
 
-// hooks
+// Hooks
+import useCreateList from "../../../hooks/backend-hooks/useCreateList";
 import useUserLists from "../../../hooks/backend-hooks/useUserLists";
 import useUser from "../../../hooks/backend-hooks/useUser";
 
 // components
 import MyLists from "../../MyPlaces/MyLists/MyLists";
-import CreateListForm from "../CreateListForm/CreateListForm";
+import CreateListModal from "../../CreateListModal/CreateListModal";
+
+// state
+import { useAppContext } from "../../../state/AppContext";
 
 // styles
 import styles from "./ListsView.module.css";
+import { createList } from "../../../api/listApi";
 
 // component for creating a new list
 const ListsView = () => {
-  const [user, setUser] = useState(null);
-  const [addNewList, setAddNewList] = useState(false);
-
   const { authUser } = useUser();
+
+  const { setShowCreateListModal } = useAppContext();
 
   const { listsData, listsError, isListsLoading } = useUserLists(
     authUser?.data.userId
   );
+
+  const { createListAsync, createListIsPending, createListIsSuccess } =
+    useCreateList();
 
   useEffect(() => {
     if (isListsLoading) {
@@ -37,25 +44,27 @@ const ListsView = () => {
     }
   }, [listsError, isListsLoading, listsData]);
 
+  const handleSubmit = (values) => {
+    createListAsync({
+      name: values.name,
+      description: values.description,
+      isPublic: values.publicList,
+    });
+  };
+
   return (
     <div className={styles.listManager}>
       <div className={styles.headerDiv}>
         <h2>Manage Your Lists</h2>
 
-        {!addNewList && (
-          <Button
-            className={styles.addNewListBtn}
-            onClick={() => setAddNewList(!addNewList)}
-            type="primary"
-          >
-            Add New List <MdOutlineAdd />
-          </Button>
-        )}
+        <Button
+          className={styles.addNewListBtn}
+          onClick={() => setShowCreateListModal(true)}
+          type="primary"
+        >
+          Add New List <MdOutlineAdd />
+        </Button>
       </div>
-
-      {addNewList && (
-        <CreateListForm setAddNewList={setAddNewList} userId={user?.userId} />
-      )}
 
       <div className={styles.listDiv}>
         {isListsLoading && (
@@ -66,6 +75,11 @@ const ListsView = () => {
 
         {listsData && <MyLists userLists={listsData.data} />}
       </div>
+      <CreateListModal
+        handleSubmit={handleSubmit}
+        isPending={createListIsPending}
+        isSuccess={createListIsSuccess}
+      />
     </div>
   );
 };

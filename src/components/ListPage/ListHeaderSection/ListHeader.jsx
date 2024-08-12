@@ -9,18 +9,22 @@ import {
   MenuOutlined,
 } from "@ant-design/icons";
 
+// State
+import { useAppContext } from "../../../state/AppContext";
+
 import styles from "./ListHeaderSection.module.css";
 
 const ListHeader = ({
   listName,
   listDescription,
   handleDeleteList,
-  setShowEditForm,
   refetchListPlaces,
 }) => {
   const [backPath, setBackPath] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { setShowCreateListModal } = useAppContext();
 
   useEffect(() => {
     console.log(location?.state?.from);
@@ -41,7 +45,7 @@ const ListHeader = ({
           <EditOutlined /> Edit
         </span>
       ),
-      onClick: () => setShowEditForm(true),
+      onClick: () => setShowCreateListModal(true),
     },
     {
       key: "2",

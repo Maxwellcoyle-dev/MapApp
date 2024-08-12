@@ -23,6 +23,7 @@ import DeletePlaceModal from "../../components/DeletePlaceModal/DeletePlaceModal
 import SavePlaceModal from "../../components/SavePlaceModal/SavePlaceModal";
 
 // Hooks
+import useCreateList from "../../hooks/backend-hooks/useCreateList";
 import useUser from "../../hooks/backend-hooks/useUser";
 import useGetOptimalPlaceData from "../../hooks/useGetOptimalPlaceData";
 import usePlaceIsSaved from "../../hooks/usePlaceIsSaved";
@@ -52,6 +53,7 @@ const PlacePage = () => {
   const { optimalPlaceData, optimalPlaceDataLoading, optimalPlaceDataError } =
     useGetOptimalPlaceData(placeId);
   const { placesPhotos } = useGetPhotos(placeIds);
+  const { createListMutation } = useCreateList();
 
   // Get photos of the place - if the place is saved to dynamoDB, then call useGetPhotots with the placeIds array. If the place is not saved, then we can use the getUrl() from the place.photos array
   useEffect(() => {

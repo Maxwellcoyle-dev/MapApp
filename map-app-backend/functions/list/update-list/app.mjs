@@ -14,10 +14,10 @@ export const lambdaHandler = async (event) => {
   console.log("Event: ", event);
 
   const listId = event.pathParameters.listId;
-  const { listName, description, isPublic, userId } = JSON.parse(event.body);
+  const { name, description, isPublic, userId } = JSON.parse(event.body);
 
   console.log("listId: ", listId);
-  console.log("listName: ", listName);
+  console.log("listName: ", name);
   console.log("description: ", description);
   console.log("isPublic: ", isPublic);
   console.log("userId: ", userId);
@@ -45,7 +45,7 @@ export const lambdaHandler = async (event) => {
   }
 
   if (
-    listName === undefined &&
+    name === undefined &&
     userId === undefined &&
     description === undefined &&
     isPublic === undefined
@@ -63,7 +63,7 @@ export const lambdaHandler = async (event) => {
 
   try {
     const updateResult = await updateList(listId, {
-      listName,
+      name,
       userId,
       description,
       isPublic,
@@ -90,10 +90,7 @@ export const lambdaHandler = async (event) => {
   }
 };
 
-const updateList = async (
-  listId,
-  { listName, userId, description, isPublic }
-) => {
+const updateList = async (listId, { name, description, isPublic }) => {
   // primary key listId, sort key userId
   const params = {
     TableName: LIST_TABLE,
@@ -107,10 +104,10 @@ const updateList = async (
   };
 
   const updates = [];
-  if (listName !== undefined) {
+  if (name !== undefined) {
     updates.push("#listName = :ln");
     params.ExpressionAttributeNames["#listName"] = "listName";
-    params.ExpressionAttributeValues[":ln"] = { S: listName };
+    params.ExpressionAttributeValues[":ln"] = { S: name };
   }
 
   if (description !== undefined) {

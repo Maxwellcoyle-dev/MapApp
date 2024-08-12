@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal, Image, Spin, Button, Form, Typography } from "antd";
+import { FolderAddOutlined } from "@ant-design/icons";
 import { MdClose } from "react-icons/md";
 
 // hooks
@@ -7,6 +8,13 @@ import useUserLists from "../../hooks/backend-hooks/useUserLists";
 import useSavePlace from "../../hooks/backend-hooks/useSavePlace";
 import useUser from "../../hooks/backend-hooks/useUser";
 import useGetPhotos from "../../hooks/google-api-hooks/useGetPhotos";
+import useCreateList from "../../hooks/backend-hooks/useCreateList";
+
+// state
+import { useAppContext } from "../../state/AppContext";
+
+// Components
+import CreateListModal from "../CreateListModal/CreateListModal";
 
 // styles & assets
 import styles from "./SavePlaceModal.module.css";
@@ -18,12 +26,21 @@ const SavePlaceModal = ({ visible, onClose, placeId }) => {
   const [placeIds, setPlaceIds] = useState([]);
   const [selectedList, setSelectedList] = useState(null);
 
+  const { setShowCreateListModal } = useAppContext();
   const { authUser } = useUser();
   const { listsData, listsError, isListsLoading } = useUserLists(
     authUser?.data.userId
   );
   const { placesPhotos } = useGetPhotos(placeIds);
-  const { mutateAsync, isPending, isSuccess, isIdle } = useSavePlace(placeId);
+
+  const { createListAsync, createListIsPending, createListIsSuccess } =
+    useCreateList();
+  const { savePlaceAsync, savePlaceIsPending, savePlaceIsSuccess } =
+    useSavePlace(placeId);
+
+  useEffect(() => {
+    console.log("listData", listsData);
+  }, [listsData]);
 
   useEffect(() => {
     if (listsData) {
@@ -35,18 +52,26 @@ const SavePlaceModal = ({ visible, onClose, placeId }) => {
   }, [listsData]);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (savePlaceIsSuccess) {
       onClose();
     }
-  }, [isSuccess, onClose]);
+  }, [savePlaceIsSuccess, onClose]);
 
   const handleListSelection = (listId) => {
     setSelectedList(listId);
   };
 
+  const handleSubmit = (values) => {
+    createListAsync({
+      name: values.name,
+      description: values.description,
+      publicList: values.publicList,
+    });
+  };
+
   const handleConfirm = async () => {
     if (selectedList) {
-      await mutateAsync(selectedList);
+      await savePlaceAsync(selectedList);
     } else {
       console.error("No list ID selected for saving.");
     }
@@ -54,14 +79,25 @@ const SavePlaceModal = ({ visible, onClose, placeId }) => {
 
   return (
     <Modal
-      title="Add to List"
+      title={
+        <div className={styles.headerDiv}>
+          <h3>Add to List</h3>
+          <Button
+            onClick={() => setShowCreateListModal(true)}
+            icon={<FolderAddOutlined />}
+          >
+            New List
+          </Button>
+        </div>
+      }
       open={visible}
       onCancel={onClose}
+      closable={false}
       footer={[
         <Button
           key="cancel"
           onClick={onClose}
-          disabled={isListsLoading || isPending}
+          disabled={isListsLoading || savePlaceIsPending}
         >
           Cancel
         </Button>,
@@ -69,8 +105,8 @@ const SavePlaceModal = ({ visible, onClose, placeId }) => {
           key="confirm"
           type="primary"
           onClick={handleConfirm}
-          disabled={!selectedList || isListsLoading || isPending}
-          loading={isPending}
+          disabled={!selectedList || isListsLoading || savePlaceIsPending}
+          loading={savePlaceIsPending}
         >
           Confirm
         </Button>,
@@ -116,6 +152,11 @@ const SavePlaceModal = ({ visible, onClose, placeId }) => {
           </Form>
         )}
       </div>
+      <CreateListModal
+        handleSubmit={handleSubmit}
+        isPending={createListIsPending}
+        isSuccess={createListIsSuccess}
+      />
     </Modal>
   );
 };

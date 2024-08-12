@@ -32,8 +32,15 @@ export const lambdaHandler = async (event) => {
     const listitemResponse = await dbclient.send(getCommand);
     console.log("listitemResponse: ", listitemResponse);
 
+    if (!listitemResponse.Item.places) {
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify([]),
+      };
+    }
     // get list of palceIds from the listitemResponse
-    const placeIds = listitemResponse.Item.places.L.map(
+    const placeIds = listitemResponse.Item.places?.L.map(
       (place) => place.M.placeId.S
     );
     console.log("placeIds: ", placeIds);

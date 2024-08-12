@@ -4,7 +4,12 @@ import { updateList } from "../../api/listApi";
 const useUpdateList = () => {
   const queryClient = useQueryClient();
 
-  const updateListMutation = useMutation({
+  const {
+    mutateAsync: updateListAsync,
+    isPending: updateListIsPending,
+    isSuccess: updateListIsSuccess,
+    isIdle: updateListIsIdle,
+  } = useMutation({
     mutationFn: async ({ listId, listData }) => {
       console.log("listId", listId);
       console.log("listData", listData);
@@ -12,12 +17,19 @@ const useUpdateList = () => {
       return updatedList;
     },
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["list", variables.listId] });
+      queryClient.invalidateQueries({
+        queryKey: ["get-list", variables.listId],
+      });
     },
     onError: (error) => console.error(error),
   });
 
-  return { updateListMutation };
+  return {
+    updateListAsync,
+    updateListIsPending,
+    updateListIsSuccess,
+    updateListIsIdle,
+  };
 };
 
 export default useUpdateList;
