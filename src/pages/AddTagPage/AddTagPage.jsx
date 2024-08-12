@@ -24,6 +24,7 @@ const AddTagPage = () => {
   const { updatePlaceMutation } = useUpdatePlace();
 
   useEffect(() => {
+    console.log("savedPlaceData", savedPlaceData);
     if (savedPlaceData?.tags) {
       const mappedTags = savedPlaceData.tags.map((tag) => ({
         tagId: tag.tagId,
@@ -88,8 +89,8 @@ const AddTagPage = () => {
       <div className={styles.headerDiv}>
         <div className={styles.topDiv}>
           <h2>
-            {savedPlaceData || state?.name?.S ? (
-              savedPlaceData.name || state.name.S
+            {savedPlaceData || state?.placeName?.S ? (
+              savedPlaceData?.placeName || state?.placeName?.S
             ) : (
               <Skeleton title={{ width: 200 }} paragraph={false} active />
             )}
