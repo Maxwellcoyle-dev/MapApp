@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Tag, Skeleton } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import isEqual from "lodash/isEqual"; // Import lodash for deep comparison
 
 // Hooks
 import useUser from "../../hooks/backend-hooks/useUser";
@@ -12,6 +13,7 @@ import useGetPlace from "../../hooks/backend-hooks/useGetPlace";
 import styles from "./AddTagPage.module.css";
 
 const AddTagPage = () => {
+  const [isSavedTags, setIsSavedTags] = useState(true);
   const [currentPlaceTags, setCurrentPlaceTags] = useState([]);
   const [allTags, setAllTags] = useState([]);
   const navigate = useNavigate();
@@ -21,10 +23,11 @@ const AddTagPage = () => {
   const { placeId } = useParams();
   const { authUser } = useUser();
   const { savedPlaceData } = useGetPlace(placeId, authUser?.data.userId);
-  const { updatePlaceMutation } = useUpdatePlace();
+
+  const { updatePlaceAsync, updatePlaceIsPending, updatePlaceIsSuccess } =
+    useUpdatePlace();
 
   useEffect(() => {
-    console.log("savedPlaceData", savedPlaceData);
     if (savedPlaceData?.tags) {
       const mappedTags = savedPlaceData.tags.map((tag) => ({
         tagId: tag.tagId,
@@ -42,19 +45,24 @@ const AddTagPage = () => {
     }
   }, [authUser]);
 
+  // New effect to compare currentPlaceTags with savedPlaceData.tags
+  useEffect(() => {
+    const tagsChanged = !isEqual(currentPlaceTags, savedPlaceData?.tags);
+    setIsSavedTags(!tagsChanged); // Disable button if tags have not changed
+  }, [currentPlaceTags, savedPlaceData]);
+
   const handleTagClick = (category, tag) => {
-    const tagExists = currentPlaceTags.some((t) => {
-      return t.tagId === tag.tagId && t.categoryId === category.categoryId;
-    });
+    const tagExists = currentPlaceTags.some(
+      (t) => t.tagId === tag.tagId && t.categoryId === category.categoryId
+    );
+
     if (tagExists) {
-      setCurrentPlaceTags(
-        currentPlaceTags.filter(
-          (t) =>
-            !(t.tagId === tag.tagId && t.categoryId === category.categoryId)
-        )
+      const newCurrentTags = currentPlaceTags.filter(
+        (t) => !(t.tagId === tag.tagId && t.categoryId === category.categoryId)
       );
+      setCurrentPlaceTags(newCurrentTags);
     } else {
-      setCurrentPlaceTags([
+      const newCurrentTags = [
         ...currentPlaceTags,
         {
           tagId: tag.tagId,
@@ -62,7 +70,8 @@ const AddTagPage = () => {
           tagName: tag.tagName,
           categoryName: category.categoryName,
         },
-      ]);
+      ];
+      setCurrentPlaceTags(newCurrentTags);
     }
   };
 
@@ -74,15 +83,22 @@ const AddTagPage = () => {
       categoryName: tag.categoryName,
     }));
 
-    updatePlaceMutation.mutate({
-      placeId: placeId,
-      userId: authUser.data.userId,
-      placeData: {
-        tags: updatedTags,
-      },
-    });
-    navigate(-1);
+    if (!isEqual(updatedTags, savedPlaceData?.tags)) {
+      updatePlaceAsync({
+        placeId: placeId,
+        userId: authUser.data.userId,
+        placeData: {
+          tags: updatedTags,
+        },
+      });
+    }
   };
+
+  useEffect(() => {
+    if (updatePlaceIsSuccess) {
+      navigate(-1);
+    }
+  }, [updatePlaceIsSuccess]);
 
   return (
     <div className={styles.container}>
@@ -99,7 +115,13 @@ const AddTagPage = () => {
           <Button onClick={() => navigate(-1)} icon={<CloseOutlined />} />
         </div>
         <div className={styles.bottomDiv}>
-          <Button onClick={handleSave} type="primary" className={styles.button}>
+          <Button
+            onClick={handleSave}
+            type="primary"
+            className={styles.button}
+            loading={updatePlaceIsPending}
+            disabled={isSavedTags}
+          >
             Save
           </Button>
           <Button
