@@ -19,7 +19,7 @@ const usePlaceIsSaved = (placeId) => {
       setIsPlaceSaved(isSaved);
       setIsPlaceSavedLoading(false);
     }
-  }, [listsData, isListsLoading, placeId]);
+  }, [listsData, placeId]);
 
   return { isPlaceSaved, isPlaceSavedLoading };
 };

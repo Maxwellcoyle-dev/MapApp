@@ -82,7 +82,6 @@ const savePlace = async (userId, listId, placeData) => {
       formattedAddress: { S: placeData.formatted_address || "" },
       formattedPhoneNumber: { S: placeData.formatted_phone_number || "" },
       businessStatus: { S: placeData.business_status || "" },
-      icon: { S: placeData.icon || "" },
       internationalPhoneNumber: {
         S: placeData.international_phone_number || "",
       },
@@ -90,7 +89,26 @@ const savePlace = async (userId, listId, placeData) => {
       website: { S: placeData.website || "" },
       vicinity: { S: placeData.vicinity || "" },
       rating: { N: placeData.rating ? placeData.rating.toString() : "0" },
+      totalUserRatings: {
+        N: placeData.user_ratings_total
+          ? placeData.user_ratings_total.toString()
+          : "0",
+      },
       types: { SS: placeData.types || [] },
+      googleReviews: {
+        L: placeData.reviews?.map((review) => ({
+          M: {
+            authorName: { S: review.author_name },
+            authorUrl: { S: review.author_url },
+            language: { S: review.language },
+            profilePhotoUrl: { S: review.profile_photo_url },
+            rating: { N: review.rating.toString() },
+            relativeTimeDescription: { S: review.relative_time_description },
+            text: { S: review.text },
+            time: { N: review.time.toString() },
+          },
+        })),
+      },
       geometry: {
         M: {
           location: {
@@ -109,6 +127,35 @@ const savePlace = async (userId, listId, placeData) => {
                 },
               }
             : { NULL: true },
+        },
+      },
+      openingHours: {
+        M: {
+          weekdayText: {
+            L: placeData.opening_hours?.weekday_text?.map((text) => ({
+              S: text,
+            })),
+          },
+        },
+        M: {
+          periods: {
+            L: placeData.opening_hours?.periods?.map((period) => ({
+              M: {
+                close: {
+                  M: {
+                    day: { N: period.close.day.toString() },
+                    time: { S: period.close.time },
+                  },
+                },
+                open: {
+                  M: {
+                    day: { N: period.open.day.toString() },
+                    time: { S: period.open.time },
+                  },
+                },
+              },
+            })),
+          },
         },
       },
     },

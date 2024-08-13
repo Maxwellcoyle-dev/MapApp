@@ -79,7 +79,7 @@ const ListItem = ({ place, firstPhoto, navigate, listData, authUser }) => {
             },
           ]} // Pass the list ID
           userId={authUser.data.userId}
-          placeName={place.name.S}
+          placeName={place.placeName.S}
           placeId={place.placeId.S}
         />
       )}

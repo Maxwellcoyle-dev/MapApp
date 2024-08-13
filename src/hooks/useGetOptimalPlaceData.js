@@ -45,8 +45,29 @@ const useGetOptimalPlaceData = (placeId) => {
             map,
             placeId
           );
-          queryClient.setQueryData(["place", placeId], placeData);
-          setOptimalPlaceData(placeData);
+          // queryClient.setQueryData(["place", placeId], placeData);
+
+          console.log("placeData", placeData);
+
+          const newOptimalPlaceData = {
+            placeId: placeData.place_id,
+            placeName: placeData.name,
+            formattedAddress: placeData.formatted_address,
+            geometry: placeData.geometry,
+            photos: placeData.photos,
+            rating: placeData.rating,
+            userRatingsTotal: placeData.user_ratings_total,
+            openingHours: placeData.opening_hours,
+            website: placeData.website,
+            placeUrl: placeData.url,
+            vicinity: placeData.vicinity,
+            formattedPhoneNumber: placeData.formatted_phone_number,
+            businessStatus: placeData.business_status,
+            isSaved: false,
+            reviews: placeData.reviews,
+          };
+
+          setOptimalPlaceData(newOptimalPlaceData);
         }
       } catch (error) {
         setOptimalPlaceDataError(error.message);
