@@ -1,3 +1,8 @@
+.headerContainer {
+  position: relative;
+  width: 100%;
+}
+
 .carouselContainer {
   position: relative;
   width: 100%;
@@ -30,7 +35,7 @@
   top: 0;
   left: 0;
   padding: 1rem;
-  width: 100vw;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   gap: 10px;
@@ -56,9 +61,22 @@
   color: red;
 }
 
-.overlayIconDisabled {
-  width: 24px;
-  height: 24px;
-  color: rgba(255, 255, 255, 0.5);
-  cursor: not-allowed;
+.infoContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f5f5f5;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+  color: #333;
+}
+
+.status {
+  font-size: 1rem;
+  font-weight: bold;
 }

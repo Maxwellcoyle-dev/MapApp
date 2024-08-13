@@ -1,25 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { Image, Carousel, Spin, Tooltip, Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import {
-  MdOutlineStar,
-  MdOutlineStarBorder,
-  MdOutlineStarHalf,
-  MdDirections,
-  MdOutlineLocalCafe,
-  MdOutlineLocalBar,
-  MdOutlineRestaurant,
-} from "react-icons/md";
+import { Spin } from "antd";
 
 // Components
 import DeletePlaceModal from "../../components/DeletePlaceModal/DeletePlaceModal";
 import SavePlaceModal from "../../components/SavePlaceModal/SavePlaceModal";
-import PlacePageHeader from "../../components/PlacePage/PlacePageHeader";
 import NoteEditorModal from "../../components/NoteEditorModal/NoteEditorModal";
+import PlacePageHeader from "../../components/PlacePage/PlacePageHeader/PlacePageHeader";
+import PlacePageDetails from "../../components/PlacePage/PlacePageDetails/PlacePageDetails";
+import PlacePageActions from "../../components/PlacePage/PlacePageActions/PlacePageActions";
 
 // Hooks
-import useCreateList from "../../hooks/backend-hooks/useCreateList";
+import useUpdatePlace from "../../hooks/backend-hooks/useUpdatePlace";
 import useUser from "../../hooks/backend-hooks/useUser";
 import useGetOptimalPlaceData from "../../hooks/useGetOptimalPlaceData";
 import usePlaceIsSaved from "../../hooks/usePlaceIsSaved";
@@ -33,11 +25,10 @@ import { useAppContext } from "../../state/AppContext";
 import styles from "./PlacePage.module.css";
 
 const PlacePage = () => {
+  const [myRating, setMyRating] = useState(0);
   const [note, setNote] = useState("");
   const [placeIds, setPlaceIds] = useState([]);
   const [photos, setPhotos] = useState([]);
-
-  // array to hold the lists that contain the current place
   const [listsContainingPlace, setListsContainingPlace] = useState([]);
 
   const { placeId } = useParams();
@@ -46,7 +37,6 @@ const PlacePage = () => {
   const { state } = location;
 
   const {
-    setShowCreateListModal,
     showSavePlaceModal,
     setShowSavePlaceModal,
     showDeletePlaceModal,
@@ -61,26 +51,45 @@ const PlacePage = () => {
   const { optimalPlaceData, optimalPlaceDataLoading, optimalPlaceDataError } =
     useGetOptimalPlaceData(placeId);
   const { placesPhotos } = useGetPhotos(placeIds);
-  const { createListMutation } = useCreateList();
+
+  const { updatePlaceAsync, updatePlaceIsPending, updatePlaceIsSuccess } =
+    useUpdatePlace();
+
+  const isOpen = (periods) => {
+    const now = new Date();
+    const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const currentTime = `${now.getHours().toString().padStart(2, "0")}${now
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}`;
+
+    const todayPeriod = periods.find(
+      (period) => period.open.day === currentDay
+    );
+
+    if (todayPeriod) {
+      const { open, close } = todayPeriod;
+      return currentTime >= open.time && currentTime < close.time;
+    }
+
+    return false; // If no periods match, assume closed
+  };
 
   // Get photos of the place - if the place is saved to dynamoDB, then call useGetPhotots with the placeIds array. If the place is not saved, then we can use the getUrl() from the place.photos array
   useEffect(() => {
     if (optimalPlaceData && !optimalPlaceData?.photos) {
-      console.log("optimalPlaceData: ", optimalPlaceData);
-
       const placeIds = [
         optimalPlaceData?.placeId
           ? optimalPlaceData.placeId
           : optimalPlaceData.place_id,
       ];
-      console.log("placeIds: ", placeIds);
       setPlaceIds(placeIds);
     }
     if (optimalPlaceData && optimalPlaceData?.photos) {
       const photoUrls = optimalPlaceData.photos.map((photo) => {
         return photo.getUrl();
       });
-      console.log("photoUrls: ", photoUrls);
+
       setPhotos(photoUrls);
     }
   }, [optimalPlaceData]);
@@ -115,11 +124,69 @@ const PlacePage = () => {
 
   // check if there is a note, if so, update the note state
   useEffect(() => {
-    console.log("optimalPlaceData: ", optimalPlaceData);
+    console.log("optimalPlaceData", optimalPlaceData);
     if (optimalPlaceData?.placeNote) {
       setNote(optimalPlaceData.placeNote);
     }
+    if (optimalPlaceData?.myRating) {
+      setMyRating(optimalPlaceData.myRating);
+    }
   }, [optimalPlaceData]);
+
+  const handleRatingClick = (rating) => {
+    console.log("rating", rating);
+    setMyRating(rating);
+    const newPlaceData = {
+      ...optimalPlaceData,
+      myRating: rating,
+    };
+    updatePlaceAsync({
+      placeId: optimalPlaceData.placeId,
+      userId: authUser.data.userId,
+      placeData: newPlaceData,
+    });
+  };
+
+  const handleTag = () => {
+    if (!isPlaceSaved) {
+      return; // Do nothing if the place is not saved
+    }
+    navigate(`/add-tag/${placeId}`);
+  };
+
+  const handleSave = async () => {
+    try {
+      await updatePlaceAsync({
+        placeId: optimalPlaceData.placeId,
+        userId: authUser.data.userId,
+        placeData: {
+          ...optimalPlaceData,
+          isSaved: true,
+        },
+      });
+      setShowSavePlaceModal(false);
+    } catch (error) {
+      console.error("Failed to save place:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      // Call your backend function to delete the place
+      await updatePlaceAsync({
+        placeId: optimalPlaceData.placeId,
+        userId: authUser.data.userId,
+        placeData: {
+          ...optimalPlaceData,
+          isSaved: false,
+        },
+      });
+      setShowDeletePlaceModal(false);
+      navigate("/"); // Redirect to home or another page after deletion
+    } catch (error) {
+      console.error("Failed to delete place:", error);
+    }
+  };
 
   if (optimalPlaceDataLoading) {
     return (
@@ -146,75 +213,34 @@ const PlacePage = () => {
             photos={photos}
             optimalPlaceData={optimalPlaceData}
             backNavigation={state?.from !== "addToList" ? -1 : "/"}
+            isPlaceSaved={isPlaceSaved}
+            isOpen={isOpen(optimalPlaceData.openingHours?.periods)}
           />
-          <div className={styles.buttonDiv}>
-            <Tooltip
-              title={
-                isPlaceSavedLoading || !isPlaceSaved
-                  ? "Save the place before adding a tag"
-                  : "Click here to add a tag"
-              }
-            >
-              <Button
-                type="dashed"
-                className={styles.tagButton}
-                disabled={isPlaceSavedLoading || !isPlaceSaved}
-                onClick={
-                  isPlaceSavedLoading || !isPlaceSaved
-                    ? undefined
-                    : () => navigate(`/add-tag/${placeId}`)
-                }
-              >
-                <PlusOutlined /> <p>Add Tags</p>
-              </Button>
-            </Tooltip>
-            <Button onClick={() => setShowEditListModal(true)}>Add Note</Button>
-          </div>
-          <div className={styles.headerDiv}>
-            <h2>{optimalPlaceData?.name}</h2>
-            {optimalPlaceData?.types?.includes("cafe") && (
-              <MdOutlineLocalCafe className={styles.icon} />
-            )}
-            {optimalPlaceData?.types?.includes("restaurant") && (
-              <MdOutlineRestaurant className={styles.icon} />
-            )}
-            {optimalPlaceData?.types?.includes("bar") && (
-              <MdOutlineLocalBar className={styles.icon} />
-            )}
-          </div>
-          <div
-            className={styles.addressDiv}
-            onClick={() => {
+          <PlacePageActions
+            isSaved={isPlaceSaved}
+            // isSavedLoading={isSavedLoading}
+            onSave={handleSave}
+            onTag={handleTag}
+            onAddNote={() => setShowEditListModal(true)}
+            tags={optimalPlaceData?.tags}
+            note={note}
+            myRating={myRating}
+            handleRatingClick={handleRatingClick}
+          />
+          <PlacePageDetails
+            totalUserRatings={optimalPlaceData?.totalUserRatings}
+            rating={optimalPlaceData?.rating}
+            address={optimalPlaceData.formattedAddress}
+            phone={optimalPlaceData.formattedPhoneNumber}
+            website={optimalPlaceData.website}
+            tags={optimalPlaceData.tags}
+            status={optimalPlaceData.businessStatus}
+            onDirectionsClick={() =>
               window.open(
-                `https://www.google.com/maps/dir/?api=1&destination=${optimalPlaceData?.lat},${optimalPlaceData?.lng}`
-              );
-            }}
-          >
-            <p>{optimalPlaceData?.formatted_address}</p>
-            <MdDirections className={styles.directionsIcon} />
-          </div>
-          <div className={styles.ratingsDiv}>
-            <p>{optimalPlaceData?.rating}</p>
-            {[1, 2, 3, 4, 5].map((star) => {
-              if (optimalPlaceData?.rating >= star) {
-                return (
-                  <MdOutlineStar key={star} className={styles.ratingStar} />
-                );
-              } else if (optimalPlaceData?.rating >= star - 0.5) {
-                return (
-                  <MdOutlineStarHalf key={star} className={styles.ratingStar} />
-                );
-              } else {
-                return (
-                  <MdOutlineStarBorder
-                    key={star}
-                    className={styles.ratingStar}
-                  />
-                );
-              }
-            })}
-            <p>({optimalPlaceData?.totalUserRatings} reviews)</p>
-          </div>
+                `https://www.google.com/maps/dir/?api=1&destination=${optimalPlaceData?.geometry?.location?.lat},${optimalPlaceData?.geometry?.location?.lng}`
+              )
+            }
+          />
         </>
       )}
 
@@ -223,8 +249,8 @@ const PlacePage = () => {
         onClose={() => setShowDeletePlaceModal(false)}
         listIds={listsContainingPlace}
         userId={authUser?.data.userId}
-        placeName={optimalPlaceData.name}
-        placeId={optimalPlaceData.placeId}
+        placeName={optimalPlaceData?.placeName}
+        placeId={optimalPlaceData?.placeId}
       />
 
       <SavePlaceModal

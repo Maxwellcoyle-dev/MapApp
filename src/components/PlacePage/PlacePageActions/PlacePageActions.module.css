@@ -1,0 +1,97 @@
+.actionsContainer {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
+  padding: 0 1rem;
+}
+
+.tagDiv {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tagButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border-radius: 8px;
+  background-color: #f1f1f1;
+}
+
+.tagsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  border-radius: 5px;
+  border: 1px solid #007bff;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.myRatingDiv {
+  display: flex;
+  flex-direction: column;
+}
+
+.myRatingText {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 5px;
+}
+
+.starContainer {
+  display: flex;
+  gap: 5px;
+}
+
+.emptyStar {
+  font-size: 1.5rem;
+  color: #ddd;
+  cursor: pointer;
+}
+
+.filledStar {
+  font-size: 1.5rem;
+  color: #ffc107;
+  cursor: pointer;
+}
+
+.noteDiv {
+  border: 1px dashed #007bff;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  transition: background-color 0.2s ease;
+  touch-action: manipulation;
+}
+
+.noteDiv:hover,
+.noteDiv:focus {
+  background-color: #e6f7ff;
+}
+
+.noteContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.placeholderText {
+  font-size: 1rem;
+  color: #888;
+  margin: 0;
+}
+
+.editIcon {
+  font-size: 1.2rem;
+  color: #007bff;
+  margin-left: 10px;
+}

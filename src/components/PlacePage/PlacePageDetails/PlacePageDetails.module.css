@@ -1,0 +1,124 @@
+.detailsContainer {
+  margin-top: 20px;
+  padding: 0 1rem;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.icon {
+  font-size: 1.5rem;
+  color: #555;
+  margin-right: 10px;
+}
+
+.text {
+  font-size: 1rem;
+  color: #333;
+}
+
+.tagsContainer {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.tags {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background-color: #f1f1f1;
+  border-radius: 3px;
+  padding: 5px 10px;
+  font-size: 0.875rem;
+  color: #333;
+}
+
+.tagButton {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.noteContainer {
+  background-color: #f9f9f9;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.noteText {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.4;
+}
+
+.ratingContainer {
+  margin-top: 20px;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.googleRatingsDiv,
+.myRatingDiv {
+  display: flex;
+  align-items: flex-start;
+}
+
+.starContainer {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ratingStar,
+.filledStar,
+.emptyStar {
+  font-size: 1.5rem;
+  color: #ffc107;
+  touch-action: manipulation; /* Enhances touch experience */
+}
+
+.ratingText {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.totalReviews {
+  font-size: 1rem;
+  color: #666;
+}
+
+.myRatingText {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #007bff;
+}
+
+.emptyStar {
+  color: #ddd;
+}
+
+.filledStar {
+  color: #ffc107;
+  cursor: pointer;
+}
+
+.ratingStar {
+  color: #ffc107;
+}
