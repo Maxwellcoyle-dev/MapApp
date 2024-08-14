@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid";
+
 export const defaultCategories = [
   {
     categoryId: { N: "1" },
@@ -92,3 +94,14 @@ export const defaultCategories = [
     lastUpdatedAt: { N: `${Date.now()}` },
   },
 ];
+
+export const defaultList = {
+  listId: { S: uuidv4() },
+  listName: { S: "Saved" },
+  public: { BOOL: false },
+  userId: { S: "" },
+  listDescription: { S: "Your saved places" },
+  createdAt: { N: `${Date.now()}` },
+  lastUpdatedAt: { N: `${Date.now()}` },
+  creationType: { S: "default" },
+};

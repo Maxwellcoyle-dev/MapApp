@@ -1,10 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 import { DynamoDBClient, PutItemCommand } from "@aws-sdk/client-dynamodb";
-import { defaultCategories } from "./userDefaults.mjs";
+import { defaultCategories, defaultList } from "./userDefaults.mjs";
 
 const REGION = "us-east-2";
-const USER_TABLE = "MapAppUserTable";
-const LIST_TABLE = "MapAppListsTable";
+const USER_TABLE = process.env.USER_TABLE;
+const LIST_TABLE = process.env.LIST_TABLE;
 const dbclient = new DynamoDBClient({ region: REGION });
 
 export const createNewUser = async (userId, email) => {
@@ -93,29 +93,21 @@ export const createNewUser = async (userId, email) => {
 
 const createDefaultList = async (userId) => {
   console.log("Creating default list ...");
-  const listId = uuidv4();
-  console.log("List ID: ", listId);
+  console.log("defaultList", defaultList);
+
+  defaultList.userId = { S: userId };
+  console.log("defaultList", defaultList);
 
   try {
-    const formattedList = {
-      listId: { S: listId },
-      userId: { S: userId },
-      listName: { S: "My List" },
-      listDescription: { S: "This is your default list." },
-      public: { BOOL: false },
-      createdAt: { N: `${Date.now()}` },
-      lastUpdatedAt: { N: `${Date.now()}` },
-    };
-
     const putParams = {
       TableName: LIST_TABLE,
-      Item: formattedList,
+      Item: defaultList,
     };
 
     console.log("Put params for list: ", JSON.stringify(putParams, null, 2));
     await dbclient.send(new PutItemCommand(putParams));
 
-    return listId;
+    return defaultList.listId.S;
   } catch (err) {
     console.error("Error: ", err);
     throw new Error("Error creating default list");

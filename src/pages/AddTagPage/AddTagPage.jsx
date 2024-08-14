@@ -8,6 +8,7 @@ import isEqual from "lodash/isEqual"; // Import lodash for deep comparison
 import useUser from "../../hooks/backend-hooks/useUser";
 import useUpdatePlace from "../../hooks/backend-hooks/useUpdatePlace";
 import useGetPlace from "../../hooks/backend-hooks/useGetPlace";
+import useGetOptimalPlaceData from "../../hooks/useGetOptimalPlaceData";
 
 // styles
 import styles from "./AddTagPage.module.css";
@@ -22,14 +23,18 @@ const AddTagPage = () => {
 
   const { placeId } = useParams();
   const { authUser } = useUser();
-  const { savedPlaceData } = useGetPlace(placeId, authUser?.data.userId);
+
+  const { optimalPlaceData } = useGetOptimalPlaceData(
+    placeId,
+    authUser?.data.userId
+  );
 
   const { updatePlaceAsync, updatePlaceIsPending, updatePlaceIsSuccess } =
     useUpdatePlace();
 
   useEffect(() => {
-    if (savedPlaceData?.tags) {
-      const mappedTags = savedPlaceData.tags.map((tag) => ({
+    if (optimalPlaceData?.tags) {
+      const mappedTags = optimalPlaceData.tags.map((tag) => ({
         tagId: tag.tagId,
         categoryId: tag.categoryId,
         tagName: tag.tagName,
@@ -37,7 +42,7 @@ const AddTagPage = () => {
       }));
       setCurrentPlaceTags(mappedTags);
     }
-  }, [savedPlaceData]);
+  }, [optimalPlaceData]);
 
   useEffect(() => {
     if (authUser?.data?.categories) {
@@ -45,11 +50,11 @@ const AddTagPage = () => {
     }
   }, [authUser]);
 
-  // New effect to compare currentPlaceTags with savedPlaceData.tags
+  // New effect to compare currentPlaceTags with optimalPlaceData.tags
   useEffect(() => {
-    const tagsChanged = !isEqual(currentPlaceTags, savedPlaceData?.tags);
+    const tagsChanged = !isEqual(currentPlaceTags, optimalPlaceData?.tags);
     setIsSavedTags(!tagsChanged); // Disable button if tags have not changed
-  }, [currentPlaceTags, savedPlaceData]);
+  }, [currentPlaceTags, optimalPlaceData]);
 
   const handleTagClick = (category, tag) => {
     const tagExists = currentPlaceTags.some(
@@ -83,7 +88,7 @@ const AddTagPage = () => {
       categoryName: tag.categoryName,
     }));
 
-    if (!isEqual(updatedTags, savedPlaceData?.tags)) {
+    if (!isEqual(updatedTags, optimalPlaceData?.tags)) {
       updatePlaceAsync({
         placeId: placeId,
         userId: authUser.data.userId,
@@ -105,8 +110,8 @@ const AddTagPage = () => {
       <div className={styles.headerDiv}>
         <div className={styles.topDiv}>
           <h2>
-            {savedPlaceData || state?.placeName?.S ? (
-              savedPlaceData?.placeName || state?.placeName?.S
+            {optimalPlaceData || state?.placeName?.S ? (
+              optimalPlaceData?.placeName || state?.placeName?.S
             ) : (
               <Skeleton title={{ width: 200 }} paragraph={false} active />
             )}

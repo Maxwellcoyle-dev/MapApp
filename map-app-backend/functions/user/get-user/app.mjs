@@ -29,6 +29,15 @@ export const lambdaHandler = async (event) => {
       }),
     };
   }
+  if (!email) {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        message: "Email is required to create a new user",
+      }),
+    };
+  }
 
   try {
     console.log("Checking if user exists...");
@@ -45,16 +54,6 @@ export const lambdaHandler = async (event) => {
         }),
       };
     } else {
-      if (!email) {
-        return {
-          statusCode: 400,
-          headers,
-          body: JSON.stringify({
-            message: "Email is required to create a new user",
-          }),
-        };
-      }
-
       console.log("User not found, creating user...");
       const newUser = await createNewUser(userId, email);
       console.log("New user created: ", newUser);

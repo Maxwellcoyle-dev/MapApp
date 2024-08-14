@@ -13,6 +13,7 @@ const useUpdatePlace = () => {
       console.log("placeId", placeId);
       console.log("userId", userId);
       console.log("placeData", placeData);
+
       const updatedPlace = await updatePlace(placeId, userId, placeData);
       return updatedPlace;
     },

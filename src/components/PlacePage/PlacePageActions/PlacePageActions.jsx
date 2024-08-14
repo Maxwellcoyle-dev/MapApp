@@ -1,10 +1,12 @@
 import React from "react";
-import { Button, Tag } from "antd";
+import { useNavigate } from "react-router-dom";
+import { Button, Tag, message } from "antd";
 import { PlusOutlined, EditOutlined } from "@ant-design/icons";
 import { MdOutlineStar, MdOutlineStarBorder } from "react-icons/md";
 import styles from "./PlacePageActions.module.css";
 
 const PlacePageActions = ({
+  placeId,
   isSaved,
   onTag,
   onAddNote,
@@ -13,8 +15,17 @@ const PlacePageActions = ({
   myRating,
   handleRatingClick,
 }) => {
+  const [messageApi, contextHolder] = message.useMessage();
+  const navigate = useNavigate();
   const truncatedNote =
     note && note.length > 100 ? note.substring(0, 100) + "..." : note;
+
+  const savePlaceMessage = () => {
+    messageApi.open({
+      type: "success",
+      content: "Save the place by adding it to a list.",
+    });
+  };
 
   return (
     <div className={styles.actionsContainer}>
@@ -26,7 +37,9 @@ const PlacePageActions = ({
               className={
                 star <= myRating ? styles.filledStar : styles.emptyStar
               }
-              onClick={() => handleRatingClick(star)}
+              onClick={() => {
+                handleRatingClick(star);
+              }}
             />
           ))}
         </div>

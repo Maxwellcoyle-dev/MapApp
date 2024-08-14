@@ -1,8 +1,13 @@
-import { DynamoDBClient, UpdateItemCommand } from "@aws-sdk/client-dynamodb";
+import {
+  DynamoDBClient,
+  UpdateItemCommand,
+  QueryCommand,
+} from "@aws-sdk/client-dynamodb";
 import AWS from "aws-sdk";
 
 const REGION = "us-east-2";
 const PLACE_TABLE = process.env.PLACE_TABLE;
+const LIST_TABLE = process.env.LIST_TABLE;
 const dbclient = new DynamoDBClient({ region: REGION });
 
 const headers = {
@@ -60,48 +65,49 @@ const updatePlace = async (placeId, userId, placeData) => {
   const expressionAttributeValues = {};
   const updateExpressions = [];
 
-  // Filter out placeId and userId from the placeData object
   const filteredPlaceData = Object.keys(placeData).reduce((acc, key) => {
-    if (key !== "placeId" && key !== "userId") {
+    if (key !== "placeId" && key !== "userId" && key !== "photos") {
       acc[key] = placeData[key];
     }
     return acc;
   }, {});
 
-  // Construct update expressions and expression attribute values
   Object.keys(filteredPlaceData).forEach((key) => {
     const attributeKey = `:${key}`;
 
-    if (key === "tags") {
-      updateExpressions.push(`${key} = ${attributeKey}`);
-      expressionAttributeValues[attributeKey] = {
-        L: filteredPlaceData[key].map((tag) => ({
-          M: {
-            tagId: { S: tag.tagId },
-            tagName: { S: tag.tagName },
-            categoryId: { S: tag.categoryId },
-            categoryName: { S: tag.categoryName },
-          },
-        })),
-      };
-    } else {
-      updateExpressions.push(`${key} = ${attributeKey}`);
+    updateExpressions.push(`${key} = ${attributeKey}`);
 
-      if (typeof filteredPlaceData[key] === "string") {
-        expressionAttributeValues[attributeKey] = { S: filteredPlaceData[key] };
-      } else if (typeof filteredPlaceData[key] === "number") {
+    if (typeof filteredPlaceData[key] === "string") {
+      expressionAttributeValues[attributeKey] = { S: filteredPlaceData[key] };
+    } else if (typeof filteredPlaceData[key] === "number") {
+      expressionAttributeValues[attributeKey] = {
+        N: filteredPlaceData[key].toString(),
+      };
+    } else if (typeof filteredPlaceData[key] === "boolean") {
+      expressionAttributeValues[attributeKey] = {
+        BOOL: filteredPlaceData[key],
+      };
+    } else if (Array.isArray(filteredPlaceData[key])) {
+      if (key === "tags") {
         expressionAttributeValues[attributeKey] = {
-          N: filteredPlaceData[key].toString(),
+          L: filteredPlaceData[key].map((tag) => ({
+            M: {
+              tagId: { S: tag.tagId },
+              tagName: { S: tag.tagName },
+              categoryId: { S: tag.categoryId },
+              categoryName: { S: tag.categoryName },
+            },
+          })),
         };
-      } else if (Array.isArray(filteredPlaceData[key])) {
+      } else {
         expressionAttributeValues[attributeKey] = {
           L: filteredPlaceData[key].map((item) => ({ S: item.toString() })),
         };
-      } else if (typeof filteredPlaceData[key] === "object") {
-        expressionAttributeValues[attributeKey] = {
-          M: AWS.DynamoDB.Converter.marshall(filteredPlaceData[key]),
-        };
       }
+    } else if (typeof filteredPlaceData[key] === "object") {
+      expressionAttributeValues[attributeKey] = {
+        M: AWS.DynamoDB.Converter.marshall(filteredPlaceData[key]),
+      };
     }
   });
 
@@ -119,9 +125,85 @@ const updatePlace = async (placeId, userId, placeData) => {
   try {
     const data = await dbclient.send(new UpdateItemCommand(params));
     console.log("Update Result: ", data);
+
+    await addPlaceToSavedList(userId, placeId, placeData.placeName);
+
     return data.Attributes;
   } catch (err) {
     console.error("Error: ", err);
     throw new Error(`Unable to update place: ${err.message}`);
+  }
+};
+
+const getSavedUserList = async (userId) => {
+  // get users lists using the GSI
+
+  const params = {
+    TableName: LIST_TABLE,
+    IndexName: "userId-index",
+    KeyConditionExpression: "userId = :userId",
+    ExpressionAttributeValues: {
+      ":userId": { S: userId },
+    },
+  };
+
+  try {
+    const data = await dbclient.send(new QueryCommand(params));
+    console.log("Lists: ", data.Items);
+    // find the list data.item matching the listName.S: "Saved"
+    const savedList = data.Items.find((item) => item.listName.S === "Saved");
+    console.log("Saved List: ", savedList);
+    return savedList;
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new Error(`Unable to get user lists: ${err.message}`);
+  }
+};
+
+const addPlaceToSavedList = async (userId, placeId, placeName) => {
+  const savedList = await getSavedUserList(userId);
+
+  if (!savedList) {
+    console.error("Saved list not found");
+    throw new Error("Saved list not found");
+  }
+
+  const listId = savedList.listId.S;
+
+  const existingPlaces = savedList.places ? savedList.places.L : [];
+  const placeExists = existingPlaces.some(
+    (place) => place.M.placeId.S === placeId
+  );
+
+  if (placeExists) {
+    console.log("Place already exists in the list. No update needed.");
+    return savedList; // Or return an appropriate response
+  }
+
+  const placeMap = {
+    placeId: { S: placeId },
+    placeName: { S: placeName },
+  };
+
+  const params = {
+    TableName: LIST_TABLE,
+    Key: {
+      listId: { S: listId },
+    },
+    UpdateExpression:
+      "SET places = list_append(if_not_exists(places, :emptyList), :place)",
+    ExpressionAttributeValues: {
+      ":place": { L: [{ M: placeMap }] },
+      ":emptyList": { L: [] },
+    },
+  };
+
+  try {
+    const data = await dbclient.send(new UpdateItemCommand(params));
+    console.log("Update Result: ", data);
+    return data.Attributes;
+  } catch (err) {
+    console.error("Error: ", err);
+    throw new Error(`Unable to add place to saved list: ${err.message}`);
   }
 };
