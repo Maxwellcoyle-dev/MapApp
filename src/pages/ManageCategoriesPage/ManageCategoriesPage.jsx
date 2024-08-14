@@ -12,7 +12,7 @@ import CategoryModal from "./CategoryModal";
 import { useAppContext } from "../../state/AppContext";
 
 // hooks
-import useUser from "../../hooks/backend-hooks/useUser";
+import useAppUser from "../../hooks/backend-hooks/useAppUser";
 import useManageCategories from "../../hooks/backend-hooks/useManageCategories";
 
 import styles from "./ManageCategoriesPage.module.css";
@@ -31,7 +31,7 @@ const ManageCategoriesPage = () => {
   const { showManageCategoriesModal, setShowManageCategoriesModal } =
     useAppContext();
 
-  const { authUser } = useUser();
+  const { appUser } = useAppUser();
   const {
     manageCategoriesAsync,
     manageCategoriesIsPending,
@@ -39,20 +39,20 @@ const ManageCategoriesPage = () => {
   } = useManageCategories();
 
   useEffect(() => {
-    if (authUser?.data.categories) {
-      setCategories(authUser.data.categories);
+    if (appUser?.data.categories) {
+      setCategories(appUser.data.categories);
     }
-  }, [authUser]);
+  }, [appUser]);
 
   // submit the new categories to the backend.
   const handlePageSubmit = () => {
     console.log("categories", categories);
-    console.log("authUser.data.categories", authUser.data.categories);
-    const updateCategories = categories !== authUser.data.categories;
+    console.log("appUser.data.categories", appUser.data.categories);
+    const updateCategories = categories !== appUser.data.categories;
     console.log("updateCategories", updateCategories);
     if (updateCategories) {
       manageCategoriesAsync({
-        userId: authUser.data.userId,
+        userId: appUser.data.userId,
         categories,
       });
     } else {

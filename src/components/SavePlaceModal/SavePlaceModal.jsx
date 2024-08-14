@@ -6,7 +6,7 @@ import { MdClose } from "react-icons/md";
 // hooks
 import useUserLists from "../../hooks/backend-hooks/useUserLists";
 import useSavePlace from "../../hooks/backend-hooks/useSavePlace";
-import useUser from "../../hooks/backend-hooks/useUser";
+import useAppUser from "../../hooks/backend-hooks/useAppUser";
 import useGetPhotos from "../../hooks/google-api-hooks/useGetPhotos";
 import useCreateList from "../../hooks/backend-hooks/useCreateList";
 
@@ -22,17 +22,14 @@ import { fallbackImage } from "./fallbackImage";
 
 const { Text } = Typography;
 
-const SavePlaceModal = ({ visible, onClose, placeId }) => {
+const SavePlaceModal = ({ visible, onClose, placeId, userId }) => {
   const [placeIds, setPlaceIds] = useState([]);
   const [selectedList, setSelectedList] = useState(null);
 
   const { setShowCreateListModal, showSavePlaceModal, setShowSavePlaceModal } =
     useAppContext();
 
-  const { authUser } = useUser();
-  const { listsData, listsError, isListsLoading } = useUserLists(
-    authUser?.data.userId
-  );
+  const { listsData, listsError, isListsLoading } = useUserLists(userId);
   const { placesPhotos } = useGetPhotos(placeIds);
 
   const { createListAsync, createListIsPending, createListIsSuccess } =

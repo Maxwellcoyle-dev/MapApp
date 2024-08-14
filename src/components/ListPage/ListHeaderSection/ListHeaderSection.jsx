@@ -8,7 +8,7 @@ import DeleteListModal from "../../DeleteListModal/DeleteListModal";
 // Hooks
 import useUpdateList from "../../../hooks/backend-hooks/useUpdateList";
 
-import useUser from "../../../hooks/backend-hooks/useUser";
+import useAppUser from "../../../hooks/backend-hooks/useAppUser";
 import useGetList from "../../../hooks/backend-hooks/useGetList";
 import useListPlaces from "../../../hooks/backend-hooks/useListPlaces";
 
@@ -20,7 +20,7 @@ const ListHeaderSection = ({ listPageState, listId }) => {
   const [description, setDescription] = useState("");
 
   // get the user
-  const { authUser } = useUser();
+  const { appUser } = useAppUser();
 
   const { listData } = useGetList(listId);
   // update list
@@ -66,7 +66,7 @@ const ListHeaderSection = ({ listPageState, listId }) => {
         isPending={updateListIsPending}
         isSuccess={updateListIsSuccess}
       />
-      <DeleteListModal listId={listId} userId={authUser?.data.userId} />
+      <DeleteListModal listId={listId} userId={appUser?.data.userId} />
     </div>
   );
 };

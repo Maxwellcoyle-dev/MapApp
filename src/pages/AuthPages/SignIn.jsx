@@ -13,7 +13,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthContext } from "../../state/AuthContext";
 
 // Hooks
-import useUser from "../../hooks/backend-hooks/useUser";
+import useAppUser from "../../hooks/backend-hooks/useAppUser";
 
 // Styles
 import styles from "./Auth.module.css";
@@ -34,14 +34,14 @@ function SignIn() {
   const from = location.state?.from?.pathname || "/";
   console.log("from", from);
 
-  const { authUser } = useUser();
+  const { appUser } = useAppUser();
 
   // Temporary sollution for redirect issue. Make sure that authenticated users are not stuck on signin page.
   useEffect(() => {
-    if (authUser) {
+    if (appUser) {
       navigate(-1);
     }
-  }, [authUser]);
+  }, [appUser]);
 
   const handleSignIn = async () => {
     setLoading(true);
@@ -69,12 +69,12 @@ function SignIn() {
   };
 
   useEffect(() => {
-    console.log("Checking authUser for redirection:", authUser);
-    if (authUser && authUser.userId) {
+    console.log("Checking appUser for redirection:", appUser);
+    if (appUser && appUser.userId) {
       console.log("Redirecting to", from);
       navigate(from);
     }
-  }, [authUser, navigate, from]);
+  }, [appUser, navigate, from]);
 
   return (
     <div className={styles.signInContainer}>

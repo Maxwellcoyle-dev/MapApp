@@ -5,7 +5,7 @@ import { GoogleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 import { useAuthContext } from "../../state/AuthContext";
-import useUser from "../../hooks/backend-hooks/useUser";
+import useAppUser from "../../hooks/backend-hooks/useAppUser";
 import styles from "./Auth.module.css";
 import demoLogo from "../../assets/ap-logo-dmeo.png";
 

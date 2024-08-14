@@ -45,11 +45,15 @@ Resources:
       Environment:
         Variables:
           USER_TABLE: !Ref MapAppUserTable
+          LIST_TABLE: !Ref MapAppListTable
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref MapAppUserTable
         - DynamoDBWritePolicy:
             TableName: !Ref MapAppUserTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppListTable
+
       Events:
         GetUser:
           Type: Api
@@ -296,6 +300,16 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
+      GlobalSecondaryIndexes:
+        - IndexName: userId-index
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: 5
+            WriteCapacityUnits: 5
   GetPlaceFunction:
     Type: "AWS::Serverless::Function"
     Properties:
@@ -358,6 +372,8 @@ Resources:
             TableName: !Ref MapAppPlacesTable
         - DynamoDBReadPolicy:
             TableName: !Ref MapAppPlacesTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppListTable
       Events:
         CreatePlaceApiEvent:
           Type: Api
@@ -376,11 +392,14 @@ Resources:
       Environment:
         Variables:
           PLACE_TABLE: !Ref MapAppPlacesTable
+          LIST_TABLE: !Ref MapAppListTable
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref MapAppPlacesTable
         - DynamoDBWritePolicy:
             TableName: !Ref MapAppPlacesTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppListTable
       Events:
         UpdatePlaceApiEvent:
           Type: Api

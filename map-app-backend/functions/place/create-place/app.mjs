@@ -79,6 +79,7 @@ const savePlace = async (userId, listId, placeData) => {
       placeId: { S: placeData.place_id },
       userId: { S: userId },
       placeName: { S: placeData.name },
+      placeIdSaved: { BOOL: true },
       formattedAddress: { S: placeData.formatted_address || "" },
       formattedPhoneNumber: { S: placeData.formatted_phone_number || "" },
       businessStatus: { S: placeData.business_status || "" },
@@ -176,7 +177,7 @@ const addPlaceToListItem = async (userId, listId, placeId, placeName) => {
 
   const placeMap = {
     placeId: { S: placeId },
-    name: { S: placeName },
+    placeName: { S: placeName },
   };
 
   const params = {

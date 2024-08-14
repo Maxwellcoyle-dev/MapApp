@@ -1,6 +1,62 @@
 .detailsContainer {
   margin-top: 20px;
-  padding: 0 1rem;
+  background-color: #dddbdb;
+  border-radius: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.googleInfoHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 1rem 1.5rem 0 1.5rem;
+}
+
+.googleInfoHeader h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.refreshIcon {
+  font-size: 1.5rem;
+  color: #007bff;
+  cursor: pointer;
+}
+
+.googleRatingsDiv {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 0 1.5rem;
+}
+
+.ratingText {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin-right: 10px;
+}
+
+.starContainer {
+  display: flex;
+  gap: 5px;
+}
+
+.ratingStar {
+  font-size: 1.5rem;
+  color: #ffc107;
+}
+
+.totalReviews {
+  font-size: 1rem;
+  color: #666;
+  margin-left: 10px;
+}
+
+.detailItemContainer {
+  padding: 0 1.5rem;
 }
 
 .detailItem {
@@ -11,7 +67,7 @@
 }
 
 .icon {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   color: #555;
   margin-right: 10px;
 }
@@ -21,104 +77,124 @@
   color: #333;
 }
 
-.tagsContainer {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-bottom: 15px;
-}
-
-.tags {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.tag {
-  background-color: #f1f1f1;
-  border-radius: 3px;
-  padding: 5px 10px;
-  font-size: 0.875rem;
-  color: #333;
-}
-
-.tagButton {
-  display: flex;
-  align-items: center;
-  font-size: 0.875rem;
-}
-
-.noteContainer {
+.hoursContainer {
   background-color: #f9f9f9;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-bottom: 15px;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 20px;
 }
 
-.noteText {
-  font-size: 1rem;
-  color: #333;
-  line-height: 1.4;
-}
-
-.ratingContainer {
-  margin-top: 20px;
-  padding: 0 1rem;
+.hoursText {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 10px;
 }
 
-.googleRatingsDiv,
-.myRatingDiv {
+.dayContainer {
   display: flex;
+  justify-content: space-between;
+}
+
+.day {
+  font-weight: bold;
+  color: #333;
+  font-size: 1rem;
+}
+
+.hours {
+  font-size: 1rem;
+  color: #555;
+}
+
+.reviewsContainer {
+  background-color: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.reviewsHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.reviewsHeader h3 {
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #333;
+  margin-left: 10px;
+}
+
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reviewItem {
+  display: flex;
+  gap: 15px;
   align-items: flex-start;
 }
 
-.starContainer {
+.profilePhoto {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.defaultProfileIcon {
+  font-size: 2.5rem;
+  color: #ccc;
+}
+
+.reviewContent {
+  flex: 1; /* Allow content to use all available space */
+}
+
+.authorName {
+  font-weight: bold;
+  color: #007bff;
+  font-size: 1rem;
+  margin-bottom: 5px;
+  text-decoration: none;
+}
+
+.authorName:hover {
+  text-decoration: underline;
+}
+
+.reviewRating {
   display: flex;
   align-items: center;
   gap: 5px;
+  margin-bottom: 10px;
 }
 
-.ratingStar,
-.filledStar,
-.emptyStar {
-  font-size: 1.5rem;
-  color: #ffc107;
-  touch-action: manipulation; /* Enhances touch experience */
-}
-
-.ratingText {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 5px;
-}
-
-.totalReviews {
-  font-size: 1rem;
+.reviewTime {
+  font-size: 0.875rem;
   color: #666;
+  margin-left: 10px;
 }
 
-.myRatingText {
-  font-size: 1.1rem;
-  font-weight: bold;
-  margin-bottom: 5px;
+.reviewText {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 10px;
+  line-height: 1.5;
+  max-width: 100%; /* Use full width */
+}
+
+.showMoreButton {
+  background: none;
+  border: none;
   color: #007bff;
-}
-
-.emptyStar {
-  color: #ddd;
-}
-
-.filledStar {
-  color: #ffc107;
+  font-size: 0.875rem;
   cursor: pointer;
+  padding: 0;
 }
 
-.ratingStar {
-  color: #ffc107;
+.showMoreButton:hover {
+  text-decoration: underline;
 }

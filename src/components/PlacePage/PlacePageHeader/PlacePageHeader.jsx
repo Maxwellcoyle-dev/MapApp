@@ -17,7 +17,6 @@ const PlacePageHeader = ({
   photos,
   optimalPlaceData,
   backNavigation,
-  isPlaceSaved,
   isOpen,
 }) => {
   const navigate = useNavigate();
@@ -27,7 +26,7 @@ const PlacePageHeader = ({
       <div className={styles.carouselContainer}>
         <Carousel className={styles.carousel}>
           {photos &&
-            photos.map((picUrl, index) => (
+            photos?.map((picUrl, index) => (
               <div key={index} className={styles.photoDiv}>
                 <Image
                   className={styles.mainImage}
@@ -48,7 +47,7 @@ const PlacePageHeader = ({
             className={styles.iconDiv}
             onClick={() => setShowSavePlaceModal(true)}
           >
-            {isPlaceSaved ? (
+            {optimalPlaceData.placeIsSaved ? (
               <HeartFilled
                 className={[styles.overlayIcon, styles.heartIcon].join(" ")}
               />

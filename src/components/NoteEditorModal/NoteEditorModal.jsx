@@ -13,6 +13,7 @@ const NoteEditorModal = ({
   note,
   setNote,
   optimalPlaceData,
+  userId,
 }) => {
   const [editorNote, setEditorNote] = useState(note || "");
   const { updatePlaceAsync, updatePlaceIsPending, updatePlaceIsSuccess } =
@@ -43,7 +44,7 @@ const NoteEditorModal = ({
       };
       updatePlaceAsync({
         placeId: optimalPlaceData.placeId,
-        userId: optimalPlaceData.userId,
+        userId: userId,
         placeData: newPlaceData,
       });
     }

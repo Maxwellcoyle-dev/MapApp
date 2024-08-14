@@ -1,5 +1,5 @@
 // Libraries
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Spin } from "antd";
 import { MdOutlineAdd } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 // Hooks
 import useCreateList from "../../hooks/backend-hooks/useCreateList";
 import useUserLists from "../../hooks/backend-hooks/useUserLists";
-import useUser from "../../hooks/backend-hooks/useUser";
+import useAppUser from "../../hooks/backend-hooks/useAppUser";
 
 // components
 import MyLists from "../../components/MyLists/MyLists";
@@ -21,12 +21,12 @@ import styles from "./MyListsPage.module.css";
 
 // component for creating a new list
 const MyListsPage = () => {
-  const { authUser } = useUser();
+  const { appUser } = useAppUser();
   const navigate = useNavigate();
   const { setShowCreateListModal } = useAppContext();
 
   const { listsData, listsError, isListsLoading } = useUserLists(
-    authUser?.data.userId
+    appUser?.data.userId
   );
 
   const { createListAsync, createListIsPending, createListIsSuccess } =

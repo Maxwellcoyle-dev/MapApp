@@ -1,91 +1,68 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
-import { useQueryClient } from "@tanstack/react-query";
-import usePlaceIsSaved from "./usePlaceIsSaved";
-import useUser from "./backend-hooks/useUser";
+
+import useAppUser from "./backend-hooks/useAppUser";
 import { fetchPlaceDetails } from "./google-api-hooks/useGetPlaceDetails";
 import { getPlace } from "../api/placeApi";
 
 const useGetOptimalPlaceData = (placeId) => {
-  const [optimalPlaceData, setOptimalPlaceData] = useState(null);
-  const [optimalPlaceDataLoading, setOptimalPlaceDataLoading] = useState(true);
-  const [optimalPlaceDataError, setOptimalPlaceDataError] = useState(null);
-  const { authUser } = useUser();
-  const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(placeId);
+  const { appUser } = useAppUser();
 
   const map = useMap();
   const placesLibrary = useMapsLibrary("places");
-  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    if (!placeId) {
-      setOptimalPlaceDataError("No placeId provided");
-      setOptimalPlaceDataLoading(false);
-      return;
-    }
+  const fetchData = async () => {
+    try {
+      console.log("place is saved - fetching from db");
+      const getPlaceDataReponse = await getPlace(placeId, appUser.data.userId);
+      console.log("getPlaceDataReponse", getPlaceDataReponse);
 
-    if (isPlaceSavedLoading || !authUser) {
-      return;
-    }
+      if (Object.keys(getPlaceDataReponse).length === 0) {
+        console.log("place is not saved - fetching from Google");
+        const googlePlaceData = await fetchPlaceDetails(
+          placesLibrary,
+          map,
+          placeId
+        );
+        console.log("googlePlaceData", googlePlaceData);
 
-    const fetchData = async () => {
-      try {
-        if (isPlaceSaved) {
-          console.log("place is saved - fetching from db");
-          const placeData = await getPlace(placeId, authUser.data.userId);
-          queryClient.setQueryData(
-            ["saved-place", placeId, authUser.data.userId],
-            placeData
-          );
-          setOptimalPlaceData(placeData);
-        } else {
-          console.log("place is not saved - fetching from Google");
-          const placeData = await fetchPlaceDetails(
-            placesLibrary,
-            map,
-            placeId
-          );
-          // queryClient.setQueryData(["place", placeId], placeData);
+        const newOptimalPlaceData = {
+          placeId: googlePlaceData.place_id,
+          placeName: googlePlaceData.name,
+          formattedAddress: googlePlaceData.formatted_address,
+          geometry: googlePlaceData.geometry,
+          photos: googlePlaceData.photos,
+          rating: googlePlaceData.rating,
+          userRatingsTotal: googlePlaceData.user_ratings_total,
+          openingHours: googlePlaceData.opening_hours,
+          website: googlePlaceData.website,
+          placeUrl: googlePlaceData.url,
+          vicinity: googlePlaceData.vicinity,
+          formattedPhoneNumber: googlePlaceData.formatted_phone_number,
+          businessStatus: googlePlaceData.business_status,
+          placeIsSaved: false,
+          reviews: googlePlaceData.reviews,
+        };
+        console.log("newOptimalPlaceData", newOptimalPlaceData);
 
-          console.log("placeData", placeData);
-
-          const newOptimalPlaceData = {
-            placeId: placeData.place_id,
-            placeName: placeData.name,
-            formattedAddress: placeData.formatted_address,
-            geometry: placeData.geometry,
-            photos: placeData.photos,
-            rating: placeData.rating,
-            userRatingsTotal: placeData.user_ratings_total,
-            openingHours: placeData.opening_hours,
-            website: placeData.website,
-            placeUrl: placeData.url,
-            vicinity: placeData.vicinity,
-            formattedPhoneNumber: placeData.formatted_phone_number,
-            businessStatus: placeData.business_status,
-            isSaved: false,
-            reviews: placeData.reviews,
-          };
-
-          setOptimalPlaceData(newOptimalPlaceData);
-        }
-      } catch (error) {
-        setOptimalPlaceDataError(error.message);
-      } finally {
-        setOptimalPlaceDataLoading(false);
+        return newOptimalPlaceData;
+      } else {
+        return getPlaceDataReponse;
       }
-    };
+    } catch (error) {
+      console.error("Failed to get place data:", error);
+    }
+  };
 
-    fetchData();
-  }, [
-    placeId,
-    isPlaceSaved,
-    isPlaceSavedLoading,
-    authUser,
-    placesLibrary,
-    map,
-    queryClient,
-  ]);
+  const {
+    data: optimalPlaceData,
+    isLoading: optimalPlaceDataLoading,
+    error: optimalPlaceDataError,
+  } = useQuery({
+    queryKey: ["saved-place", placeId, appUser?.data.userId],
+    queryFn: () => fetchData(),
+    enabled: !!placeId && !!appUser,
+  });
 
   return {
     optimalPlaceData,

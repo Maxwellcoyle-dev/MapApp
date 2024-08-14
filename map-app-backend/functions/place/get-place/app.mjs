@@ -26,9 +26,24 @@ export const lambdaHandler = async (event) => {
   };
   const command = new GetItemCommand(params);
   try {
+    // get the item from the palces table
     const data = await dbclient.send(command);
-    const transformedData = transformDynamoDBData(data.Item); // Transform data here
-    console.log("Data: ", transformedData);
+    console.log("Data: ", data);
+
+    const transformedData = transformDynamoDBData(data.Item);
+    console.log("transformedData: ", transformedData);
+
+    // handle a no data found
+    if (transformedData === null) {
+      console.log("Place not found");
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({}),
+      };
+    }
+
+    // return the transformed data
     return {
       statusCode: 200,
       headers,

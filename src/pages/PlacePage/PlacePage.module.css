@@ -18,6 +18,11 @@
   background-color: white;
 }
 
+.scrollContainer {
+  overflow-y: auto;
+  height: 100vh;
+}
+
 .optionsDiv {
   display: flex;
   justify-content: space-around;
