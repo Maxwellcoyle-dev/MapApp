@@ -1,8 +1,9 @@
 .detailsContainer {
   margin-top: 20px;
-  background-color: #dddbdb;
+  background-color: #f0f0f0; /* Lighter background for a modern, clean look */
   border-radius: 12px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem; /* Added padding to the container for consistent spacing */
 }
 
 .googleInfoHeader {
@@ -10,32 +11,26 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
-  padding: 1rem 1.5rem 0 1.5rem;
 }
 
 .googleInfoHeader h2 {
   font-size: 1.5rem;
   font-weight: bold;
   color: #333;
-}
-
-.refreshIcon {
-  font-size: 1.5rem;
-  color: #007bff;
-  cursor: pointer;
+  margin: 0; /* Remove any default margin for cleaner spacing */
 }
 
 .googleRatingsDiv {
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-  padding: 0 1.5rem;
+  padding: 0; /* Removed additional padding to keep alignment consistent */
 }
 
 .ratingText {
   font-size: 2rem;
   font-weight: bold;
-  color: #333;
+  color: #444; /* Slightly darker text for contrast */
   margin-right: 10px;
 }
 
@@ -46,17 +41,17 @@
 
 .ratingStar {
   font-size: 1.5rem;
-  color: #ffc107;
+  color: #ffac33; /* Slightly warmer star color */
 }
 
 .totalReviews {
   font-size: 1rem;
-  color: #666;
+  color: #777; /* Neutral gray for secondary text */
   margin-left: 10px;
 }
 
 .detailItemContainer {
-  padding: 0 1.5rem;
+  padding: 0; /* Remove padding to align with container spacing */
 }
 
 .detailItem {
@@ -64,21 +59,22 @@
   align-items: center;
   margin-bottom: 15px;
   cursor: pointer;
+  color: #555; /* Unified text and icon color for detail items */
 }
 
 .icon {
   font-size: 1.75rem;
-  color: #555;
+  color: #555; /* Unified icon color */
   margin-right: 10px;
 }
 
 .text {
   font-size: 1rem;
-  color: #333;
+  color: #333; /* Consistent text color across the design */
 }
 
 .hoursContainer {
-  background-color: #f9f9f9;
+  background-color: #e0e0e0; /* Slightly darker background for differentiation */
   padding: 1.5rem;
   border-radius: 8px;
   margin-bottom: 20px;
@@ -107,9 +103,10 @@
 }
 
 .reviewsContainer {
-  background-color: #f9f9f9;
+  background-color: #e0e0e0; /* Match with hoursContainer for consistency */
   padding: 1.5rem;
   border-radius: 12px;
+  margin-bottom: 20px; /* Added margin-bottom for spacing between sections */
 }
 
 .reviewsHeader {
@@ -125,37 +122,19 @@
   margin-left: 10px;
 }
 
-.reviewsList {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
 .reviewItem {
   display: flex;
   gap: 15px;
   align-items: flex-start;
 }
 
-.profilePhoto {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.defaultProfileIcon {
-  font-size: 2.5rem;
-  color: #ccc;
-}
-
 .reviewContent {
-  flex: 1; /* Allow content to use all available space */
+  flex: 1;
 }
 
 .authorName {
   font-weight: bold;
-  color: #007bff;
+  color: #007bff; /* Keep primary link color consistent */
   font-size: 1rem;
   margin-bottom: 5px;
   text-decoration: none;
@@ -174,7 +153,7 @@
 
 .reviewTime {
   font-size: 0.875rem;
-  color: #666;
+  color: #777; /* Unified secondary text color */
   margin-left: 10px;
 }
 
@@ -183,13 +162,13 @@
   color: #333;
   margin-bottom: 10px;
   line-height: 1.5;
-  max-width: 100%; /* Use full width */
+  max-width: 100%;
 }
 
 .showMoreButton {
   background: none;
   border: none;
-  color: #007bff;
+  color: #007bff; /* Primary action color */
   font-size: 0.875rem;
   cursor: pointer;
   padding: 0;
