@@ -10,7 +10,7 @@ import useGetList from "../../../hooks/backend-hooks/useGetList";
 import useGetPhotos from "../../../hooks/google-api-hooks/useGetPhotos";
 import useListPlaces from "../../../hooks/backend-hooks/useListPlaces";
 import useRemoveListPlace from "../../../hooks/backend-hooks/useRemoveListPlace";
-import useUser from "../../../hooks/backend-hooks/useUser";
+import useAppUser from "../../../hooks/backend-hooks/useAppUser";
 
 // Utilities
 import {
@@ -32,7 +32,7 @@ const ListBodySection = ({ listId, showFilterForm, setShowFilterForm }) => {
   const navigate = useNavigate();
 
   // Data
-  const { authUser } = useUser();
+  const { appUser } = useAppUser();
   const { listData } = useGetList(listId);
   const { listPlacesData } = useListPlaces(listId);
   const { placesPhotos } = useGetPhotos(placeIds);
@@ -127,7 +127,7 @@ const ListBodySection = ({ listId, showFilterForm, setShowFilterForm }) => {
                   navigate={navigate}
                   removeListPlaceMutation={removeListPlaceMutation}
                   listData={listData}
-                  authUser={authUser}
+                  appUser={appUser}
                 />
               );
             })}

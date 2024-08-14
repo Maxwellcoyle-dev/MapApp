@@ -1,14 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import useUser from "./useUser";
+import useAppUser from "./useAppUser";
 
 import { createList } from "../../api/listApi";
 
-// a hook that will take in list data and create a new list using useMutation - then trigger a new query to get the updated list data using hook useUserLists.js
+// a hook that will take in list data and create a new list using useMutation - then trigger a new query to get the updated list data using hook useAppUserLists.js
 // listData = { userId, listName, listDescription, public: boolean }
 
 const useCreateList = () => {
-  const { authUser } = useUser();
+  const { appUser } = useAppUser();
   const queryClient = useQueryClient();
 
   const {
@@ -20,7 +20,7 @@ const useCreateList = () => {
     mutationFn: (listData) => {
       console.log("listData", listData);
       return createList({
-        userId: authUser.data.userId,
+        userId: appUser.data.userId,
         listName: listData.name,
         listDescription: listData.description,
         public: listData.publicList,
@@ -31,7 +31,7 @@ const useCreateList = () => {
       console.log("List created successfully!");
       console.log("data", data);
       queryClient.invalidateQueries({
-        queryKey: ["user-lists", authUser.data.userId],
+        queryKey: ["user-lists", appUser.data.userId],
       });
     },
   });

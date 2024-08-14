@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 
-import useUser from "./backend-hooks/useUser";
+import useAppUser from "./backend-hooks/useAppUser";
 import { fetchPlaceDetails } from "./google-api-hooks/useGetPlaceDetails";
 import { getPlace } from "../api/placeApi";
 
 const useGetOptimalPlaceData = (placeId) => {
-  const { authUser } = useUser();
+  const { appUser } = useAppUser();
 
   const map = useMap();
   const placesLibrary = useMapsLibrary("places");
@@ -14,7 +14,7 @@ const useGetOptimalPlaceData = (placeId) => {
   const fetchData = async () => {
     try {
       console.log("place is saved - fetching from db");
-      const getPlaceDataReponse = await getPlace(placeId, authUser.data.userId);
+      const getPlaceDataReponse = await getPlace(placeId, appUser.data.userId);
       console.log("getPlaceDataReponse", getPlaceDataReponse);
 
       if (Object.keys(getPlaceDataReponse).length === 0) {
@@ -59,9 +59,9 @@ const useGetOptimalPlaceData = (placeId) => {
     isLoading: optimalPlaceDataLoading,
     error: optimalPlaceDataError,
   } = useQuery({
-    queryKey: ["saved-place", placeId, authUser?.data.userId],
+    queryKey: ["saved-place", placeId, appUser?.data.userId],
     queryFn: () => fetchData(),
-    enabled: !!placeId && !!authUser,
+    enabled: !!placeId && !!appUser,
   });
 
   return {

@@ -7,7 +7,7 @@ import DeletePlaceModal from "../../../DeletePlaceModal/DeletePlaceModal";
 
 import styles from "./ListItem.module.css";
 
-const ListItem = ({ place, firstPhoto, navigate, listData, authUser }) => {
+const ListItem = ({ place, firstPhoto, navigate, listData, appUser }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const handleDeleteClick = (e) => {
     e.stopPropagation();
@@ -78,7 +78,7 @@ const ListItem = ({ place, firstPhoto, navigate, listData, authUser }) => {
               listName: listData.data.listName.S,
             },
           ]} // Pass the list ID
-          userId={authUser.data.userId}
+          userId={appUser.data.userId}
           placeName={place.placeName.S}
           placeId={place.placeId.S}
         />

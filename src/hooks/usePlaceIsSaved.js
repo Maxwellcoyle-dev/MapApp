@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 
 import useUserLists from "./backend-hooks/useUserLists";
-import useUser from "./backend-hooks/useUser";
+import useAppUser from "./backend-hooks/useAppUser";
 
 const usePlaceIsSaved = (placeId) => {
   const [isPlaceSaved, setIsPlaceSaved] = useState(false);
   const [isPlaceSavedLoading, setIsPlaceSavedLoading] = useState(true);
 
-  const { authUser } = useUser();
+  const { appUser } = useAppUser();
 
-  const { listsData, isListsLoading } = useUserLists(authUser?.data.userId);
+  const { listsData, isListsLoading } = useUserLists(appUser?.data.userId);
 
   useEffect(() => {
     if (!isListsLoading && listsData) {

@@ -6,7 +6,7 @@ import { MdClose } from "react-icons/md";
 // hooks
 import useUserLists from "../../hooks/backend-hooks/useUserLists";
 import useSavePlace from "../../hooks/backend-hooks/useSavePlace";
-import useUser from "../../hooks/backend-hooks/useUser";
+import useAppUser from "../../hooks/backend-hooks/useAppUser";
 import useGetPhotos from "../../hooks/google-api-hooks/useGetPhotos";
 import useCreateList from "../../hooks/backend-hooks/useCreateList";
 
@@ -29,9 +29,9 @@ const SavePlaceModal = ({ visible, onClose, placeId }) => {
   const { setShowCreateListModal, showSavePlaceModal, setShowSavePlaceModal } =
     useAppContext();
 
-  const { authUser } = useUser();
+  const { appUser } = useAppUser();
   const { listsData, listsError, isListsLoading } = useUserLists(
-    authUser?.data.userId
+    appUser?.data.userId
   );
   const { placesPhotos } = useGetPhotos(placeIds);
 

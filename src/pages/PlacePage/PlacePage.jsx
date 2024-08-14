@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Spin } from "antd";
+import { getCurrentUser } from "aws-amplify/auth";
 
 // Components
 import DeletePlaceModal from "../../components/DeletePlaceModal/DeletePlaceModal";
@@ -12,7 +13,7 @@ import PlacePageActions from "../../components/PlacePage/PlacePageActions/PlaceP
 
 // Hooks
 import useUpdatePlace from "../../hooks/backend-hooks/useUpdatePlace";
-import useUser from "../../hooks/backend-hooks/useUser";
+import useAppUser from "../../hooks/backend-hooks/useAppUser";
 import useGetOptimalPlaceData from "../../hooks/useGetOptimalPlaceData";
 import useGetPhotos from "../../hooks/google-api-hooks/useGetPhotos";
 import useUserLists from "../../hooks/backend-hooks/useUserLists";
@@ -24,17 +25,35 @@ import { useAppContext } from "../../state/AppContext";
 import styles from "./PlacePage.module.css";
 
 const PlacePage = () => {
+  const [userId, setUserId] = useState("");
   const [myRating, setMyRating] = useState(0);
   const [note, setNote] = useState("");
   const [placeIds, setPlaceIds] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [listsContainingPlace, setListsContainingPlace] = useState([]);
 
+  useEffect(() => {
+    const getUser = async () => {
+      return await getCurrentUser();
+    };
+    const user = getUser();
+    console.log("user", user);
+  }, []);
+
+  // extract placeId from the URL
   const { placeId } = useParams();
+  // get the place data from the Google Places API
+  const { optimalPlaceData, optimalPlaceDataLoading, optimalPlaceDataError } =
+    useGetOptimalPlaceData(placeId);
+
+  // Get the navigate function from the useNavigate hook
   const navigate = useNavigate();
+
+  // Get the state from the location object
   const location = useLocation();
   const { state } = location;
 
+  // Get Modal Triggers from AppContext
   const {
     showSavePlaceModal,
     setShowSavePlaceModal,
@@ -44,12 +63,11 @@ const PlacePage = () => {
     setShowEditListModal,
   } = useAppContext();
 
-  const { authUser } = useUser();
-  const { listsData } = useUserLists(authUser?.data.userId);
-  // const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(placeId);
+  // get User data from the useAppUser hook
+  const { appUser } = useAppUser(userId);
 
-  const { optimalPlaceData, optimalPlaceDataLoading, optimalPlaceDataError } =
-    useGetOptimalPlaceData(placeId);
+  const { listsData } = useUserLists(appUser?.data.userId);
+  // const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(placeId);
 
   const { placesPhotos } = useGetPhotos(placeIds);
 
@@ -153,7 +171,7 @@ const PlacePage = () => {
     };
     updatePlaceAsync({
       placeId: optimalPlaceData.placeId,
-      userId: authUser.data.userId,
+      userId: appUser.data.userId,
       placeData: newPlaceData,
     });
   };
@@ -166,7 +184,7 @@ const PlacePage = () => {
     try {
       await updatePlaceAsync({
         placeId: optimalPlaceData.placeId,
-        userId: authUser.data.userId,
+        userId: appUser.data.userId,
         placeData: {
           ...optimalPlaceData,
           isSaved: true,
@@ -178,19 +196,19 @@ const PlacePage = () => {
     }
   };
 
-  if (optimalPlaceDataLoading) {
-    return (
-      <div className={styles.loadingDiv}>
-        <p>Loading place details...</p>
-        <Spin size="large" />
-      </div>
-    );
-  }
-
   if (optimalPlaceDataError) {
     return (
       <div className={styles.placeDetailsDiv}>
         <p>Error loading place details: {optimalPlaceDataError}</p>
+      </div>
+    );
+  }
+
+  if (optimalPlaceDataLoading || !optimalPlaceData) {
+    console.log("state", state);
+    return (
+      <div className={styles.loadingDiv}>
+        <Spin size="large" />
       </div>
     );
   }
@@ -243,7 +261,7 @@ const PlacePage = () => {
         visible={showDeletePlaceModal}
         onClose={() => setShowDeletePlaceModal(false)}
         listIds={listsContainingPlace}
-        userId={authUser?.data.userId}
+        userId={appUser?.data.userId}
         placeName={optimalPlaceData?.placeName}
         placeId={optimalPlaceData?.placeId}
       />

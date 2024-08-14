@@ -5,7 +5,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import isEqual from "lodash/isEqual"; // Import lodash for deep comparison
 
 // Hooks
-import useUser from "../../hooks/backend-hooks/useUser";
+import useAppUser from "../../hooks/backend-hooks/useAppUser";
 import useUpdatePlace from "../../hooks/backend-hooks/useUpdatePlace";
 import useGetPlace from "../../hooks/backend-hooks/useGetPlace";
 import useGetOptimalPlaceData from "../../hooks/useGetOptimalPlaceData";
@@ -22,11 +22,11 @@ const AddTagPage = () => {
   const { state } = location;
 
   const { placeId } = useParams();
-  const { authUser } = useUser();
+  const { appUser } = useAppUser();
 
   const { optimalPlaceData } = useGetOptimalPlaceData(
     placeId,
-    authUser?.data.userId
+    appUser?.data.userId
   );
 
   const { updatePlaceAsync, updatePlaceIsPending, updatePlaceIsSuccess } =
@@ -45,10 +45,10 @@ const AddTagPage = () => {
   }, [optimalPlaceData]);
 
   useEffect(() => {
-    if (authUser?.data?.categories) {
-      setAllTags(authUser.data.categories);
+    if (appUser?.data?.categories) {
+      setAllTags(appUser.data.categories);
     }
-  }, [authUser]);
+  }, [appUser]);
 
   // New effect to compare currentPlaceTags with optimalPlaceData.tags
   useEffect(() => {
@@ -91,7 +91,7 @@ const AddTagPage = () => {
     if (!isEqual(updatedTags, optimalPlaceData?.tags)) {
       updatePlaceAsync({
         placeId: placeId,
-        userId: authUser.data.userId,
+        userId: appUser.data.userId,
         placeData: {
           tags: updatedTags,
         },

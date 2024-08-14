@@ -7,14 +7,14 @@ import { savePlace } from "../../api/placeApi";
 import { useAppContext } from "../../state/AppContext";
 
 import useGetPlaceDetails from "../google-api-hooks/useGetPlaceDetails";
-import useUser from "./useUser";
+import useAppUser from "./useAppUser";
 
 const useSavePlace = (placeId) => {
   if (!placeId) {
     throw new Error("placeId is required");
   }
 
-  const { authUser } = useUser();
+  const { appUser } = useAppUser();
 
   const { setShowAddToList } = useAppContext();
 
@@ -32,7 +32,7 @@ const useSavePlace = (placeId) => {
   } = useMutation({
     mutationFn: (listId) => {
       return savePlace({
-        userId: authUser?.data.userId,
+        userId: appUser?.data.userId,
         listId,
         place: placeData,
       });
@@ -40,13 +40,13 @@ const useSavePlace = (placeId) => {
     onError: (error) => console.error(error),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({
-        queryKey: ["user-lists", authUser.data.userId],
+        queryKey: ["user-lists", appUser.data.userId],
       });
       queryClient.invalidateQueries({
         queryKey: [
           "saved-place",
           placeData.place_id || placeData.placeId,
-          authUser.data.userId,
+          appUser.data.userId,
         ],
       });
       queryClient.invalidateQueries({
