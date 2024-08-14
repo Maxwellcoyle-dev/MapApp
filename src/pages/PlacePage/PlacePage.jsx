@@ -176,10 +176,6 @@ const PlacePage = () => {
     });
   };
 
-  const handleTag = () => {
-    navigate(`/add-tag/${placeId}`);
-  };
-
   const handleSave = async () => {
     try {
       await updatePlaceAsync({
@@ -223,7 +219,7 @@ const PlacePage = () => {
 
   return (
     <div className={styles.placeDetailsDiv}>
-      <>
+      <div className={styles.scrollContainer}>
         <PlacePageHeader
           photos={photos}
           optimalPlaceData={optimalPlaceData}
@@ -234,7 +230,7 @@ const PlacePage = () => {
           placeId={placeId}
           // isSavedLoading={isSavedLoading}
           onSave={handleSave}
-          onTag={handleTag}
+          onTag={() => navigate(`/add-tag/${placeId}`)}
           onAddNote={() => setShowEditListModal(true)}
           tags={optimalPlaceData?.tags}
           note={note}
@@ -242,7 +238,7 @@ const PlacePage = () => {
           handleRatingClick={handleRatingClick}
         />
         <PlacePageDetails
-          totalUserRatings={optimalPlaceData?.totalUserRatings}
+          userRatingsTotal={optimalPlaceData?.userRatingsTotal}
           rating={optimalPlaceData?.rating}
           address={optimalPlaceData.formattedAddress}
           phone={optimalPlaceData.formattedPhoneNumber}
@@ -254,8 +250,11 @@ const PlacePage = () => {
               `https://www.google.com/maps/dir/?api=1&destination=${optimalPlaceData?.geometry?.location?.lat},${optimalPlaceData?.geometry?.location?.lng}`
             )
           }
+          openingHours={optimalPlaceData?.openingHours}
+          vicinity={optimalPlaceData?.vicinity}
+          reviews={optimalPlaceData?.reviews}
         />
-      </>
+      </div>
 
       <DeletePlaceModal
         visible={showDeletePlaceModal}
@@ -270,6 +269,7 @@ const PlacePage = () => {
         visible={showSavePlaceModal}
         onClose={() => setShowSavePlaceModal(false)}
         placeId={placeId} // Pass the appropriate placeId here
+        userId={appUser?.data.userId}
       />
       <NoteEditorModal
         visible={showEditListModal}
@@ -277,6 +277,7 @@ const PlacePage = () => {
         note={note}
         setNote={setNote}
         optimalPlaceData={optimalPlaceData}
+        userId={appUser?.data.userId}
       />
     </div>
   );

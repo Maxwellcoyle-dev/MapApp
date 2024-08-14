@@ -45,12 +45,7 @@ const PlacePageActions = ({
         </div>
       </div>
       <div className={styles.tagDiv}>
-        <Button
-          type="dashed"
-          className={styles.tagButton}
-          disabled={!isSaved}
-          onClick={onTag}
-        >
+        <Button type="dashed" className={styles.tagButton} onClick={onTag}>
           <PlusOutlined /> <p>Tags</p>
         </Button>
         {tags.length > 0 && (

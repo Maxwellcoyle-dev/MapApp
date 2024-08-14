@@ -22,17 +22,14 @@ import { fallbackImage } from "./fallbackImage";
 
 const { Text } = Typography;
 
-const SavePlaceModal = ({ visible, onClose, placeId }) => {
+const SavePlaceModal = ({ visible, onClose, placeId, userId }) => {
   const [placeIds, setPlaceIds] = useState([]);
   const [selectedList, setSelectedList] = useState(null);
 
   const { setShowCreateListModal, showSavePlaceModal, setShowSavePlaceModal } =
     useAppContext();
 
-  const { appUser } = useAppUser();
-  const { listsData, listsError, isListsLoading } = useUserLists(
-    appUser?.data.userId
-  );
+  const { listsData, listsError, isListsLoading } = useUserLists(userId);
   const { placesPhotos } = useGetPhotos(placeIds);
 
   const { createListAsync, createListIsPending, createListIsSuccess } =

@@ -75,20 +75,38 @@ const updatePlace = async (placeId, userId, placeData) => {
   Object.keys(filteredPlaceData).forEach((key) => {
     const attributeKey = `:${key}`;
 
-    updateExpressions.push(`${key} = ${attributeKey}`);
-
-    if (typeof filteredPlaceData[key] === "string") {
+    if (key === "reviews") {
+      updateExpressions.push(`${key} = ${attributeKey}`);
+      expressionAttributeValues[attributeKey] = {
+        L: filteredPlaceData[key].map((review) => ({
+          M: {
+            author_name: { S: review.author_name },
+            author_url: { S: review.author_url },
+            language: { S: review.language },
+            profile_photo_url: { S: review.profile_photo_url },
+            rating: { N: review.rating.toString() },
+            relative_time_description: { S: review.relative_time_description },
+            text: { S: review.text },
+            time: { N: review.time.toString() },
+          },
+        })),
+      };
+    } else if (typeof filteredPlaceData[key] === "string") {
+      updateExpressions.push(`${key} = ${attributeKey}`);
       expressionAttributeValues[attributeKey] = { S: filteredPlaceData[key] };
     } else if (typeof filteredPlaceData[key] === "number") {
+      updateExpressions.push(`${key} = ${attributeKey}`);
       expressionAttributeValues[attributeKey] = {
         N: filteredPlaceData[key].toString(),
       };
     } else if (typeof filteredPlaceData[key] === "boolean") {
+      updateExpressions.push(`${key} = ${attributeKey}`);
       expressionAttributeValues[attributeKey] = {
         BOOL: filteredPlaceData[key],
       };
     } else if (Array.isArray(filteredPlaceData[key])) {
       if (key === "tags") {
+        updateExpressions.push(`${key} = ${attributeKey}`);
         expressionAttributeValues[attributeKey] = {
           L: filteredPlaceData[key].map((tag) => ({
             M: {
@@ -100,11 +118,13 @@ const updatePlace = async (placeId, userId, placeData) => {
           })),
         };
       } else {
+        updateExpressions.push(`${key} = ${attributeKey}`);
         expressionAttributeValues[attributeKey] = {
           L: filteredPlaceData[key].map((item) => ({ S: item.toString() })),
         };
       }
     } else if (typeof filteredPlaceData[key] === "object") {
+      updateExpressions.push(`${key} = ${attributeKey}`);
       expressionAttributeValues[attributeKey] = {
         M: AWS.DynamoDB.Converter.marshall(filteredPlaceData[key]),
       };
