@@ -4,8 +4,8 @@ import { MdFormatListBulleted, MdOutlineMap } from "react-icons/md";
 import { Outlet } from "react-router-dom";
 
 // Components
-import MapView from "../../components/Main/Map/MapView";
-import MapListView from "../../components/Main/MapListView/MapListView";
+import MapView from "../../components/MapComponent/Map/MapView";
+import MapListView from "../../components/MapComponent/MapListView/MapListView";
 import SearchBar from "../../components/Search/SearchBar";
 
 // Hooks
@@ -13,9 +13,9 @@ import useGetUserLocation from "../../hooks/useGetUserLocation";
 import usePlacesSearch from "../../hooks/google-api-hooks/usePlacesSearch";
 
 // Styles
-import styles from "./Main.module.css";
+import styles from "./Home.module.css";
 
-const Main = () => {
+const Home = () => {
   const [view, setView] = useState("map");
 
   useGetUserLocation();
@@ -52,4 +52,4 @@ const Main = () => {
   );
 };
 
-export default Main;
+export default Home;

@@ -9,7 +9,8 @@ import { Layout } from "antd";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Pages
-import Main from "./pages/Main/Main";
+import Map from "./pages/Map/Map";
+import Home from "./pages/Home/Home";
 import MyAccount from "./pages/MyAccount";
 import MyListsPage from "./pages/MyListsPage/MyListsPage";
 import ListPage from "./pages/ListPage/ListPage";
@@ -62,7 +63,8 @@ function App() {
               <Routes>
                 <Route path="login" element={<SignIn />} />
                 <Route path="create-account" element={<CreateAccount />} />
-                <Route path="/" element={<Main />}>
+                <Route path="/map" element={<Map />}>
+                  <Route path="/" element={<Home />} />
                   <Route path="list/:listId" element={<ListPage />} />
                   <Route path="place/:placeId" element={<PlacePage />} />
                 </Route>
