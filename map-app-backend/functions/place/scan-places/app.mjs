@@ -3,6 +3,7 @@ import {
   GetItemCommand,
   BatchGetItemCommand,
 } from "@aws-sdk/client-dynamodb";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 const REGION = "us-east-2";
 const PLACES_TABLE = process.env.PLACES_TABLE;
@@ -66,11 +67,15 @@ export const lambdaHandler = async (event) => {
     const batchGetCommand = new BatchGetItemCommand(batchGetParams);
     const batchGetResponse = await dbclient.send(batchGetCommand);
     console.log("batchGetResponse: ", batchGetResponse);
+    const places = batchGetResponse.Responses[PLACES_TABLE].map((item) =>
+      unmarshall(item)
+    );
+    console.log("places: ", places);
 
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(batchGetResponse.Responses[PLACES_TABLE]),
+      body: JSON.stringify(places),
     };
   } catch (err) {
     console.log("Error: ", err);

@@ -62,6 +62,9 @@ export const lambdaHandler = async (event) => {
 };
 
 const updatePlace = async (placeId, userId, placeData) => {
+  console.log("Updating place...");
+  console.log("Place Data: ", placeData);
+  console.log("Place ID: ", placeId);
   const expressionAttributeValues = {};
   const updateExpressions = [];
 
