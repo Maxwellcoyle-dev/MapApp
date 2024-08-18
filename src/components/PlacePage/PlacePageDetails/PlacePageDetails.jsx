@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MdLocationOn,
   MdPhone,
@@ -10,7 +10,6 @@ import {
   MdOutlineStar,
   MdOutlineStarBorder,
   MdOutlineStarHalf,
-  MdRefresh,
   MdLocationCity,
 } from "react-icons/md";
 
@@ -26,11 +25,14 @@ const PlacePageDetails = ({
   vicinity,
   reviews,
   onDirectionsClick,
-  onRefreshClick,
 }) => {
   const [expandedReviews, setExpandedReviews] = useState(
-    new Array(reviews.length).fill(false)
+    new Array(reviews?.length).fill(false)
   );
+
+  useEffect(() => {
+    console.log("reviews", reviews);
+  }, [reviews]);
 
   const toggleReviewExpansion = (index) => {
     setExpandedReviews((prev) => {
@@ -52,7 +54,7 @@ const PlacePageDetails = ({
       <div className={styles.googleRatingsDiv}>
         <p className={styles.ratingText}>{rating.toFixed(1)}</p>
         <div className={styles.starContainer}>
-          {[1, 2, 3, 4, 5].map((star) => {
+          {[1, 2, 3, 4, 5]?.map((star) => {
             if (rating >= star) {
               return <MdOutlineStar key={star} className={styles.ratingStar} />;
             } else if (rating >= star - 0.5) {
@@ -109,7 +111,7 @@ const PlacePageDetails = ({
       <div className={styles.hoursContainer}>
         <MdSchedule className={styles.icon} />
         <div className={styles.hoursText}>
-          {openingHours.weekday_text.map((day, index) => (
+          {openingHours.weekday_text?.map((day, index) => (
             <div key={index} className={styles.dayContainer}>
               <span className={styles.day}>{day.split(": ")[0]}</span>
               <span className={styles.hours}>{day.split(": ")[1]}</span>
@@ -125,7 +127,7 @@ const PlacePageDetails = ({
           <h3>Reviews</h3>
         </div>
         <div className={styles.reviewsList}>
-          {reviews.map((review, index) => (
+          {reviews?.map((review, index) => (
             <div key={index} className={styles.reviewItem}>
               <div className={styles.reviewContent}>
                 <a

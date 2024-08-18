@@ -8,7 +8,6 @@ import PlaceDetailsCard from "../../PlaceDetailsCard/PlaceDetailsCard";
 
 // State
 import { useMapContext } from "../../../state/MapContext";
-import { useAppContext } from "../../../state/AppContext";
 import { useSearchContext } from "../../../state/SearchContext";
 
 // Hooks
@@ -27,42 +26,29 @@ const mapOptions = {
   gestureHandling: "greedy",
 };
 
-const MapView = ({ placesResults }) => {
+const MapView = ({ markerList, mapHeight }) => {
+  const { selectedPlace } = useSearchContext();
+  const { center, zoom, mapSize, mapLayout, isMapVisible } = useMapContext();
+
+  useEffect(() => {
+    console.log("selectedPlace", selectedPlace);
+    console.log("markerList", markerList);
+  }, [selectedPlace, markerList]);
+
   // Custom hook to handle marker click
   const handleMarkerClick = useMarkerClick();
 
-  // Get user's location from AppContext
-  const { userLocation } = useAppContext();
-
-  const { center, setCenter, setZoom, zoom } = useMapContext();
-  const { searchQuery, setAutoCompleteResults, selectedPlace, searchResults } =
-    useSearchContext();
-
-  useEffect(() => {
-    console.log("selecetdPlace: ", selectedPlace);
-    console.log("searchResults: ", searchResults);
-  }, [selectedPlace, searchResults]);
-
-  useEffect(() => {
-    if (userLocation) {
-      setCenter(userLocation);
-    }
-  }, [userLocation]);
-
-  useEffect(() => {
-    if (searchQuery === "") {
-      setAutoCompleteResults([]);
-      setZoom(12);
-    }
-  }, [searchQuery]);
+  if (!isMapVisible) return null;
 
   return (
-    <div className={styles.mapViewContainer}>
+    <div
+      className={`${styles.mapViewContainer} ${styles[mapLayout]} ${styles[mapSize]}`}
+      style={mapHeight !== null && { height: `${mapHeight}px` }}
+    >
       <Map
         mapId={"126ae8e8ffefefdf"}
         style={{
           width: "100vw",
-          height: "calc(100vh - 10rem)",
           overflow: "hidden",
         }}
         defaultCenter={center}
@@ -70,30 +56,37 @@ const MapView = ({ placesResults }) => {
         zoom={zoom}
         options={mapOptions}
       >
-        <MapComponent setCenter={setCenter} setZoom={setZoom} />
-        {placesResults?.map((marker) => (
-          <AdvancedMarker
-            key={marker.place_id}
-            position={{
-              lat: marker?.geometry.location.lat(),
-              lng: marker?.geometry.location.lng(),
-            }}
-            onClick={() => {
-              handleMarkerClick(marker);
-            }}
-          >
-            {marker.place_id === selectedPlace?.place_id ? (
-              <Pin
-                background={"blue"}
-                glyphColor={"gray"}
-                borderColor={"gray"}
-              />
-            ) : (
-              <Pin background={""} glyphColor={""} borderColor={""} />
-            )}
-          </AdvancedMarker>
-        ))}
-        {selectedPlace?.place_id && <PlaceDetailsCard />}
+        <MapComponent />
+        {markerList?.length !== 0 &&
+          markerList?.map((marker) => {
+            const placeId = marker.placeId;
+            return (
+              <AdvancedMarker
+                key={placeId}
+                position={
+                  placeId && {
+                    lng: marker?.geometry?.location?.lng,
+                    lat: marker?.geometry?.location?.lat,
+                  }
+                }
+                onClick={() => {
+                  handleMarkerClick(marker);
+                }}
+              >
+                {placeId === selectedPlace?.placeId ? (
+                  <Pin
+                    background={"blue"}
+                    glyphColor={"gray"}
+                    borderColor={"gray"}
+                  />
+                ) : (
+                  <Pin background={""} glyphColor={""} borderColor={""} />
+                )}
+              </AdvancedMarker>
+            );
+          })}
+
+        {selectedPlace?.placeId && <PlaceDetailsCard />}
       </Map>
     </div>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Image, Spin, Button, Form, Typography } from "antd";
+import { Modal, Spin, Button, Form, Typography } from "antd";
 import { FolderAddOutlined } from "@ant-design/icons";
 import { MdClose } from "react-icons/md";
 
@@ -7,7 +7,6 @@ import { MdClose } from "react-icons/md";
 import useUserLists from "../../hooks/backend-hooks/useUserLists";
 import useSavePlace from "../../hooks/backend-hooks/useSavePlace";
 import useAppUser from "../../hooks/backend-hooks/useAppUser";
-import useGetPhotos from "../../hooks/google-api-hooks/useGetPhotos";
 import useCreateList from "../../hooks/backend-hooks/useCreateList";
 
 // state
@@ -18,37 +17,25 @@ import CreateListModal from "../CreateListModal/CreateListModal";
 
 // styles & assets
 import styles from "./SavePlaceModal.module.css";
-import { fallbackImage } from "./fallbackImage";
 
 const { Text } = Typography;
 
-const SavePlaceModal = ({ visible, onClose, placeId, userId }) => {
-  const [placeIds, setPlaceIds] = useState([]);
+const SavePlaceModal = ({ visible, onClose, placeId }) => {
   const [selectedList, setSelectedList] = useState(null);
 
-  const { setShowCreateListModal, showSavePlaceModal, setShowSavePlaceModal } =
-    useAppContext();
+  const { appUser } = useAppUser();
 
-  const { listsData, listsError, isListsLoading } = useUserLists(userId);
-  const { placesPhotos } = useGetPhotos(placeIds);
+  const { setShowCreateListModal } = useAppContext();
+
+  const { listsData, listsError, isListsLoading } = useUserLists(
+    appUser?.data?.userId
+  );
 
   const { createListAsync, createListIsPending, createListIsSuccess } =
     useCreateList();
+
   const { savePlaceAsync, savePlaceIsPending, savePlaceIsSuccess } =
     useSavePlace(placeId);
-
-  useEffect(() => {
-    console.log("listData", listsData);
-  }, [listsData]);
-
-  useEffect(() => {
-    if (listsData) {
-      const ids = listsData?.data
-        .map((list) => list.places?.L?.[0]?.M?.placeId?.S)
-        .filter(Boolean); // Filter out any undefined or null values
-      setPlaceIds(ids);
-    }
-  }, [listsData]);
 
   useEffect(() => {
     if (savePlaceIsSuccess) {
@@ -129,14 +116,6 @@ const SavePlaceModal = ({ visible, onClose, placeId, userId }) => {
                   }`}
                   onClick={() => handleListSelection(list.listId.S)}
                 >
-                  <div className={styles.imageDiv}>
-                    <Image
-                      className={styles.image}
-                      src={placesPhotos && placesPhotos[index]?.[0].getUrl()}
-                      fallback={fallbackImage}
-                      preview={false}
-                    />
-                  </div>
                   <div className={styles.textDiv}>
                     <h4>{list.listName.S}</h4>
                     <p>{list.places?.L.length || 0} saved</p>

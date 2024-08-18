@@ -1,6 +1,13 @@
-.mapviewContainer {
+/* MapView.module.css */
+.mapViewContainer {
   position: relative;
-  height: 100%;
   width: 100%;
-  overflow: hidden;
+}
+
+.full {
+  height: calc(100vh - 10rem);
+}
+
+.small {
+  height: 30vh;
 }

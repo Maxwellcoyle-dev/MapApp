@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 // Components
+import MapView from "../../MapComponent/Map/MapView";
 import ListItem from "./ListItem/ListItem";
 import FilterForm from "./FilterForm/FilterForm";
 
@@ -28,6 +29,7 @@ const ListBodySection = ({ listId, showFilterForm, setShowFilterForm }) => {
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(true);
+  const [showMap, setShowMap] = useState(false);
 
   const navigate = useNavigate();
 
@@ -48,7 +50,8 @@ const ListBodySection = ({ listId, showFilterForm, setShowFilterForm }) => {
   useEffect(() => {
     console.log("listPlacesData: ", listPlacesData);
     if (listPlacesData) {
-      const placeIds = listPlacesData.map((place) => place.placeId.S);
+      const placeIds = listPlacesData.map((place) => place.placeId);
+      console.log("placeIds: ", placeIds);
       setPlaceIds(placeIds);
       setFilteredPlaces(listPlacesData); // Initialize filtered places
       setLoading(false);
@@ -104,35 +107,30 @@ const ListBodySection = ({ listId, showFilterForm, setShowFilterForm }) => {
           clearFilters={clearFilters}
         />
       </div>
-      {loading ? (
-        <div className={styles.loading}>Loading...</div>
-      ) : (
-        <div className={styles.listItemContainer}>
-          {listData && !filteredPlaces.length && (
-            <div className={styles.noDataMessage}>No places in this list.</div>
-          )}
-          {listData &&
-            filteredPlaces.map((place, index) => {
-              console.log("place: ", place);
-              console.log("placesPhotos: ", placesPhotos);
-              const photo = placesPhotos?.[index]?.find(
-                (p) => p.width > p.height
-              );
-              const firstPhoto = photo ? photo.getUrl() : null;
-              return (
-                <ListItem
-                  key={place.placeId.S}
-                  place={place}
-                  firstPhoto={firstPhoto}
-                  navigate={navigate}
-                  removeListPlaceMutation={removeListPlaceMutation}
-                  listData={listData}
-                  appUser={appUser}
-                />
-              );
-            })}
-        </div>
-      )}
+      <div className={styles.listItemContainer}>
+        <MapView markerList={filteredPlaces} mapHeight={!showMap ? 0 : null} />
+        {listData &&
+          filteredPlaces?.map((place, index) => {
+            console.log("place: ", place);
+            const photo = placesPhotos?.[index]?.find(
+              (p) => p.width > p.height
+            );
+            console.log("photo: ", photo);
+            console.log("placesPhotos: ", placesPhotos);
+            const firstPhoto = photo ? photo.getUrl() : null;
+            return (
+              <ListItem
+                key={place.placeId.S}
+                place={place}
+                firstPhoto={firstPhoto}
+                navigate={navigate}
+                removeListPlaceMutation={removeListPlaceMutation}
+                listData={listData}
+                appUser={appUser}
+              />
+            );
+          })}
+      </div>
     </div>
   );
 };

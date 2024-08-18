@@ -4,8 +4,9 @@ export const extractPlaceTypes = (placesData) => {
 };
 
 export const extractVicinities = (placesData) => {
+  console.log("placesData", placesData);
   const vicinities = placesData.map((place) => {
-    const vicinity = place.vicinity?.S.split(", ").pop();
+    const vicinity = place.vicinity?.split(", ").pop();
     return vicinity;
   });
   return [...new Set(vicinities)]; // Remove duplicates
@@ -13,11 +14,11 @@ export const extractVicinities = (placesData) => {
 
 export const extractCategoryTags = (placesData) => {
   return placesData.reduce((acc, place) => {
-    place.tags?.L.forEach((tag) => {
-      const categoryName = tag.M.categoryName.S;
-      const tagName = tag.M.tagName.S;
-      const tagId = tag.M.tagId.S;
-      const categoryId = tag.M.categoryId.S;
+    place.tags?.forEach((tag) => {
+      const categoryName = tag.categoryName;
+      const tagName = tag.tagName;
+      const tagId = tag.tagId;
+      const categoryId = tag.categoryId;
 
       if (!acc[categoryName]) {
         acc[categoryName] = { categoryId, tags: [] };
@@ -41,31 +42,29 @@ export const handleFilter = (
 
   if (filters.name) {
     filtered = filtered.filter((place) =>
-      place.name.S.toLowerCase().includes(filters.name.toLowerCase())
+      place.name.toLowerCase().includes(filters.name.toLowerCase())
     );
   }
 
   if (filters.rating) {
-    filtered = filtered.filter((place) => place.rating?.N >= filters.rating);
+    filtered = filtered.filter((place) => place?.rating >= filters.rating);
   }
 
   if (filters.tags && filters.tags.length > 0) {
     filtered = filtered.filter((place) =>
-      filters.tags.every((tag) =>
-        place.tags?.L.some((t) => t.M.tagId.S === tag)
-      )
+      filters.tags.every((tag) => place.tags?.some((t) => t.tagId === tag))
     );
   }
 
   if (filters.types && filters.types.length > 0) {
     filtered = filtered.filter((place) =>
-      filters.types.every((type) => place.types?.SS.includes(type))
+      filters.types.every((type) => place.types?.includes(type))
     );
   }
 
   if (filters.vicinity) {
     filtered = filtered.filter((place) =>
-      place.vicinity?.S.includes(filters.vicinity)
+      place.vicinity?.includes(filters.vicinity)
     );
   }
 

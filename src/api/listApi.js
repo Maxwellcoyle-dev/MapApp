@@ -12,6 +12,7 @@ export const scanLists = async (userId) => {
       userId,
     },
   });
+  console.log("response", response);
   return response.data;
 };
 

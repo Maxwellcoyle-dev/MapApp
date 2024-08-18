@@ -24,26 +24,39 @@ const useGetOptimalPlaceData = (placeId) => {
           map,
           placeId
         );
-        console.log("googlePlaceData", googlePlaceData);
+        console.log("googlePlaceData response object", googlePlaceData);
+
+        const location = {
+          lat: googlePlaceData.geometry.location.lat(),
+          lng: googlePlaceData.geometry.location.lng(),
+        };
+        const geometry = {
+          location: location,
+          viewport: googlePlaceData.geometry.viewport,
+        };
 
         const newOptimalPlaceData = {
           placeId: googlePlaceData.place_id,
           placeName: googlePlaceData.name,
-          formattedAddress: googlePlaceData.formatted_address,
-          geometry: googlePlaceData.geometry,
+          formatted_address: googlePlaceData.formatted_address,
+          geometry: geometry,
           photos: googlePlaceData.photos,
           rating: googlePlaceData.rating,
-          userRatingsTotal: googlePlaceData.user_ratings_total,
-          openingHours: googlePlaceData.opening_hours,
+          user_ratings_total: googlePlaceData.user_ratings_total,
+          opening_hours: googlePlaceData.opening_hours,
           website: googlePlaceData.website,
           placeUrl: googlePlaceData.url,
           vicinity: googlePlaceData.vicinity,
-          formattedPhoneNumber: googlePlaceData.formatted_phone_number,
-          businessStatus: googlePlaceData.business_status,
+          formatted_phone_number: googlePlaceData.formatted_phone_number,
+          business_status: googlePlaceData.business_status,
           placeIsSaved: false,
           reviews: googlePlaceData.reviews,
+          types: googlePlaceData.types,
         };
-        console.log("newOptimalPlaceData", newOptimalPlaceData);
+        console.log(
+          "newOptimalPlaceData from google place data",
+          newOptimalPlaceData
+        );
 
         return newOptimalPlaceData;
       } else {

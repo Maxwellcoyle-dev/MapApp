@@ -74,6 +74,10 @@ const PlacePage = () => {
   const { updatePlaceAsync } = useUpdatePlace();
 
   const isOpen = (periods) => {
+    console.log("periods", periods);
+    if (!periods) {
+      return false;
+    }
     const now = new Date();
     const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
     const currentTime = `${now.getHours().toString().padStart(2, "0")}${now
@@ -224,7 +228,7 @@ const PlacePage = () => {
           photos={photos}
           optimalPlaceData={optimalPlaceData}
           backNavigation={state?.from !== "addToList" ? -1 : "/"}
-          isOpen={isOpen(optimalPlaceData?.openingHours?.periods)}
+          isOpen={isOpen(optimalPlaceData?.opening_hours?.periods)}
         />
         <PlacePageActions
           placeId={placeId}
@@ -238,19 +242,19 @@ const PlacePage = () => {
           handleRatingClick={handleRatingClick}
         />
         <PlacePageDetails
-          userRatingsTotal={optimalPlaceData?.userRatingsTotal}
+          userRatingsTotal={optimalPlaceData?.total_user_ratings}
           rating={optimalPlaceData?.rating}
-          address={optimalPlaceData.formattedAddress}
-          phone={optimalPlaceData.formattedPhoneNumber}
+          address={optimalPlaceData.formatted_address}
+          phone={optimalPlaceData.formatted_phone_number}
           website={optimalPlaceData.website}
           tags={optimalPlaceData.tags}
-          status={optimalPlaceData.businessStatus}
+          status={optimalPlaceData.business_status}
           onDirectionsClick={() =>
             window.open(
               `https://www.google.com/maps/dir/?api=1&destination=${optimalPlaceData?.geometry?.location?.lat},${optimalPlaceData?.geometry?.location?.lng}`
             )
           }
-          openingHours={optimalPlaceData?.openingHours}
+          openingHours={optimalPlaceData?.opening_hours}
           vicinity={optimalPlaceData?.vicinity}
           reviews={optimalPlaceData?.reviews}
         />

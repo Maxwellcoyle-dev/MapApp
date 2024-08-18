@@ -2,8 +2,12 @@
 import { useEffect } from "react";
 import { useMap } from "@vis.gl/react-google-maps";
 
-const MapComponent = ({ setCenter, setZoom }) => {
+// Context
+import { useMapContext } from "../../../state/MapContext";
+
+const MapComponent = () => {
   const map = useMap();
+  const { setCenter, setZoom } = useMapContext();
 
   useEffect(() => {
     if (!map) return;

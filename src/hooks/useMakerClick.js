@@ -11,10 +11,7 @@ const useMarkerClick = () => {
 
     try {
       setZoom(14);
-      setCenter({
-        lat: place.geometry.location.lat(),
-        lng: place.geometry.location.lng(),
-      });
+      setCenter(place.geometry.location);
       setSelectedPlace(place);
     } catch (error) {
       console.error("Error fetching place details:", error);

@@ -22,12 +22,11 @@ import styles from "./MyListsPage.module.css";
 // component for creating a new list
 const MyListsPage = () => {
   const { appUser } = useAppUser();
-  const navigate = useNavigate();
-  const { setShowCreateListModal } = useAppContext();
+  const { listsData, isListsLoading } = useUserLists(appUser?.data.userId);
 
-  const { listsData, listsError, isListsLoading } = useUserLists(
-    appUser?.data.userId
-  );
+  const navigate = useNavigate();
+
+  const { setShowCreateListModal } = useAppContext();
 
   const { createListAsync, createListIsPending, createListIsSuccess } =
     useCreateList();

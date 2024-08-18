@@ -8,17 +8,24 @@ import MapView from "../../components/MapComponent/Map/MapView";
 import MapListView from "../../components/MapComponent/MapListView/MapListView";
 import SearchBar from "../../components/Search/SearchBar";
 
-// Hooks
-import useGetUserLocation from "../../hooks/useGetUserLocation";
 import usePlacesSearch from "../../hooks/google-api-hooks/usePlacesSearch";
+
+// State
+import { useAppContext } from "../../state/AppContext";
+import { useMapContext } from "../../state/MapContext";
 
 // Styles
 import styles from "./Home.module.css";
 
 const Home = () => {
-  const [view, setView] = useState("map");
+  const { userLocation } = useAppContext();
+  const { setCenter, mapView, setMapView } = useMapContext();
 
-  useGetUserLocation();
+  useEffect(() => {
+    if (userLocation) {
+      setCenter(userLocation);
+    }
+  }, [userLocation]);
 
   const { placesResults, isPlacesResultsLoading } = usePlacesSearch();
 
@@ -26,23 +33,25 @@ const Home = () => {
     <div className={styles.mainContainer}>
       <Outlet />
       <SearchBar />
-      <MapView placesResults={placesResults} setView={setView} />
-      {view === "list" && (
+      <MapView markerList={placesResults} />
+      {mapView === "list" && (
         <MapListView
           placesResults={placesResults}
           isPlacesResultsLoading={isPlacesResultsLoading}
-          setView={setView}
         />
       )}
-      {view === "map" ? (
-        <div className={styles.toggleButtonDiv} onClick={() => setView("list")}>
+      {mapView === "map" ? (
+        <div
+          className={styles.toggleButtonDiv}
+          onClick={() => setMapView("list")}
+        >
           <MdFormatListBulleted className={styles.viewToggleIcon} />
         </div>
       ) : (
-        view === "list" && (
+        mapView === "list" && (
           <div
             className={styles.toggleButtonDiv}
-            onClick={() => setView("map")}
+            onClick={() => setMapView("map")}
           >
             <MdOutlineMap className={styles.viewToggleIcon} />
           </div>
