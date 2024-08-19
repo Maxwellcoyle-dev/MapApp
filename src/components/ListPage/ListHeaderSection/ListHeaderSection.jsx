@@ -30,20 +30,21 @@ const ListHeaderSection = ({ listPageState, listId }) => {
   const { refetchListPlaces } = useListPlaces(listId);
 
   useEffect(() => {
-    setName(listData?.data?.listName?.S);
-    setDescription(listData?.data?.listDescription?.S);
+    console.log("listData", listData);
+    setName(listData?.data?.listName);
+    setDescription(listData?.data?.listDescription);
   }, [listData]);
 
   const handleUpdateList = (values) => {
     setDescription(values.description);
     setName(values.name);
     updateListAsync({
-      listId: listPageState.listId.S,
+      listId: listPageState.listId,
       listData: {
         name: values.name,
         description: values.description,
         isPublic: false,
-        userId: listPageState.userId.S,
+        userId: listPageState.userId,
       },
     });
   };
@@ -51,9 +52,9 @@ const ListHeaderSection = ({ listPageState, listId }) => {
   return (
     <div>
       <ListHeader
-        listName={name ? name : listPageState?.listName.S}
+        listName={name ? name : listPageState?.listName}
         listDescription={
-          description ? description : listPageState?.listDescription?.S
+          description ? description : listPageState?.listDescription
         }
         refetchListPlaces={refetchListPlaces}
       />

@@ -4,6 +4,7 @@
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  padding-top: 0;
 }
 
 .filterFormContainer {
@@ -11,6 +12,7 @@
   z-index: 7;
   width: 100%;
   max-height: 100%;
+  min-height: 4rem;
   overflow-y: auto;
   background: white;
   border-bottom-right-radius: 0.5rem;
@@ -28,10 +30,28 @@
 .listItemContainer {
   flex: 1;
   overflow-y: auto;
-  padding-top: 5rem;
 }
 
 .formDiv {
   width: 100%;
   background: white;
+}
+
+.toggleButtonDiv {
+  position: absolute;
+  z-index: 15;
+  bottom: 3rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  background-color: white;
+  padding: 0.5rem;
+  box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.2);
+}
+
+.viewToggleIcon {
+  width: 2rem;
+  height: 2rem;
 }

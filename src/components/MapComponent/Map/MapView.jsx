@@ -1,6 +1,6 @@
 // Libraries
-import React, { useEffect } from "react";
-import { Map, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
+import React, { useEffect, useState } from "react";
+import { Map, AdvancedMarker, Pin, useMap } from "@vis.gl/react-google-maps";
 
 // Components
 import MapComponent from "./MapComponent";
@@ -26,31 +26,28 @@ const mapOptions = {
   gestureHandling: "greedy",
 };
 
-const MapView = ({ markerList, mapHeight }) => {
+const MapView = ({ markerList, showMap = true, page = "home" }) => {
   const { selectedPlace } = useSearchContext();
-  const { center, zoom, mapSize, mapLayout, isMapVisible } = useMapContext();
+  const { center, zoom, isMapVisible } = useMapContext();
 
-  useEffect(() => {
-    console.log("selectedPlace", selectedPlace);
-    console.log("markerList", markerList);
-  }, [selectedPlace, markerList]);
-
-  // Custom hook to handle marker click
   const handleMarkerClick = useMarkerClick();
 
-  if (!isMapVisible) return null;
+  useEffect(() => {
+    console.log("MapView mounted");
+    console.log("center", center);
+    console.log("zoom", zoom);
+  }, [center, zoom]);
 
   return (
     <div
-      className={`${styles.mapViewContainer} ${styles[mapLayout]} ${styles[mapSize]}`}
-      style={mapHeight !== null && { height: `${mapHeight}px` }}
+      className={
+        (page === "home" && styles.mapViewContainer) ||
+        (page === "list" && styles.mapViewContainerList)
+      }
+      style={showMap ? { height: "100vh" } : { height: 0 }}
     >
       <Map
         mapId={"126ae8e8ffefefdf"}
-        style={{
-          width: "100vw",
-          overflow: "hidden",
-        }}
         defaultCenter={center}
         center={center}
         zoom={zoom}

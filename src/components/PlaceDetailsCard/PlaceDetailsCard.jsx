@@ -33,20 +33,11 @@ const PlaceDetailsCard = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("Place Details Card Mounting");
-    console.log("selectedPlace: ", selectedPlace);
-  }, [selectedPlace]);
-
   const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(
     selectedPlace?.placeId
   );
 
   const { placesPhotos } = useGetPhotos([selectedPlace?.placeId]);
-
-  useEffect(() => {
-    console.log("placesPhotos: ", placesPhotos);
-  }, [placesPhotos]);
 
   useEffect(() => {
     if (selectedPlace?.photos) {

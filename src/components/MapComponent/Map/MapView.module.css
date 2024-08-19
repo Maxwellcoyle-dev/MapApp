@@ -4,6 +4,13 @@
   width: 100%;
 }
 
+.mapViewContainerList {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 4rem);
+  padding-top: 4rem;
+}
+
 .full {
   height: calc(100vh - 10rem);
 }

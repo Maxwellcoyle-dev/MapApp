@@ -57,6 +57,7 @@ const SavePlaceModal = ({ visible, onClose, placeId }) => {
 
   const handleConfirm = async () => {
     if (selectedList) {
+      console.log("selectedList: ", selectedList);
       await savePlaceAsync(selectedList);
     } else {
       console.error("No list ID selected for saving.");
@@ -112,13 +113,13 @@ const SavePlaceModal = ({ visible, onClose, placeId }) => {
                 <div
                   key={index}
                   className={`${styles.cardDiv} ${
-                    selectedList === list.listId.S ? styles.selected : ""
+                    selectedList === list.listId ? styles.selected : ""
                   }`}
-                  onClick={() => handleListSelection(list.listId.S)}
+                  onClick={() => handleListSelection(list.listId)}
                 >
                   <div className={styles.textDiv}>
-                    <h4>{list.listName.S}</h4>
-                    <p>{list.places?.L.length || 0} saved</p>
+                    <h4>{list.listName}</h4>
+                    <p>{list.places?.length || 0} saved</p>
                   </div>
                 </div>
               ))

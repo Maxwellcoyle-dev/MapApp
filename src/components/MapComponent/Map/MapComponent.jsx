@@ -10,6 +10,11 @@ const MapComponent = () => {
   const { setCenter, setZoom } = useMapContext();
 
   useEffect(() => {
+    console.log("MapComponent mounted");
+    console.log(map);
+  }, []);
+
+  useEffect(() => {
     if (!map) return;
 
     const centerChangedListener = map.addListener("center_changed", () => {

@@ -15,8 +15,6 @@ const useSavePlace = (placeId) => {
 
   const { appUser } = useAppUser();
 
-  const { setShowAddToList } = useAppContext();
-
   console.log("placeId: ", placeId);
 
   const { optimalPlaceData } = useGetOptimalPlaceData(placeId);
@@ -48,20 +46,17 @@ const useSavePlace = (placeId) => {
       queryClient.invalidateQueries({
         queryKey: [
           "saved-place",
-          optimalPlaceData.place_id || optimalPlaceData.placeId,
+          optimalPlaceData.placeId,
           appUser.data.userId,
         ],
       });
       queryClient.invalidateQueries({
         queryKey: ["list-places", variables.listId],
       });
-      setShowAddToList(false);
-      navigate(
-        `/place/${optimalPlaceData.place_id || optimalPlaceData.placeId}`,
-        {
-          state: { from: "addToList" },
-        }
-      );
+
+      navigate(`/place/${optimalPlaceData.placeId}`, {
+        state: { from: "addToList" },
+      });
     },
   });
 

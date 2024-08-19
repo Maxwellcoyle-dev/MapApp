@@ -5,7 +5,7 @@ const useRemoveListPlace = () => {
   const queryClient = useQueryClient();
 
   const removeListPlaceMutation = useMutation({
-    mutationFn: async ({ listIds, placeId, userId }) => {
+    mutationFn: async ({ listIds, placeId, userId, placeData }) => {
       console.log("listIds", listIds);
       console.log("placeId", placeId);
       console.log("userId", userId);
@@ -13,14 +13,19 @@ const useRemoveListPlace = () => {
       return removePlaceResponse;
     },
     onSuccess: (data, variables) => {
-      // Invalidate queries for each listId in the array
-      variables.listIds.forEach((listId) => {
-        queryClient.invalidateQueries(["get-list", listId]);
-        queryClient.invalidateQueries(["list-places", listId]);
-      });
-      // Optionally, invalidate the user's lists and saved places queries
       queryClient.invalidateQueries(["user-lists", variables.userId]);
-      queryClient.invalidateQueries(["place-saved", variables.placeId]); // Assuming you have a query to check if a place is saved
+      queryClient.invalidateQueries("list-places");
+      const qData = queryClient.getQueryData(["list-places"]);
+      console.log("qData", qData);
+      queryClient.setQueryData(
+        ["saved-place", variables.placeId, variables.userId],
+        (oldData) => {
+          return {
+            ...oldData,
+            placeIsSaved: false,
+          };
+        }
+      );
     },
     onError: (error) => console.error(error),
   });

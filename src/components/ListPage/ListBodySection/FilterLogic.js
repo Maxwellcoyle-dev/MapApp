@@ -4,7 +4,6 @@ export const extractPlaceTypes = (placesData) => {
 };
 
 export const extractVicinities = (placesData) => {
-  console.log("placesData", placesData);
   const vicinities = placesData.map((place) => {
     const vicinity = place.vicinity?.split(", ").pop();
     return vicinity;
@@ -38,8 +37,6 @@ export const handleFilter = (
 ) => {
   let filtered = listPlacesData;
 
-  console.log("Applying filters:", filters);
-
   if (filters.name) {
     filtered = filtered.filter((place) =>
       place.name.toLowerCase().includes(filters.name.toLowerCase())
@@ -68,7 +65,6 @@ export const handleFilter = (
     );
   }
 
-  console.log("Filtered places:", filtered);
   setFilteredPlaces(filtered);
   setShowFilterForm(false);
 };

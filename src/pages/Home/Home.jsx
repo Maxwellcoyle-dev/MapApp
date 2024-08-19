@@ -22,6 +22,10 @@ const Home = () => {
   const { setCenter, mapView, setMapView } = useMapContext();
 
   useEffect(() => {
+    console.log("home page mounted");
+  }, []);
+
+  useEffect(() => {
     if (userLocation) {
       setCenter(userLocation);
     }

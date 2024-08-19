@@ -22,25 +22,23 @@ const MyLists = (userLists) => {
         <div className={styles.listContainer}>
           {userLists.userLists.map((list) => {
             const createdAt = new Date(
-              parseInt(list.createdAt.N)
+              parseInt(list.createdAt)
             ).toLocaleDateString();
 
             return (
               <div
                 className={styles.listDiv}
-                key={list.listId.S}
+                key={list.listId}
                 onClick={
-                  list.places?.L.length > 0
-                    ? () => navigate(`/list/${list.listId.S}`, { state: list })
+                  list.places?.length > 0
+                    ? () => navigate(`/list/${list.listId}`, { state: list })
                     : warning
                 }
               >
-                <h2>{list.listName.S}</h2>
-                <p>
-                  {list.description?.S && `Description: ${list.description.S}`}
-                </p>
+                <h2>{list.listName}</h2>
+                <p>{list.description && `Description: ${list.description}`}</p>
                 <p>Created on: {createdAt}</p>
-                <p>Number of Places: {list.places?.L.length || 0}</p>
+                <p>Number of Places: {list.places?.length || 0}</p>
               </div>
             );
           })}
