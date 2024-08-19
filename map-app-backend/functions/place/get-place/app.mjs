@@ -1,4 +1,5 @@
 import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 const REGION = "us-east-2";
 const PLACE_TABLE = process.env.PLACE_TABLE;
@@ -30,11 +31,9 @@ export const lambdaHandler = async (event) => {
     const data = await dbclient.send(command);
     console.log("Data: ", data);
 
-    const transformedData = transformDynamoDBData(data.Item);
-    console.log("transformedData: ", transformedData);
-
     // handle a no data found
-    if (transformedData === null) {
+    console.log("data.Item: ", data.Item);
+    if (!data.Item) {
       console.log("Place not found");
       return {
         statusCode: 200,
@@ -42,12 +41,14 @@ export const lambdaHandler = async (event) => {
         body: JSON.stringify({}),
       };
     }
+    const unmarshalledData = unmarshall(data.Item);
+    console.log("unmarshalledData: ", unmarshalledData);
 
     // return the transformed data
     return {
       statusCode: 200,
       headers,
-      body: JSON.stringify(transformedData),
+      body: JSON.stringify(unmarshalledData),
     };
   } catch (err) {
     console.error(err);
@@ -57,24 +58,4 @@ export const lambdaHandler = async (event) => {
       body: JSON.stringify(err),
     };
   }
-};
-
-const transformDynamoDBData = (dynamoData) => {
-  if (!dynamoData) return null;
-
-  const convertAttribute = (attribute) => {
-    if ("S" in attribute) return attribute.S;
-    if ("N" in attribute) return Number(attribute.N);
-    if ("SS" in attribute) return attribute.SS;
-    if ("M" in attribute) return transformDynamoDBData(attribute.M);
-    if ("L" in attribute) return attribute.L.map(convertAttribute);
-    return attribute;
-  };
-
-  const transformedData = {};
-  for (const key in dynamoData) {
-    transformedData[key] = convertAttribute(dynamoData[key]);
-  }
-
-  return transformedData;
 };

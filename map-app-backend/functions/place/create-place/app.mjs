@@ -5,6 +5,8 @@ import {
   GetItemCommand,
 } from "@aws-sdk/client-dynamodb";
 
+import { marshall } from "@aws-sdk/util-dynamodb";
+
 const REGION = "us-east-2";
 const PLACE_TABLE = process.env.PLACE_TABLE;
 const LIST_TABLE = process.env.LIST_TABLE;
@@ -30,10 +32,11 @@ export const lambdaHandler = async (event) => {
   const getParams = {
     TableName: PLACE_TABLE,
     Key: {
-      placeId: { S: place.place_id },
+      placeId: { S: place.placeId },
       userId: { S: userId },
     },
   };
+  console.log("getParams -- ", getParams);
   const getCommand = new GetItemCommand(getParams);
 
   const getPlaceResponse = await dbclient.send(getCommand);
@@ -43,7 +46,7 @@ export const lambdaHandler = async (event) => {
     console.log(
       "Place already saved to Place Table. Adding reference to List Item"
     );
-    const isDuplicate = await checkListForDuplicateItem(listId, place.place_id);
+    const isDuplicate = await checkListForDuplicateItem(listId, place.placeId);
     if (isDuplicate) {
       console.log("Place already saved to this list!");
       return {
@@ -52,12 +55,13 @@ export const lambdaHandler = async (event) => {
         body: JSON.stringify({ message: "Place already saved to this list!" }),
       };
     }
-    await addPlaceToListItem(userId, listId, place.place_id, place.name);
+    console.log(userId, listId, place.placeId, place.placeName);
+    await addPlaceToListItem(userId, listId, place.placeId, place.placeName);
   } else {
     console.log("Place not saved yet. Saving place to Place Table");
     await savePlace(userId, listId, place);
     console.log("Place saved to Place Table. Adding reference to List Item");
-    await addPlaceToListItem(userId, listId, place.place_id, place.name);
+    await addPlaceToListItem(userId, listId, place.placeId, place.placeName);
   }
 
   return {
@@ -73,30 +77,36 @@ const savePlace = async (userId, listId, placeData) => {
     return;
   }
 
+  console.log("savePlace -- ", userId, listId, placeData);
+
+  console.log("opening_hours -- ", placeData.opening_hours);
+
   const params = {
     TableName: PLACE_TABLE,
     Item: {
-      placeId: { S: placeData.place_id },
+      placeId: { S: placeData.placeId },
       userId: { S: userId },
-      placeName: { S: placeData.name },
-      placeIdSaved: { BOOL: true },
-      formattedAddress: { S: placeData.formatted_address || "" },
-      formattedPhoneNumber: { S: placeData.formatted_phone_number || "" },
-      businessStatus: { S: placeData.business_status || "" },
-      internationalPhoneNumber: {
-        S: placeData.international_phone_number || "",
-      },
-      placeUrl: { S: placeData.url || "" },
+      placeName: { S: placeData.placeName },
+      placeIsSaved: { BOOL: true },
+      formatted_address: { S: placeData.formatted_address || "" },
+      formatted_phone_number: { S: placeData.formatted_phone_number || "" },
+      business_status: { S: placeData.business_status || "" },
+      ...(placeData.international_phone_number && {
+        international_phone_number: {
+          S: placeData.international_phone_number,
+        },
+      }),
+      placeUrl: { S: placeData.placeUrl || "" },
       website: { S: placeData.website || "" },
       vicinity: { S: placeData.vicinity || "" },
       rating: { N: placeData.rating ? placeData.rating.toString() : "0" },
-      totalUserRatings: {
+      total_user_ratings: {
         N: placeData.user_ratings_total
           ? placeData.user_ratings_total.toString()
           : "0",
       },
       types: { SS: placeData.types || [] },
-      googleReviews: {
+      reviews: {
         L: placeData.reviews?.map((review) => ({
           M: {
             authorName: { S: review.author_name },
@@ -130,15 +140,13 @@ const savePlace = async (userId, listId, placeData) => {
             : { NULL: true },
         },
       },
-      openingHours: {
+      opening_hours: {
         M: {
-          weekdayText: {
+          weekday_text: {
             L: placeData.opening_hours?.weekday_text?.map((text) => ({
               S: text,
             })),
           },
-        },
-        M: {
           periods: {
             L: placeData.opening_hours?.periods?.map((period) => ({
               M: {
@@ -162,7 +170,9 @@ const savePlace = async (userId, listId, placeData) => {
     },
   };
 
+  console.log("opening_hours -- ", placeData.opening_hours);
   console.log("params", params);
+  console.log(params.Item.opening_hours);
   const command = new PutItemCommand(params);
   try {
     const savePlaceResult = await dbclient.send(command);
@@ -179,6 +189,8 @@ const addPlaceToListItem = async (userId, listId, placeId, placeName) => {
     placeId: { S: placeId },
     placeName: { S: placeName },
   };
+
+  console.log("placeMap -- ", placeMap);
 
   const params = {
     TableName: LIST_TABLE,

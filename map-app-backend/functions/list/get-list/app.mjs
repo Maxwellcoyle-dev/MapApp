@@ -1,4 +1,5 @@
 import { DynamoDBClient, GetItemCommand } from "@aws-sdk/client-dynamodb";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 const REGION = "us-east-2";
 const LIST_TABLE = process.env.LIST_TABLE;
@@ -38,13 +39,15 @@ export const lambdaHandler = async (event) => {
     const data = await dbclient.send(new GetItemCommand(params));
     console.log("Data: ", data);
     console.log("data.Item: ", data.Item);
+    const unmarshalledData = unmarshall(data.Item);
+    console.log("unmarshalledData: ", unmarshalledData);
 
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
         message: "List retrieved",
-        data: data.Item,
+        data: unmarshalledData,
       }),
     };
   } catch (error) {

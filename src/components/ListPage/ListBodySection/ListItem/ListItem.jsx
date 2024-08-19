@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tag } from "antd";
 import { MdOutlineNewLabel, MdDeleteOutline } from "react-icons/md";
 
@@ -8,6 +8,10 @@ import DeletePlaceModal from "../../../DeletePlaceModal/DeletePlaceModal";
 import styles from "./ListItem.module.css";
 
 const ListItem = ({ place, firstPhoto, navigate, listData, appUser }) => {
+  useEffect(() => {
+    console.log("place: ", place);
+    console.log("firstPhoto: ", firstPhoto);
+  }, [place]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const handleDeleteClick = (e) => {
     e.stopPropagation();
@@ -25,7 +29,7 @@ const ListItem = ({ place, firstPhoto, navigate, listData, appUser }) => {
           <img
             className={styles.image}
             src={firstPhoto}
-            alt={`${place.name?.S || place.placeName?.S} photo`}
+            alt={`${place.placeName} photo`}
           />
         ) : (
           <img
@@ -40,7 +44,7 @@ const ListItem = ({ place, firstPhoto, navigate, listData, appUser }) => {
         <div
           className={styles.btnIconDiv}
           onClick={() => {
-            navigate(`/add-tag/${place.placeId.S}`, {
+            navigate(`/add-tag/${place.placeId}`, {
               state: { place },
             });
           }}
@@ -53,18 +57,18 @@ const ListItem = ({ place, firstPhoto, navigate, listData, appUser }) => {
         </div>
       </div>
       <div
-        onClick={() => navigate(`/place/${place.placeId.S}`)}
+        onClick={() => navigate(`/place/${place.placeId}`)}
         className={styles.cardBody}
       >
         <div className={styles.tagContainer}>
-          {place.tags?.L.map((tag, index) => (
+          {place.tags?.map((tag, index) => (
             <Tag key={index} color="blue">
-              {tag.M.tagName.S}
+              {tag.tagName}
             </Tag>
           ))}
         </div>
         <div className={styles.infoContainer}>
-          <h2>{place.placeName?.S || place.name?.S}</h2>
+          <h2>{place?.placeName || place?.name}</h2>
         </div>
       </div>
       {/* DeletePlaceModal component */}
@@ -74,13 +78,13 @@ const ListItem = ({ place, firstPhoto, navigate, listData, appUser }) => {
           onClose={handleCloseModal}
           listIds={[
             {
-              listId: listData.data.listId.S,
-              listName: listData.data.listName.S,
+              listId: listData.data.listId,
+              listName: listData.data.listName,
             },
           ]} // Pass the list ID
           userId={appUser.data.userId}
-          placeName={place.placeName.S}
-          placeId={place.placeId.S}
+          placeName={place.placeName}
+          placeId={place.placeId}
         />
       )}
     </div>

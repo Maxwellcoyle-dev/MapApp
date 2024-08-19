@@ -12,6 +12,9 @@ import {
 // Components
 import SavePlaceModal from "../SavePlaceModal/SavePlaceModal";
 
+// Hooks
+import useGetPhotos from "../../hooks/google-api-hooks/useGetPhotos";
+
 // State
 import { useSearchContext } from "../../state/SearchContext";
 import { useMapContext } from "../../state/MapContext";
@@ -30,26 +33,23 @@ const PlaceDetailsCard = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log("Place Details Card Mounting");
-  }, []);
-
   const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(
-    selectedPlace?.place_id
+    selectedPlace?.placeId
   );
 
+  const { placesPhotos } = useGetPhotos([selectedPlace?.placeId]);
+
   useEffect(() => {
-    if (
-      selectedPlace &&
-      selectedPlace.photos &&
-      selectedPlace.photos.length > 0
-    ) {
+    if (selectedPlace?.photos) {
       const image = selectedPlace.photos[0].getUrl();
+      setImageUrl(image);
+    } else if (placesPhotos?.length > 0) {
+      const image = placesPhotos[0]?.[0].getUrl();
       setImageUrl(image);
     } else {
       setImageUrl(null);
     }
-  }, [selectedPlace]);
+  }, [selectedPlace, placesPhotos]);
 
   useEffect(() => {
     let open = selectedPlace?.opening_hours?.isOpen
@@ -87,7 +87,7 @@ const PlaceDetailsCard = () => {
           <div className={styles.imageContainer}>
             <div
               className={styles.imageDiv}
-              onClick={() => navigate(`/place/${selectedPlace.place_id}`)}
+              onClick={() => navigate(`/place/${selectedPlace.placeId}`)}
             >
               {imageUrl ? (
                 <Image
@@ -124,10 +124,10 @@ const PlaceDetailsCard = () => {
           </div>
           <div
             className={styles.contentContainer}
-            onClick={() => navigate(`/place/${selectedPlace.place_id}`)}
+            onClick={() => navigate(`/place/${selectedPlace.placeId}`)}
           >
             <div className={styles.headerDiv}>
-              <h3>{selectedPlace?.name}</h3>
+              <h3>{selectedPlace?.placeName}</h3>
               {isOpen !== null && (
                 <p className={isOpen ? styles.open : styles.closed}>
                   {isOpen ? "Open" : "Closed"}
@@ -168,7 +168,7 @@ const PlaceDetailsCard = () => {
         <SavePlaceModal
           visible={isSavePlaceModalVisible}
           onClose={handleCloseSavePlaceModal}
-          placeId={selectedPlace?.place_id} // Pass the appropriate placeId here
+          placeId={selectedPlace?.placeId} // Pass the appropriate placeId here
         />
       )}
     </div>

@@ -22,7 +22,7 @@ const MapListViewCard = ({ place }) => {
   const [imageUrl, setImageUrl] = useState(null);
   const { setSelectedPlace } = useSearchContext();
 
-  const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(place.place_id);
+  const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(place.placeId);
 
   const navigate = useNavigate();
 
@@ -61,7 +61,7 @@ const MapListViewCard = ({ place }) => {
           <div className={styles.imageContainer}>
             <div
               className={styles.imageDiv}
-              onClick={() => navigate(`/place/${place.place_id}`)}
+              onClick={() => navigate(`/place/${place.placeId}`)}
             >
               {imageUrl ? (
                 <Image
@@ -87,9 +87,9 @@ const MapListViewCard = ({ place }) => {
           </div>
           <div
             className={styles.headerDiv}
-            onClick={() => navigate(`/place/${place.place_id}`)}
+            onClick={() => navigate(`/place/${place.placeId}`)}
           >
-            <h3>{place?.name}</h3>
+            <h3>{place?.placeName}</h3>
             {/* {place?.opening_hours !== null && (
               <p
                 className={
@@ -102,7 +102,7 @@ const MapListViewCard = ({ place }) => {
           </div>
           <div
             className={styles.infoDiv}
-            onClick={() => navigate(`/place/${place.place_id}`)}
+            onClick={() => navigate(`/place/${place.placeId}`)}
           >
             <div className={styles.ratingDiv}>
               <p>{place?.rating}</p>
