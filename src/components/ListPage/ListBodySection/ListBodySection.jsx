@@ -1,7 +1,12 @@
+/* global google */
+
 import React, { useState, useEffect } from "react";
+import { useMap } from "@vis.gl/react-google-maps";
+import { MdFormatListBulleted, MdOutlineMap } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 
 // Components
+import MapView from "../../MapComponent/Map/MapView";
 import ListItem from "./ListItem/ListItem";
 import FilterForm from "./FilterForm/FilterForm";
 
@@ -11,6 +16,9 @@ import useGetPhotos from "../../../hooks/google-api-hooks/useGetPhotos";
 import useListPlaces from "../../../hooks/backend-hooks/useListPlaces";
 import useRemoveListPlace from "../../../hooks/backend-hooks/useRemoveListPlace";
 import useAppUser from "../../../hooks/backend-hooks/useAppUser";
+
+// state
+import { useMapContext } from "../../../state/MapContext";
 
 // Utilities
 import {
@@ -28,6 +36,13 @@ const ListBodySection = ({ listId, showFilterForm, setShowFilterForm }) => {
   const [filteredPlaces, setFilteredPlaces] = useState([]);
   const [filters, setFilters] = useState({});
   const [loading, setLoading] = useState(true);
+  const [showMap, setShowMap] = useState(false);
+  const [bounds, setBounds] = useState(null);
+  const [isMapInitialized, setIsMapInitialized] = useState(false);
+
+  const { center, setCenter, zoom, setZoom } = useMapContext();
+
+  const map = useMap();
 
   const navigate = useNavigate();
 
@@ -37,18 +52,42 @@ const ListBodySection = ({ listId, showFilterForm, setShowFilterForm }) => {
   const { listPlacesData } = useListPlaces(listId);
   const { placesPhotos } = useGetPhotos(placeIds);
 
-  useEffect(() => {
-    console.log("listId: ", listId);
-    console.log("listData: ", listData);
-  }, [listId, listData]);
-
   // Mutations
   const { removeListPlaceMutation } = useRemoveListPlace();
 
   useEffect(() => {
+    if (!map || isMapInitialized) return;
+
+    if (listPlacesData?.length > 0) {
+      const bounds = new window.google.maps.LatLngBounds();
+      listPlacesData.forEach((marker) => {
+        bounds.extend({
+          lat: marker.geometry.location.lat,
+          lng: marker.geometry.location.lng,
+        });
+      });
+      const paddingOptions = {
+        left: 50,
+        right: 50,
+        top: 50,
+        bottom: 50,
+      };
+      map.panToBounds(bounds, paddingOptions);
+      setIsMapInitialized(true); // Only set this once
+
+      console.log("bounds: ", bounds);
+      console.log("center: ", bounds.getCenter());
+      console.log("zoom: ", map.getZoom());
+      // Optionally set initial center and zoom
+      setCenter(bounds.getCenter());
+      setZoom(null);
+    }
+  }, [listPlacesData, map, setCenter, setZoom, isMapInitialized]);
+
+  useEffect(() => {
     console.log("listPlacesData: ", listPlacesData);
     if (listPlacesData) {
-      const placeIds = listPlacesData.map((place) => place.placeId.S);
+      const placeIds = listPlacesData.map((place) => place.placeId);
       setPlaceIds(placeIds);
       setFilteredPlaces(listPlacesData); // Initialize filtered places
       setLoading(false);
@@ -104,33 +143,42 @@ const ListBodySection = ({ listId, showFilterForm, setShowFilterForm }) => {
           clearFilters={clearFilters}
         />
       </div>
-      {loading ? (
-        <div className={styles.loading}>Loading...</div>
-      ) : (
+      <MapView markerList={filteredPlaces} showMap={showMap} page="list" />
+      {!showMap && (
         <div className={styles.listItemContainer}>
-          {listData && !filteredPlaces.length && (
-            <div className={styles.noDataMessage}>No places in this list.</div>
-          )}
-          {listData &&
-            filteredPlaces.map((place, index) => {
-              console.log("place: ", place);
-              console.log("placesPhotos: ", placesPhotos);
-              const photo = placesPhotos?.[index]?.find(
-                (p) => p.width > p.height
-              );
-              const firstPhoto = photo ? photo.getUrl() : null;
-              return (
-                <ListItem
-                  key={place.placeId.S}
-                  place={place}
-                  firstPhoto={firstPhoto}
-                  navigate={navigate}
-                  removeListPlaceMutation={removeListPlaceMutation}
-                  listData={listData}
-                  appUser={appUser}
-                />
-              );
-            })}
+          {filteredPlaces?.map((place, index) => {
+            const photo = placesPhotos?.[index]?.find(
+              (p) => p.width > p.height
+            );
+
+            const firstPhoto = photo ? photo.getUrl() : null;
+            return (
+              <ListItem
+                key={place.placeId}
+                place={place}
+                firstPhoto={firstPhoto}
+                navigate={navigate}
+                removeListPlaceMutation={removeListPlaceMutation}
+                listData={listData}
+                appUser={appUser}
+              />
+            );
+          })}
+        </div>
+      )}
+      {showMap ? (
+        <div
+          className={styles.toggleButtonDiv}
+          onClick={() => setShowMap(false)}
+        >
+          <MdFormatListBulleted className={styles.viewToggleIcon} />
+        </div>
+      ) : (
+        <div
+          className={styles.toggleButtonDiv}
+          onClick={() => setShowMap(true)}
+        >
+          <MdOutlineMap className={styles.viewToggleIcon} />
         </div>
       )}
     </div>

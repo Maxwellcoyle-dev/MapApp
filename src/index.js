@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import { AppProvider } from "./state/AppContext";
 import { AuthProvider } from "./state/AuthContext";
-
+import { MapProvider } from "./state/MapContext";
 import { APIProvider } from "@vis.gl/react-google-maps";
 
 import { Amplify } from "aws-amplify";
@@ -23,7 +23,9 @@ root.render(
       <AuthProvider>
         <APIProvider apiKey={process.env.REACT_APP_GOOGLE_API_KEY}>
           <QueryClientProvider client={queryClient}>
-            <App />
+            <MapProvider>
+              <App />
+            </MapProvider>
           </QueryClientProvider>
         </APIProvider>
       </AuthProvider>

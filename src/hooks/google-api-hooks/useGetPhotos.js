@@ -8,6 +8,8 @@ const fetchPhotos = async (placesLibrary, map, normalizedPlaceIds) => {
 
   if (!placesService) throw new Error("Failed to create PlacesService");
 
+  console.log("Fetching photos for placeIds: ", normalizedPlaceIds);
+
   return Promise.all(
     normalizedPlaceIds.map(
       (placeId) =>
@@ -20,6 +22,7 @@ const fetchPhotos = async (placesLibrary, map, normalizedPlaceIds) => {
             (place, status) => {
               if (status === window.google.maps.places.PlacesServiceStatus.OK) {
                 if (place && place.photos && place.photos.length > 0) {
+                  console.log(`Photos available for ${placeId}`);
                   resolve(place.photos);
                 } else {
                   console.warn(`No photos available for ${placeId}`);

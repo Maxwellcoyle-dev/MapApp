@@ -14,7 +14,7 @@ const usePlaceIsSaved = (placeId) => {
   useEffect(() => {
     if (!isListsLoading && listsData) {
       const isSaved = listsData?.data?.some((list) =>
-        list?.places?.L?.some((place) => place.M.placeId.S === placeId)
+        list?.places?.some((place) => place.placeId === placeId)
       );
       setIsPlaceSaved(isSaved);
       setIsPlaceSavedLoading(false);

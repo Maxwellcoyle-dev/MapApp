@@ -126,7 +126,8 @@ const FilterForm = ({
           onKeyPress={handleKeyPress}
           value={searchValue}
           onSelect={handleSearchSelect}
-          options={autoCompleteOptions.map((option) => ({
+          options={autoCompleteOptions.map((option, index) => ({
+            key: index,
             value: option,
           }))}
           className={styles.searchInput}

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
@@ -6,7 +5,7 @@ import { savePlace } from "../../api/placeApi";
 
 import { useAppContext } from "../../state/AppContext";
 
-import useGetPlaceDetails from "../google-api-hooks/useGetPlaceDetails";
+import useGetOptimalPlaceData from "../useGetOptimalPlaceData";
 import useAppUser from "./useAppUser";
 
 const useSavePlace = (placeId) => {
@@ -16,9 +15,9 @@ const useSavePlace = (placeId) => {
 
   const { appUser } = useAppUser();
 
-  const { setShowAddToList } = useAppContext();
+  console.log("placeId: ", placeId);
 
-  const { placeData } = useGetPlaceDetails(placeId);
+  const { optimalPlaceData } = useGetOptimalPlaceData(placeId);
 
   const navigate = useNavigate();
 
@@ -31,10 +30,12 @@ const useSavePlace = (placeId) => {
     isIdle: savePlaceIsIdle,
   } = useMutation({
     mutationFn: (listId) => {
+      const place = optimalPlaceData;
+      console.log("place: ", place);
       return savePlace({
         userId: appUser?.data.userId,
         listId,
-        place: placeData,
+        place,
       });
     },
     onError: (error) => console.error(error),
@@ -45,15 +46,15 @@ const useSavePlace = (placeId) => {
       queryClient.invalidateQueries({
         queryKey: [
           "saved-place",
-          placeData.place_id || placeData.placeId,
+          optimalPlaceData.placeId,
           appUser.data.userId,
         ],
       });
       queryClient.invalidateQueries({
         queryKey: ["list-places", variables.listId],
       });
-      setShowAddToList(false);
-      navigate(`/place/${placeData.place_id || placeData.placeId}`, {
+
+      navigate(`/place/${optimalPlaceData.placeId}`, {
         state: { from: "addToList" },
       });
     },

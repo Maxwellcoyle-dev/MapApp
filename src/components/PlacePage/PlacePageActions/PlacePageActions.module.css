@@ -1,15 +1,33 @@
 .actionsContainer {
-  margin-top: 0.5rem;
   display: flex;
-  gap: 20px;
+  gap: 1rem;
   flex-direction: column;
-  padding: 1rem 1.5rem;
+  padding: 0.5rem 1rem 1rem 1rem;
   background-color: #ffffff; /* White background to distinguish from Google Info */
 }
 
+.placeHeader {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.descriptionTextDiv {
+  border: 0.5px solid #ddd;
+  border-radius: 0.25rem;
+  background-color: #dddddd70;
+  padding: 0.5rem;
+}
+
 .descriptionText {
-  font-size: 1rem;
+  font-size: 0.9rem;
   color: #666;
+}
+
+.myInfoContainer {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .sectionTitle {
@@ -102,6 +120,7 @@
   transition: background-color 0.2s ease, border-color 0.2s ease;
   touch-action: manipulation;
   cursor: pointer;
+  width: 100%;
 }
 
 .noteDiv:hover,

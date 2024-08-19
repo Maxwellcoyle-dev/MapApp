@@ -1,4 +1,5 @@
 import { DynamoDBClient, QueryCommand } from "@aws-sdk/client-dynamodb";
+import { unmarshall } from "@aws-sdk/util-dynamodb";
 
 const REGION = "us-east-2";
 const LIST_TABLE = process.env.LIST_TABLE;
@@ -42,16 +43,22 @@ export const lambdaHandler = async (event) => {
     console.log("Data: ", data);
     console.log("data.Items: ", data.Items);
 
+    const unmarshalledData = data.Items.map((item) => unmarshall(item));
+    console.log("unmarshalledData: ", unmarshalledData);
+
     // Process data.Items: Convert timestamps and sort the array
-    const processedItems = data.Items.map((item) => {
-      return {
-        ...item,
-        createdAt: new Date(Number(item.createdAt.N)).toISOString(),
-        lastUpdatedAt: new Date(Number(item.lastUpdatedAt.N)).toISOString(),
-      };
-    }).sort((a, b) => {
-      return new Date(b.lastUpdatedAt) - new Date(a.lastUpdatedAt);
-    });
+    const processedItems = unmarshalledData
+      .map((item) => {
+        return {
+          ...item,
+          createdAt: new Date(Number(item.createdAt)).toISOString(),
+          lastUpdatedAt: new Date(Number(item.lastUpdatedAt)).toISOString(),
+        };
+      })
+      .sort((a, b) => {
+        return new Date(b.lastUpdatedAt) - new Date(a.lastUpdatedAt);
+      });
+    console.log("processedItems: ", processedItems);
 
     return {
       statusCode: 200,
