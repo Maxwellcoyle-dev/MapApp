@@ -33,7 +33,10 @@ export const lambdaHandler = async (event) => {
     const listitemResponse = await dbclient.send(getCommand);
     console.log("listitemResponse: ", listitemResponse);
 
-    if (!listitemResponse.Item.places) {
+    if (
+      !listitemResponse.Item.places ||
+      listitemResponse.Item.places.L.length === 0
+    ) {
       return {
         statusCode: 200,
         headers,
@@ -67,6 +70,7 @@ export const lambdaHandler = async (event) => {
     const batchGetCommand = new BatchGetItemCommand(batchGetParams);
     const batchGetResponse = await dbclient.send(batchGetCommand);
     console.log("batchGetResponse: ", batchGetResponse);
+
     const places = batchGetResponse.Responses[PLACES_TABLE].map((item) =>
       unmarshall(item)
     );
