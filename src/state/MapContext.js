@@ -11,7 +11,7 @@ export const MapProvider = ({ children }) => {
   const [mapSize, setMapSize] = useState("full");
   const [mapLayout, setMapLayout] = useState("bottom");
   const [isMapVisible, setIsMapVisible] = useState(true);
-  const [mapView, setMapView] = useState("map");
+  const [showMap, setShowMap] = useState(false);
 
   return (
     <MapContext.Provider
@@ -28,8 +28,8 @@ export const MapProvider = ({ children }) => {
         setMapLayout,
         isMapVisible,
         setIsMapVisible,
-        mapView,
-        setMapView,
+        showMap,
+        setShowMap,
       }}
     >
       {children}

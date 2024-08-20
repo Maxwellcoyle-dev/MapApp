@@ -1,5 +1,5 @@
 // Libraries
-import React from "react";
+import React, { useEffect } from "react";
 import { IoRestaurantOutline } from "react-icons/io5";
 import {
   MdOutlineSportsBar,
@@ -11,6 +11,10 @@ import {
 } from "react-icons/md";
 import { BiCoffeeTogo } from "react-icons/bi";
 
+// Hooks
+import useListPlaces from "../../../hooks/backend-hooks/useListPlaces";
+import useAppUser from "../../../hooks/backend-hooks/useAppUser";
+
 // State
 import { useSearchContext } from "../../../state/SearchContext";
 
@@ -18,11 +22,6 @@ import { useSearchContext } from "../../../state/SearchContext";
 import styles from "./PlaceTypeSelector.module.css";
 
 const types = [
-  {
-    name: "All",
-    value: "establishment",
-    icon: <MdOutlineSearch className={styles.typeIcon} />,
-  },
   {
     name: "Restaurants",
     value: "restaurant",
@@ -63,8 +62,20 @@ const types = [
 const PlaceTypeSelector = () => {
   const { placeType, setPlaceType } = useSearchContext();
 
+  const { appUser } = useAppUser();
+
+  const { allListsData, allListsIsLoading, allListsIsError, allListsError } =
+    useListPlaces(appUser?.data?.userId);
+
+  useEffect(() => {
+    console.log("place type selector mounted");
+
+    console.log("allListsData", allListsData);
+  }, [allListsData]);
+
   return (
     <div className={styles.placeTypeSelectorContainer}>
+      <h2 className={styles.title}>Google Places Search</h2>
       <div className={styles.scrollContainer}>
         {types.map((type) => (
           <div

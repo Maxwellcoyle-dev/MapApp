@@ -18,11 +18,11 @@ import usePlaceIsSaved from "../../../hooks/usePlaceIsSaved";
 // Styles
 import styles from "./MapListViewCard.module.css";
 
-const MapListViewCard = ({ place }) => {
+const MapListViewCard = ({ place, placeId }) => {
   const [imageUrl, setImageUrl] = useState(null);
   const { setSelectedPlace } = useSearchContext();
 
-  const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(place.placeId);
+  const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(placeId);
 
   const navigate = useNavigate();
 
@@ -61,7 +61,7 @@ const MapListViewCard = ({ place }) => {
           <div className={styles.imageContainer}>
             <div
               className={styles.imageDiv}
-              onClick={() => navigate(`/place/${place.placeId}`)}
+              onClick={() => navigate(`/place/${placeId}`)}
             >
               {imageUrl ? (
                 <Image
@@ -75,9 +75,7 @@ const MapListViewCard = ({ place }) => {
             </div>
             <div className={styles.iconOverlayContainer}>
               <div className={styles.iconContainer} onClick={handleSavePlace}>
-                {isPlaceSavedLoading ? (
-                  <Skeleton.Avatar size="large" active />
-                ) : isPlaceSaved ? (
+                {isPlaceSaved ? (
                   <FaHeart className={styles.overlayIcon} />
                 ) : (
                   <FaRegHeart className={styles.overlayIcon} />
@@ -87,7 +85,7 @@ const MapListViewCard = ({ place }) => {
           </div>
           <div
             className={styles.headerDiv}
-            onClick={() => navigate(`/place/${place.placeId}`)}
+            onClick={() => navigate(`/place/${placeId}`)}
           >
             <h3>{place?.placeName}</h3>
             {/* {place?.opening_hours !== null && (
@@ -102,7 +100,7 @@ const MapListViewCard = ({ place }) => {
           </div>
           <div
             className={styles.infoDiv}
-            onClick={() => navigate(`/place/${place.placeId}`)}
+            onClick={() => navigate(`/place/${placeId}`)}
           >
             <div className={styles.ratingDiv}>
               <p>{place?.rating}</p>

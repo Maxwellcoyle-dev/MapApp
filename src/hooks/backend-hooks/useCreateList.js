@@ -33,6 +33,9 @@ const useCreateList = () => {
       queryClient.invalidateQueries({
         queryKey: ["user-lists", appUser.data.userId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["listplaces"],
+      });
     },
   });
 

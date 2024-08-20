@@ -16,7 +16,7 @@ const SearchBar = () => {
       <div className={styles.autocompleteWrapper}>
         <AutoComplete />
       </div>
-      <PlaceTypeSelector />
+      {/* <PlaceTypeSelector /> */}
     </div>
   );
 };
