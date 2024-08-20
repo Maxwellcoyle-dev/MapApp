@@ -94,7 +94,7 @@ function App() {
               />
             </Routes>
           </Content>
-          <Footer
+          {/* <Footer
             style={{
               position: "sticky",
               bottom: 0,
@@ -103,7 +103,7 @@ function App() {
             }}
           >
             <NavBar />
-          </Footer>
+          </Footer> */}
         </Layout>
       </Router>
     </SearchProvider>

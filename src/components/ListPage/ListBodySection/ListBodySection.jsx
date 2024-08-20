@@ -13,7 +13,7 @@ import FilterForm from "./FilterForm/FilterForm";
 // Hooks
 import useGetList from "../../../hooks/backend-hooks/useGetList";
 import useGetPhotos from "../../../hooks/google-api-hooks/useGetPhotos";
-import useListPlaces from "../../../hooks/backend-hooks/useListPlaces";
+import useGetListPlaces from "../../../hooks/backend-hooks/useGetListPlaces";
 import useRemoveListPlace from "../../../hooks/backend-hooks/useRemoveListPlace";
 import useAppUser from "../../../hooks/backend-hooks/useAppUser";
 
@@ -49,7 +49,7 @@ const ListBodySection = ({ listId, showFilterForm, setShowFilterForm }) => {
   // Data
   const { appUser } = useAppUser();
   const { listData } = useGetList(listId);
-  const { listPlacesData } = useListPlaces(listId);
+  const { listPlacesData } = useGetListPlaces(listId);
   const { placesPhotos } = useGetPhotos(placeIds);
 
   // Mutations

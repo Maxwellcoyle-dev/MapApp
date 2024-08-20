@@ -10,7 +10,7 @@ import useUpdateList from "../../../hooks/backend-hooks/useUpdateList";
 
 import useAppUser from "../../../hooks/backend-hooks/useAppUser";
 import useGetList from "../../../hooks/backend-hooks/useGetList";
-import useListPlaces from "../../../hooks/backend-hooks/useListPlaces";
+import useGetListPlaces from "../../../hooks/backend-hooks/useGetListPlaces";
 
 const ListHeaderSection = ({ listPageState, listId }) => {
   const formRef = useRef(null);
@@ -27,7 +27,7 @@ const ListHeaderSection = ({ listPageState, listId }) => {
   const { updateListAsync, updateListIsPending, updateListIsSuccess } =
     useUpdateList();
 
-  const { refetchListPlaces } = useListPlaces(listId);
+  const { refetchListPlaces } = useGetListPlaces(listId);
 
   useEffect(() => {
     console.log("listData", listData);

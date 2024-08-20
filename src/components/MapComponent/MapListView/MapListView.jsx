@@ -9,6 +9,7 @@ import MapListViewCard from "../MapListViewCard/MapListViewCard";
 import styles from "./MapListView.module.css";
 
 const MapListView = ({ placesResults, isPlacesResultsLoading }) => {
+
   useEffect(() => {
     console.log("ListView - placesResults:", placesResults);
   }, [placesResults]);
@@ -26,7 +27,11 @@ const MapListView = ({ placesResults, isPlacesResultsLoading }) => {
           (result) =>
             result.photos &&
             result.photos.length > 0 && (
-              <MapListViewCard key={result.place_id} place={result} />
+              <MapListViewCard
+                key={result.placeId}
+                placeId={result.placeId}
+                place={result}
+              />
             )
         )}
     </div>

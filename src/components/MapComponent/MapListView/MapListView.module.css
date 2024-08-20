@@ -1,9 +1,6 @@
 .listViewDiv {
-  position: absolute;
-  top: 8rem;
-  background: lightgray;
   width: 100%;
-  height: calc(100vh - 12.5rem);
+  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
