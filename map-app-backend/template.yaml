@@ -331,6 +331,30 @@ Resources:
             Path: /place/{placeId}/user/{userId}
             Method: get
             RestApiId: !Ref MappAppAPI
+  ListPlacesFunction:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      Handler: app.lambdaHandler
+      Runtime: nodejs20.x
+      CodeUri: "./functions/place/list-places"
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          PLACE_TABLE: !Ref MapAppPlacesTable
+          LIST_TABLE: !Ref MapAppListTable
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref MapAppPlacesTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref MapAppListTable
+      Events:
+        ListPlaces:
+          Type: Api
+          Properties:
+            Path: /places/{userId}
+            Method: get
+            RestApiId: !Ref MappAppAPI
   ScanPlacesFunction:
     Type: "AWS::Serverless::Function"
     Properties:
