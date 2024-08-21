@@ -24,7 +24,8 @@ import CreateListModal from "../../components/CreateListModal/CreateListModal";
 
 const Home = () => {
   const { userLocation } = useAppContext();
-  const { setCenter, showMap, setShowMap } = useMapContext();
+  const { setCenter, showMap, setShowMap, currentMapPins, setCurrentMapPins } =
+    useMapContext();
 
   const { appUser } = useAppUser();
   const { allListsData, allListsIsLoading } = useListPlaces(
@@ -50,10 +51,12 @@ const Home = () => {
         <div className={styles.homePageContent}>
           <PlaceTypeSelector />
           <MyLists allListsData={allListsData} />
-          <MapListView
-            placesResults={placesResults}
-            isPlacesResultsLoading={isPlacesResultsLoading}
-          />
+          {currentMapPins?.length > 0 && (
+            <MapListView
+              placesResults={placesResults}
+              isPlacesResultsLoading={isPlacesResultsLoading}
+            />
+          )}
         </div>
       )}
       {showMap ? (

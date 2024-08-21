@@ -1,12 +1,12 @@
 .placeTypeSelectorContainer {
   width: 100vw;
-  padding: 1rem 0.5rem;
+  padding: 1rem;
 }
 
 .scrollContainer {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 1rem;
   padding: 1rem 0;
 }
 
@@ -16,8 +16,8 @@
   align-items: center;
   cursor: pointer;
   width: fit-content;
-  min-width: 4rem;
-  max-width: 5.5rem;
+  min-width: 4.5rem;
+  max-width: 6rem;
   text-align: center;
   border: 1px solid gray;
   border-radius: 0.5rem;
