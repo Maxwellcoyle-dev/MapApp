@@ -5,17 +5,26 @@ import { useLocation, useParams } from "react-router-dom";
 import ListHeaderSection from "../../components/ListPage/ListHeaderSection/ListHeaderSection";
 import ListBodySection from "../../components/ListPage/ListBodySection/ListBodySection";
 
+// state
+import { useMapContext } from "../../state/MapContext";
+
 import styles from "./ListPage.module.css";
 
 const List = () => {
   const [showFilterForm, setShowFilterForm] = useState(false);
+
+  const { showMap, setCurrentMapPins } = useMapContext();
 
   const location = useLocation();
   const { listId } = useParams();
   const { state } = location;
 
   return (
-    <div className={styles.listPageContainer}>
+    <div
+      className={
+        !showMap ? styles.listPageContainer : styles.listPageContainerHide
+      }
+    >
       <ListHeaderSection
         listPageState={state}
         listId={listId}

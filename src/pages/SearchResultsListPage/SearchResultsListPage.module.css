@@ -1,0 +1,24 @@
+.listViewDiv {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 2rem;
+  overflow-y: auto;
+  padding: 1rem;
+  background: lightgray;
+  position: absolute;
+  z-index: 15;
+}
+
+.listViewDivHide {
+  display: none;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 10rem);
+}

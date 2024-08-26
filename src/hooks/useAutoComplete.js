@@ -72,7 +72,7 @@ const transformSavedPlaceToAutocompleteFormat = (place) => {
 const searchSavedPlaces = (listsData, query) => {
   const results = [];
   listsData?.forEach((list) => {
-    list?.places.forEach((place) => {
+    list?.places?.forEach((place) => {
       if (place.placeName.toLowerCase().includes(query.toLowerCase())) {
         results.push({
           ...place,

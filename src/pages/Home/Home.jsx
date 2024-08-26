@@ -1,13 +1,14 @@
 // Libraries
-import React, { useEffect, useState } from "react";
-import { MdFormatListBulleted, MdOutlineMap } from "react-icons/md";
+import React, { useEffect } from "react";
+
+import { Outlet } from "react-router-dom";
 
 // Components
 import MapView from "../../components/MapComponent/Map/MapView";
-import MapListView from "../../components/MapComponent/MapListView/MapListView";
 import SearchBar from "../../components/Search/SearchBar";
 import PlaceTypeSelector from "../../components/Search/PlaceTypeSelector/PlaceTypeSelector";
 import MyLists from "../../components/MyLists/MyLists";
+import MapToggle from "../../components/MapToggle/MapToggle";
 
 // Hooks
 import usePlacesSearch from "../../hooks/google-api-hooks/usePlacesSearch";
@@ -24,18 +25,10 @@ import CreateListModal from "../../components/CreateListModal/CreateListModal";
 
 const Home = () => {
   const { userLocation } = useAppContext();
-  const { setCenter, showMap, setShowMap, currentMapPins, setCurrentMapPins } =
-    useMapContext();
+  const { setCenter, showMap, currentMapPins } = useMapContext();
 
   const { appUser } = useAppUser();
-  const { allListsData, allListsIsLoading } = useListPlaces(
-    appUser?.data.userId
-  );
-  const { placesResults, isPlacesResultsLoading } = usePlacesSearch();
-
-  useEffect(() => {
-    console.log("all lists data:", allListsData);
-  }, [allListsData]);
+  const { allListsData } = useListPlaces(appUser?.data.userId);
 
   useEffect(() => {
     if (userLocation) {
@@ -45,35 +38,16 @@ const Home = () => {
 
   return (
     <div className={styles.mainContainer}>
+      <Outlet />
       <SearchBar />
-      <MapView markerList={placesResults} />
+      <MapView markerList={currentMapPins} />
       {!showMap && (
         <div className={styles.homePageContent}>
           <PlaceTypeSelector />
           <MyLists allListsData={allListsData} />
-          {currentMapPins?.length > 0 && (
-            <MapListView
-              placesResults={placesResults}
-              isPlacesResultsLoading={isPlacesResultsLoading}
-            />
-          )}
         </div>
       )}
-      {showMap ? (
-        <div
-          className={styles.toggleButtonDiv}
-          onClick={() => setShowMap(false)}
-        >
-          <MdFormatListBulleted className={styles.viewToggleIcon} />
-        </div>
-      ) : (
-        <div
-          className={styles.toggleButtonDiv}
-          onClick={() => setShowMap(true)}
-        >
-          <MdOutlineMap className={styles.viewToggleIcon} />
-        </div>
-      )}
+      <MapToggle />
       <CreateListModal />
     </div>
   );

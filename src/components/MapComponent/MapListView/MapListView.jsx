@@ -8,11 +8,10 @@ import MapListViewCard from "../MapListViewCard/MapListViewCard";
 // Styles
 import styles from "./MapListView.module.css";
 
-const MapListView = ({ placesResults, isPlacesResultsLoading }) => {
-
+const MapListView = ({ currentMapPins, isPlacesResultsLoading }) => {
   useEffect(() => {
-    console.log("ListView - placesResults:", placesResults);
-  }, [placesResults]);
+    console.log("ListView - currentMapPins:", currentMapPins);
+  }, [currentMapPins]);
 
   return (
     <div className={styles.listViewDiv}>
@@ -22,8 +21,8 @@ const MapListView = ({ placesResults, isPlacesResultsLoading }) => {
         </div>
       )}
 
-      {placesResults &&
-        placesResults.map(
+      {currentMapPins &&
+        currentMapPins.map(
           (result) =>
             result.photos &&
             result.photos.length > 0 && (

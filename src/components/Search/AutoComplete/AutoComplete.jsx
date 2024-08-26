@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Tag } from "antd";
 import { UnorderedListOutlined } from "@ant-design/icons";
 
@@ -11,15 +12,22 @@ import { useSearchContext } from "../../../state/SearchContext";
 import styles from "./AutoComplete.module.css";
 
 const AutoComplete = () => {
-  const { autoCompleteResults, setAutoCompleteResults, setSearchResults } =
-    useSearchContext();
+  const navigate = useNavigate();
 
-  const handleAutoCompleteSelect = useAutoCompleteSelect();
+  const {
+    autoCompleteResults,
+    setAutoCompleteResults,
+    setSearchResults,
+    setQueryInput,
+  } = useSearchContext();
+
+  // const handleAutoCompleteSelect = useAutoCompleteSelect();
 
   const handleAutocompleteClick = (placeId) => {
     setAutoCompleteResults([]);
     setSearchResults([]);
-    handleAutoCompleteSelect(placeId);
+    setQueryInput("");
+    navigate(`/place/${placeId}`);
   };
 
   if (autoCompleteResults === null) {

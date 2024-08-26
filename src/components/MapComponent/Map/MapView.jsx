@@ -26,9 +26,9 @@ const mapOptions = {
   gestureHandling: "greedy",
 };
 
-const MapView = ({ markerList, showMap = true, page = "home" }) => {
+const MapView = ({ markerList }) => {
   const { selectedPlace } = useSearchContext();
-  const { center, zoom, isMapVisible } = useMapContext();
+  const { center, zoom } = useMapContext();
 
   const handleMarkerClick = useMarkerClick();
 
@@ -39,17 +39,10 @@ const MapView = ({ markerList, showMap = true, page = "home" }) => {
   }, [center, zoom]);
 
   return (
-    <div
-      className={
-        (page === "home" && styles.mapViewContainer) ||
-        (page === "list" && styles.mapViewContainerList)
-      }
-      style={showMap ? { height: "100vh" } : { height: 0 }}
-    >
+    <div className={styles.mapViewContainer} style={{ height: "100vh" }}>
       <Map
         mapId={"126ae8e8ffefefdf"}
         defaultCenter={center}
-        center={center}
         zoom={zoom}
         options={mapOptions}
       >

@@ -1,5 +1,6 @@
 // Libraries
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { IoRestaurantOutline } from "react-icons/io5";
 import {
   MdOutlineSportsBar,
@@ -7,7 +8,6 @@ import {
   MdOutlineBakeryDining,
   MdOutlineBreakfastDining,
   MdOutlineLocalCafe,
-  MdOutlineSearch,
 } from "react-icons/md";
 import { BiCoffeeTogo } from "react-icons/bi";
 
@@ -60,18 +60,13 @@ const types = [
 ];
 
 const PlaceTypeSelector = () => {
+  const navigate = useNavigate();
   const { placeType, setPlaceType } = useSearchContext();
 
-  const { appUser } = useAppUser();
-
-  const { allListsData, allListsIsLoading, allListsIsError, allListsError } =
-    useListPlaces(appUser?.data?.userId);
-
-  useEffect(() => {
-    console.log("place type selector mounted");
-
-    console.log("allListsData", allListsData);
-  }, [allListsData]);
+  const handleSelectPlace = (type) => {
+    setPlaceType(type);
+    navigate("/results-list");
+  };
 
   return (
     <div className={styles.placeTypeSelectorContainer}>
@@ -85,7 +80,7 @@ const PlaceTypeSelector = () => {
                 ? styles.typeContainerSelected
                 : styles.typeContainer
             }
-            onClick={() => setPlaceType(type.value)}
+            onClick={() => handleSelectPlace(type.value)}
           >
             {type.icon}
             <span className={styles.text}>{type.name}</span>
