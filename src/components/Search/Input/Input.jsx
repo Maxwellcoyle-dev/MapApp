@@ -6,7 +6,8 @@ import { MdOutlineSearch, MdClear } from "react-icons/md";
 import { useSearchContext } from "../../../state/SearchContext";
 
 // Hooks
-import useAutocomplete from "../../../hooks/google-api-hooks/useAutocomplete";
+import useAutoComplete from "../../../hooks/useAutoComplete.js";
+import { useAppUser } from "../../../hooks/backend-hooks/useAppUser";
 
 // styles
 import styles from "./Input.module.css";
@@ -18,7 +19,8 @@ const Input = () => {
     setAutoCompleteResults,
     autoCompleteResults,
   } = useSearchContext();
-  const handleInputChange = useAutocomplete();
+
+  const handleInputChange = useAutoComplete();
 
   const handleKeyDown = (event) => {
     if (event.key !== "Enter") {
@@ -61,7 +63,7 @@ const Input = () => {
       )}
       <input
         type="text"
-        placeholder="Enter a location"
+        placeholder="Enter a place name"
         value={queryInput}
         onChange={handleInputChange}
         className={styles.input}

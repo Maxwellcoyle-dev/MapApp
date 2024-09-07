@@ -1,5 +1,6 @@
 // Libraries
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { IoRestaurantOutline } from "react-icons/io5";
 import {
   MdOutlineSportsBar,
@@ -7,9 +8,12 @@ import {
   MdOutlineBakeryDining,
   MdOutlineBreakfastDining,
   MdOutlineLocalCafe,
-  MdOutlineSearch,
 } from "react-icons/md";
 import { BiCoffeeTogo } from "react-icons/bi";
+
+// Hooks
+import useListPlaces from "../../../hooks/backend-hooks/useListPlaces";
+import useAppUser from "../../../hooks/backend-hooks/useAppUser";
 
 // State
 import { useSearchContext } from "../../../state/SearchContext";
@@ -18,11 +22,6 @@ import { useSearchContext } from "../../../state/SearchContext";
 import styles from "./PlaceTypeSelector.module.css";
 
 const types = [
-  {
-    name: "All",
-    value: "establishment",
-    icon: <MdOutlineSearch className={styles.typeIcon} />,
-  },
   {
     name: "Restaurants",
     value: "restaurant",
@@ -61,10 +60,17 @@ const types = [
 ];
 
 const PlaceTypeSelector = () => {
+  const navigate = useNavigate();
   const { placeType, setPlaceType } = useSearchContext();
+
+  const handleSelectPlace = (type) => {
+    setPlaceType(type);
+    navigate("/results-list");
+  };
 
   return (
     <div className={styles.placeTypeSelectorContainer}>
+      <h2 className={styles.title}>Google Places Search</h2>
       <div className={styles.scrollContainer}>
         {types.map((type) => (
           <div
@@ -74,7 +80,7 @@ const PlaceTypeSelector = () => {
                 ? styles.typeContainerSelected
                 : styles.typeContainer
             }
-            onClick={() => setPlaceType(type.value)}
+            onClick={() => handleSelectPlace(type.value)}
           >
             {type.icon}
             <span className={styles.text}>{type.name}</span>

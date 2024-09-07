@@ -25,9 +25,12 @@ const useDeleteList = () => {
       queryClient.invalidateQueries({
         queryKey: ["get-list", variables.listId],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["listplaces", variables.userId],
+      });
       console.log("data", data);
       console.log("variables", variables);
-      navigate("/my-lists");
+      navigate(-1);
     },
     onError: (error) => console.error(error),
   });

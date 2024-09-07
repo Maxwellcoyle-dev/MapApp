@@ -1,0 +1,79 @@
+.autocompleteWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.autocompleteContainer {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  max-height: 80vh;
+  width: 90%;
+  overflow-y: auto;
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: absolute;
+  z-index: 15;
+  left: 1.1rem;
+}
+
+.autocompleteItem {
+  position: relative;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background-color: #f9f9f9;
+}
+
+.autocompleteItem:hover {
+  background-color: #eaeaea;
+}
+
+.resultText {
+  flex: 1;
+  overflow: hidden;
+}
+
+.mainText {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.secondaryText {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.tagContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.sourceTag {
+  margin-left: 0.5rem;
+  font-size: 0.75rem;
+  padding: 0.1rem 0.5rem;
+  white-space: nowrap;
+}
+
+.listNameContainer {
+  display: flex;
+  align-items: center;
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.listIcon {
+  margin-right: 0.25rem;
+}

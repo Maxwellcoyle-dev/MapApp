@@ -20,6 +20,15 @@ export const scanPlaces = async (listId) => {
   return response.data;
 };
 
+export const listPlaces = async (userId, listIds) => {
+  const response = await axiosInstance.get(`/places/${userId}`, {
+    params: {
+      listIds,
+    },
+  });
+  return response.data;
+};
+
 export const updatePlace = async (placeId, userId, placeData) => {
   const response = await axiosInstance.put(`/place/${placeId}`, {
     userId,

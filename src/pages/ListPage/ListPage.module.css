@@ -1,11 +1,15 @@
 .listPageContainer {
   position: absolute;
   top: 0;
-  z-index: 10;
+  z-index: 15;
   height: 100vh;
   width: 100%;
   display: flex;
   flex-direction: column;
   background: white;
   overflow: hidden;
+}
+
+.listPageContainerHide {
+  display: none;
 }

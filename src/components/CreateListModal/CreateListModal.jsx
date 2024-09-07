@@ -13,7 +13,6 @@ import styles from "./CreateListModal.module.css";
 const CreateListModal = ({
   listName = "",
   listDescription = "",
-  handleSubmit,
   newList = true,
   isPending,
   isSuccess,
@@ -23,9 +22,15 @@ const CreateListModal = ({
   const [publicList, setPublicList] = useState(true);
 
   const { showCreateListModal, setShowCreateListModal } = useAppContext();
+  const { createListAsync, createListIsPending, createListIsSuccess } =
+    useCreateList();
 
-  const handleFormSubmit = () => {
-    handleSubmit({ name, description, publicList });
+  const handleFormSubmit = async () => {
+    await createListAsync({
+      name,
+      description,
+      publicList,
+    });
 
     setDescription("");
     setName("");
@@ -42,10 +47,10 @@ const CreateListModal = ({
   }, [listName, listDescription]);
 
   useEffect(() => {
-    if (isSuccess) {
+    if (createListIsSuccess) {
       setShowCreateListModal(false);
     }
-  }, [isSuccess, setShowCreateListModal]);
+  }, [createListIsSuccess, setShowCreateListModal]);
 
   const onClose = () => {
     setShowCreateListModal(false);
@@ -88,8 +93,8 @@ const CreateListModal = ({
             className={styles.button}
             type="primary"
             htmlType="submit"
-            disabled={isPending}
-            loading={isPending}
+            disabled={createListIsPending}
+            loading={createListIsPending}
           >
             {newList ? "Create List" : "Update List"}
           </Button>

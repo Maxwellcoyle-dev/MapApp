@@ -1,26 +1,20 @@
-.searchBarContainer {
+.searchBarContainer_Map {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 1rem 0 0 0;
-  position: relative;
+  position: absolute;
+  z-index: 11;
 }
 
-.autocompleteWrapper {
-  position: relative;
+.searchBarContainer_List {
   width: 100%;
-}
-
-.autocompleteContainer {
-  background-color: white;
-  border: 1px solid #e0e0e0;
-  width: 90%;
-  padding: 0.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  position: absolute;
-  z-index: 10;
-  left: 1.1rem;
+  align-items: center;
+  padding: 1.5rem 0 1rem 0;
+  background-color: white;
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
 }

@@ -9,7 +9,6 @@ import { Layout } from "antd";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // Pages
-import Map from "./pages/Map/Map";
 import Home from "./pages/Home/Home";
 import MyAccount from "./pages/MyAccount";
 import MyListsPage from "./pages/MyListsPage/MyListsPage";
@@ -19,12 +18,10 @@ import SignIn from "./pages/AuthPages/SignIn";
 import CreateAccount from "./pages/AuthPages/CreateAccount";
 import AddTagPage from "./pages/AddTagPage/AddTagPage";
 import ManageCategoriesPage from "./pages/ManageCategoriesPage/ManageCategoriesPage";
+import SearchResultsListPage from "./pages/SearchResultsListPage/SearchResultsListPage";
 
 // Protected Route
 import ProtectedRoute from "./ProtectedRoute";
-
-// Components
-import NavBar from "./components/NavBar/NavBar";
 
 // Hooks
 import useGetUserLocation from "./hooks/useGetUserLocation";
@@ -67,8 +64,13 @@ function App() {
             <Routes>
               <Route path="login" element={<SignIn />} />
               <Route path="create-account" element={<CreateAccount />} />
-              <Route path="/" element={<Home />} />
-              <Route path="list/:listId" element={<ListPage />} />
+              <Route path="/" element={<Home />}>
+                <Route
+                  path="results-list"
+                  element={<SearchResultsListPage />}
+                />
+                <Route path="list/:listId" element={<ListPage />} />
+              </Route>
               <Route path="place/:placeId" element={<PlacePage />} />
               <Route
                 path="my-lists"
@@ -94,7 +96,7 @@ function App() {
               />
             </Routes>
           </Content>
-          <Footer
+          {/* <Footer
             style={{
               position: "sticky",
               bottom: 0,
@@ -103,7 +105,7 @@ function App() {
             }}
           >
             <NavBar />
-          </Footer>
+          </Footer> */}
         </Layout>
       </Router>
     </SearchProvider>
