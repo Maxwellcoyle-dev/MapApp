@@ -22,6 +22,7 @@ import { useMapContext } from "../../state/MapContext";
 // Styles
 import styles from "./Home.module.css";
 import CreateListModal from "../../components/CreateListModal/CreateListModal";
+import Search from "antd/es/input/Search";
 
 const Home = () => {
   const { userLocation } = useAppContext();
@@ -39,11 +40,11 @@ const Home = () => {
   return (
     <div className={styles.mainContainer}>
       <Outlet />
-      <SearchBar />
+      {showMap && <SearchBar />}
       <MapView markerList={currentMapPins} />
       {!showMap && (
         <div className={styles.homePageContent}>
-          <PlaceTypeSelector />
+          <SearchBar />
           <MyLists allListsData={allListsData} />
         </div>
       )}

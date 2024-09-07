@@ -11,6 +11,7 @@ export const SearchProvider = ({ children }) => {
   const [selectedPlace, setSelectedPlace] = useState(null);
   const [autoCompleteResults, setAutoCompleteResults] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
+  const [searchType, setSearchType] = useState("nearby");
 
   return (
     <SearchContext.Provider
@@ -27,6 +28,8 @@ export const SearchProvider = ({ children }) => {
         setAutoCompleteResults,
         searchResults,
         setSearchResults,
+        searchType,
+        setSearchType,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-.searchBarContainer {
+.searchBarContainer_Map {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -6,4 +6,15 @@
   padding: 1rem 0 0 0;
   position: absolute;
   z-index: 11;
+}
+
+.searchBarContainer_List {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.5rem 0 1rem 0;
+  background-color: white;
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
 }
