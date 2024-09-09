@@ -24,6 +24,7 @@ const AutoComplete = () => {
   // const handleAutoCompleteSelect = useAutoCompleteSelect();
 
   const handleAutocompleteClick = (placeId) => {
+    console.log("placeId", placeId);
     setAutoCompleteResults([]);
     setSearchResults([]);
     setQueryInput("");
@@ -41,7 +42,9 @@ const AutoComplete = () => {
           return (
             <div
               key={place.place_id}
-              onClick={() => handleAutocompleteClick(place.place_id)}
+              onClick={() => {
+                handleAutocompleteClick(place.place_id);
+              }}
               className={styles.autocompleteItem}
             >
               <div className={styles.resultText}>
