@@ -3,9 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Tag } from "antd";
 import { UnorderedListOutlined } from "@ant-design/icons";
 
-// Hooks
-import useAutoCompleteSelect from "../../../hooks/useAutoCompleteSelect";
-
 // State
 import { useSearchContext } from "../../../state/SearchContext";
 
