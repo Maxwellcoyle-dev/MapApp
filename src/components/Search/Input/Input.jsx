@@ -1,5 +1,7 @@
 // Libraries
 import React, { useEffect } from "react";
+import { Button } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
 import { MdOutlineSearch, MdClear } from "react-icons/md";
 
 // State
@@ -43,31 +45,30 @@ const Input = () => {
   };
 
   return (
-    <div className={styles.inputContainer}>
-      {queryInput && (
-        <div className={styles.buttonDiv}>
-          <button
-            className={styles.button}
-            onClick={() => setSearchQuery(queryInput)}
-          >
-            <MdOutlineSearch
-              style={{ fontSize: "1.5rem", color: "black", margin: "auto" }}
-            />
-          </button>
-          <button className={styles.button} onClick={handleClearInput}>
-            <MdClear
-              style={{ fontSize: "1.5rem", color: "black", margin: "auto" }}
-            />
-          </button>
-        </div>
-      )}
-      <input
-        type="text"
-        placeholder="Enter a place name"
-        value={queryInput}
-        onChange={handleInputChange}
-        className={styles.input}
-        onKeyDown={handleKeyDown}
+    <div className={styles.wrapper}>
+      <div className={styles.inputContainer}>
+        {queryInput && (
+          <div className={styles.buttonDiv}>
+            <button className={styles.button} onClick={handleClearInput}>
+              <MdClear
+                style={{ fontSize: "1.5rem", color: "black", margin: "auto" }}
+              />
+            </button>
+          </div>
+        )}
+        <input
+          type="text"
+          placeholder="Enter a place name"
+          value={queryInput}
+          onChange={handleInputChange}
+          className={styles.input}
+          onKeyDown={handleKeyDown}
+        />
+      </div>
+      <Button
+        type="primary"
+        icon={<SearchOutlined style={{ fontSize: "1.5rem" }} />}
+        style={{ width: "2.5rem", height: "2.5rem" }}
       />
     </div>
   );

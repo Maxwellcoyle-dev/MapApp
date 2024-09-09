@@ -2,27 +2,16 @@ import React, { useState } from "react";
 import { Input, Radio, Button, Select } from "antd";
 
 import { useMapContext } from "../../../state/MapContext";
+import LocationSearchForm from "./LocationSearchForm";
+import FilterMenu from "./FilterMenu";
+import NearbySearchForm from "./NearbySearchForm";
 
 const Filters = () => {
-  const [locationSearchType, setLocationSearchType] = useState("city");
   const [location, setLocation] = useState("");
   const [radius, setRadius] = useState(10);
-
-  const locationInputOptions = [
-    { label: "City", value: "city" },
-    { label: "State", value: "state" },
-    { label: "Country", value: "country" },
-    { label: "Zip", value: "zip" },
-  ];
-
-  const radiusOptions = [
-    { label: "5 miles", value: 5 },
-    { label: "10 miles", value: 10 },
-    { label: "25 miles", value: 25 },
-    { label: "50 miles", value: 50 },
-    { label: "100 miles", value: 100 },
-    { label: "--", value: 0 },
-  ];
+  const [searchType, setSearchType] = useState("nearby");
+  const [locationSearchType, setLocationSearchType] = useState("city");
+  const [showFilters, setShowFilters] = useState(true);
 
   return (
     <div
@@ -31,31 +20,37 @@ const Filters = () => {
         display: "flex",
         flexDirection: "column",
         gap: "1rem",
+        padding: ".5rem 1rem",
       }}
     >
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        <Radio.Group
-          options={locationInputOptions}
-          value={locationSearchType}
-          optionType="button"
-          onChange={(event) => setLocationSearchType(event.target.value)}
-        />
-        <Input placeholder={`Search for a ${locationSearchType}`} />
-      </div>
-
-      <div>
-        <h4>Radius</h4>
-        <Select
-          options={radiusOptions}
-          style={{ minWidth: "6rem" }}
-          value={radius}
-          optionType="default"
-          onChange={(event) => {
-            console.log(event);
-            setRadius(event);
-          }}
-        />
-      </div>
+      <FilterMenu
+        searchType={searchType}
+        setSearchType={setSearchType}
+        showFilters={showFilters}
+        setShowFilters={setShowFilters}
+      />
+      {showFilters && (
+        <>
+          {searchType === "location" && (
+            <LocationSearchForm
+              radius={radius}
+              setRadius={setRadius}
+              searchType={searchType}
+              setSearchType={setSearchType}
+              locationSearchType={locationSearchType}
+              setLocationSearchType={setLocationSearchType}
+            />
+          )}
+          {searchType === "nearby" && (
+            <NearbySearchForm
+              radius={radius}
+              setRadius={setRadius}
+              searchType={searchType}
+              setSearchType={setSearchType}
+            />
+          )}
+        </>
+      )}
     </div>
   );
 };

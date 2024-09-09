@@ -5,12 +5,14 @@ import React from "react";
 import Input from "./Input/Input";
 import AutoComplete from "./AutoComplete/AutoComplete";
 import SearchFilterContainer from "./SearchFilters/SearchFilterContainer";
+import PlaceTypeSelector from "./PlaceTypeSelector/PlaceTypeSelector";
 
 // State
 import { useMapContext } from "../../state/MapContext";
 
 // Styles
 import styles from "./SearchBar.module.css";
+import Filters from "./SearchFilters/Filters";
 
 const SearchBar = () => {
   const { showMap } = useMapContext();
@@ -22,10 +24,10 @@ const SearchBar = () => {
       }
     >
       <Input />
-      <SearchFilterContainer />
       <div className={styles.autocompleteWrapper}>
         <AutoComplete />
       </div>
+      <Filters />
     </div>
   );
 };

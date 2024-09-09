@@ -29,7 +29,6 @@ const SearchFilterContainer = () => {
         padding: ".5rem 0",
       }}
     >
-      <FilterMenu setShowFilters={setShowFilters} showFilters={showFilters} />
       {showFilters && <Filters />}
     </div>
   );
