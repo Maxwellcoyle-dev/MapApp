@@ -13,15 +13,10 @@ const schema = {
   },
 };
 
-export const textSearch = async (
-  placesLibrary,
-  map,
-  searchQuery,
-  placeType
-) => {
-  if (!map || !placesLibrary || !searchQuery || !placeType) {
+export const textSearch = async (placesLibrary, map, searchQuery) => {
+  if (!map || !placesLibrary || !searchQuery) {
     console.error(
-      "textSearch: Missing required arguments. Required arguments are placesLibrary, map, searchQuery, and placeType."
+      "textSearch: Missing required arguments. Required arguments are placesLibrary, map, searchQuery."
     );
     return;
   }
@@ -31,11 +26,8 @@ export const textSearch = async (
   return new Promise((resolve, reject) => {
     placesService.textSearch(
       {
-        query: searchQuery || `${placeType} near me`,
+        query: searchQuery,
         locationBias: map?.getCenter(),
-        includedType: placeType,
-        minPriceLevel: 2,
-        maxPriceLevel: 3,
       },
       (results, status) => {
         if (status === window.google.maps.places.PlacesServiceStatus.OK) {

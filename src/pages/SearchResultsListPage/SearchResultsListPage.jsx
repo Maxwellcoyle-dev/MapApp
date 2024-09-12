@@ -20,11 +20,16 @@ import styles from "./SearchResultsListPage.module.css";
 const SearchResultsListPage = () => {
   const navigate = useNavigate();
   const { showMap, setCurrentMapPins } = useMapContext();
-  const { placesResults, isPlacesResultsLoading } = usePlacesSearch();
+  const { searchQuery, setSearchQuery } = useSearchContext();
+
+  const { placesResults, isPlacesResultsLoading } =
+    usePlacesSearch(searchQuery);
+
   const { setPlaceType } = useSearchContext();
 
   const handleBack = () => {
     setPlaceType(null);
+    setSearchQuery("");
     navigate(-1);
   };
 
