@@ -67,8 +67,8 @@ const Input = () => {
       </div>
       <Button
         type="primary"
-        icon={<SearchOutlined style={{ fontSize: "1.5rem" }} />}
-        style={{ width: "2.5rem", height: "2.5rem" }}
+        icon={<SearchOutlined style={{ fontSize: "1.25rem" }} />}
+        style={{ height: "100%", width: "2rem" }}
       />
     </div>
   );

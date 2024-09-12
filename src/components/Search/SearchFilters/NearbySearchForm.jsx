@@ -32,7 +32,7 @@ const NearbySearchForm = () => {
         width: "100%",
         display: "flex",
         justifyContent: "space-between",
-        gap: "1rem",
+        gap: ".25rem",
       }}
     >
       <div>
