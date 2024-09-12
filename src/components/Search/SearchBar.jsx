@@ -4,8 +4,7 @@ import React from "react";
 // Components
 import Input from "./Input/Input";
 import AutoComplete from "./AutoComplete/AutoComplete";
-import SearchFilterContainer from "./SearchFilters/SearchFilterContainer";
-import PlaceTypeSelector from "./PlaceTypeSelector/PlaceTypeSelector";
+import SearchNav from "./SearchNav/SearchNav";
 
 // State
 import { useMapContext } from "../../state/MapContext";
@@ -23,6 +22,7 @@ const SearchBar = () => {
         showMap ? styles.searchBarContainer_Map : styles.searchBarContainer_List
       }
     >
+      <SearchNav />
       <Input />
       <div className={styles.autocompleteWrapper}>
         <AutoComplete />
