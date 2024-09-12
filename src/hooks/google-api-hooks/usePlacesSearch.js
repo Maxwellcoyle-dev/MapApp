@@ -1,28 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
 
-import { useMapContext } from "../../state/MapContext";
 import { useSearchContext } from "../../state/SearchContext";
 
 import { textSearch } from "./place-search-functions/textSearch";
 import { nearbySearch } from "./place-search-functions/nearbySearch";
-import { useEffect } from "react";
 
-const usePlacesSearch = () => {
+const usePlacesSearch = (searchQuery) => {
   const map = useMap();
   const placesLibrary = useMapsLibrary("places");
 
-  const { placeType, searchQuery } = useSearchContext();
-
   const fetchPlaces = async () => {
     let results;
-    if (!searchQuery) {
-      console.log("Fetching nearby places");
-      results = await nearbySearch(placesLibrary, map, placeType);
-    } else {
-      console.log("Fetching text search places");
-      results = await textSearch(placesLibrary, map, searchQuery, placeType);
-    }
+    console.log("Search query: ", searchQuery);
+
+    console.log("Fetching text search places");
+    results = await textSearch(placesLibrary, map, searchQuery);
 
     const formattedData = results.map((place) => {
       const location = {
@@ -67,9 +60,9 @@ const usePlacesSearch = () => {
     error: placesResultsError,
     refetch: refetchPlacesResults,
   } = useQuery({
-    queryKey: ["places-search", placeType],
+    queryKey: ["places-search", searchQuery],
     queryFn: fetchPlaces,
-    enabled: !!placeType,
+    enabled: false,
     staleTime: 1000 * 60 * 10, // Cache the data for 10 minutes
     cacheTime: 1000 * 60 * 30, // Keep the data in cache for 30 minutes
     refetchOnWindowFocus: false, // Do not refetch on window focus

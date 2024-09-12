@@ -1,24 +1,37 @@
 // Libraries
 import React, { useEffect } from "react";
-import { MdOutlineSearch, MdClear } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { Button } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import { MdClear } from "react-icons/md";
 
 // State
 import { useSearchContext } from "../../../state/SearchContext";
 
 // Hooks
 import useAutoComplete from "../../../hooks/useAutoComplete.js";
-import { useAppUser } from "../../../hooks/backend-hooks/useAppUser";
+import usePlacesSearch from "../../../hooks/google-api-hooks/usePlacesSearch.js";
 
 // styles
 import styles from "./Input.module.css";
 
 const Input = () => {
+  const navigate = useNavigate();
   const {
     setSearchQuery,
+    searchQuery,
     queryInput,
     setAutoCompleteResults,
     autoCompleteResults,
   } = useSearchContext();
+
+  const { refetchPlacesResults } = usePlacesSearch(searchQuery);
+
+  useEffect(() => {
+    if (searchQuery) {
+      refetchPlacesResults();
+    }
+  }, [searchQuery, refetchPlacesResults]);
 
   const handleInputChange = useAutoComplete();
 
@@ -28,6 +41,8 @@ const Input = () => {
     }
     if (event.key === "Enter") {
       setSearchQuery(event.target.value);
+      setAutoCompleteResults([]);
+      navigate(`/results-list`);
     }
   };
 
@@ -36,38 +51,42 @@ const Input = () => {
     if (queryInput === "" && autoCompleteResults.length > 0) {
       setAutoCompleteResults([]);
     }
-  }, [queryInput, autoCompleteResults]);
+  }, [queryInput, autoCompleteResults, setAutoCompleteResults]);
 
   const handleClearInput = () => {
     handleInputChange({ target: { value: "" } });
   };
 
   return (
-    <div className={styles.inputContainer}>
-      {queryInput && (
-        <div className={styles.buttonDiv}>
-          <button
-            className={styles.button}
-            onClick={() => setSearchQuery(queryInput)}
-          >
-            <MdOutlineSearch
-              style={{ fontSize: "1.5rem", color: "black", margin: "auto" }}
-            />
-          </button>
-          <button className={styles.button} onClick={handleClearInput}>
-            <MdClear
-              style={{ fontSize: "1.5rem", color: "black", margin: "auto" }}
-            />
-          </button>
-        </div>
-      )}
-      <input
-        type="text"
-        placeholder="Enter a place name"
-        value={queryInput}
-        onChange={handleInputChange}
-        className={styles.input}
-        onKeyDown={handleKeyDown}
+    <div className={styles.wrapper}>
+      <div className={styles.inputContainer}>
+        {queryInput && (
+          <div className={styles.buttonDiv}>
+            <button className={styles.button} onClick={handleClearInput}>
+              <MdClear
+                style={{ fontSize: "1.5rem", color: "black", margin: "auto" }}
+              />
+            </button>
+          </div>
+        )}
+        <input
+          type="text"
+          placeholder="Enter a place name"
+          value={queryInput}
+          onChange={handleInputChange}
+          className={styles.input}
+          onKeyDown={handleKeyDown}
+        />
+      </div>
+      <Button
+        onClick={() => {
+          setSearchQuery(queryInput);
+          setAutoCompleteResults([]);
+          navigate(`/results-list`);
+        }}
+        type="primary"
+        icon={<SearchOutlined style={{ fontSize: "1.25rem" }} />}
+        style={{ height: "100%", width: "2rem" }}
       />
     </div>
   );

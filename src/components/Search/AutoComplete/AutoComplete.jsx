@@ -3,9 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Tag } from "antd";
 import { UnorderedListOutlined } from "@ant-design/icons";
 
-// Hooks
-import useAutoCompleteSelect from "../../../hooks/useAutoCompleteSelect";
-
 // State
 import { useSearchContext } from "../../../state/SearchContext";
 
@@ -24,6 +21,7 @@ const AutoComplete = () => {
   // const handleAutoCompleteSelect = useAutoCompleteSelect();
 
   const handleAutocompleteClick = (placeId) => {
+    console.log("placeId", placeId);
     setAutoCompleteResults([]);
     setSearchResults([]);
     setQueryInput("");
@@ -41,7 +39,9 @@ const AutoComplete = () => {
           return (
             <div
               key={place.place_id}
-              onClick={() => handleAutocompleteClick(place.place_id)}
+              onClick={() => {
+                handleAutocompleteClick(place.place_id);
+              }}
               className={styles.autocompleteItem}
             >
               <div className={styles.resultText}>

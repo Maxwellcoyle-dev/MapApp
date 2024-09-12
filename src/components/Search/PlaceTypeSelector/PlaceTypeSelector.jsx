@@ -70,22 +70,24 @@ const PlaceTypeSelector = () => {
 
   return (
     <div className={styles.placeTypeSelectorContainer}>
-      <h2 className={styles.title}>Google Places Search</h2>
-      <div className={styles.scrollContainer}>
-        {types.map((type) => (
-          <div
-            key={type.value}
-            className={
-              placeType === type.value
-                ? styles.typeContainerSelected
-                : styles.typeContainer
-            }
-            onClick={() => handleSelectPlace(type.value)}
-          >
-            {type.icon}
-            <span className={styles.text}>{type.name}</span>
-          </div>
-        ))}
+      <h4>Type of Place</h4>
+      <div className={styles.scrollWrapper}>
+        <div className={styles.scrollContainer}>
+          {types.map((type) => (
+            <div
+              key={type.value}
+              className={
+                placeType === type.value
+                  ? styles.typeContainerSelected
+                  : styles.typeContainer
+              }
+              onClick={() => handleSelectPlace(type.value)}
+            >
+              {type.icon}
+              <span className={styles.text}>{type.name}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

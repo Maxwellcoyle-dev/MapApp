@@ -39,7 +39,8 @@ function SignIn() {
   // Temporary sollution for redirect issue. Make sure that authenticated users are not stuck on signin page.
   useEffect(() => {
     if (appUser) {
-      navigate(-1);
+      navigate(from);
+      console.log("Navigating to", from);
     }
   }, [appUser]);
 
@@ -56,6 +57,7 @@ function SignIn() {
       setError(error.message || "Failed to sign in");
     } finally {
       setLoading(false);
+      navigate(from);
     }
   };
 
@@ -144,13 +146,6 @@ function SignIn() {
           className={styles.goBackButton}
         >
           Create Account
-        </Button>
-        <Button
-          type="link"
-          onClick={() => navigate(-1)}
-          className={styles.goBackButton}
-        >
-          Continue as Guest
         </Button>
       </div>
     </div>
