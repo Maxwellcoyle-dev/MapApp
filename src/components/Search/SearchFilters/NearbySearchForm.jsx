@@ -1,13 +1,14 @@
-import React, { useState } from "react";
-import { Input, Radio, Button, Select } from "antd";
+import React from "react";
+import { Radio, Select } from "antd";
+
+// Components
+import PlaceTypeSelector from "../PlaceTypeSelector/PlaceTypeSelector";
+
+// Context
+import { useSearchContext } from "../../../state/SearchContext";
 
 const NearbySearchForm = () => {
-  const [locationSearchType, setLocationSearchType] = useState("city");
-  const [location, setLocation] = useState("");
-  const [radius, setRadius] = useState(10);
-
-  const [rankBy, setRankBy] = useState("POP");
-  const [userLocation, setUserLocation] = useState("Edgewood, Pa");
+  const { searchRadius, setSearchRadius } = useSearchContext();
 
   const radiusOptions = [
     { label: "2 miles", value: 2 },
@@ -21,11 +22,6 @@ const NearbySearchForm = () => {
     { label: "--", value: 0 },
   ];
 
-  const rankByOptions = [
-    { label: "Popularity", value: "POP" },
-    { label: "Distance", value: "DIST" },
-  ];
-
   return (
     <div
       style={{
@@ -33,31 +29,28 @@ const NearbySearchForm = () => {
         display: "flex",
         justifyContent: "space-between",
         gap: ".25rem",
+        padding: "0 1rem",
       }}
     >
-      <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: ".5rem",
+          width: "100%",
+        }}
+      >
+        <PlaceTypeSelector />
+
         <h4>Radius</h4>
         <Select
           options={radiusOptions}
           style={{ minWidth: "6rem" }}
-          value={radius}
+          value={searchRadius}
           optionType="default"
           onChange={(event) => {
             console.log(event);
-            setRadius(event);
-          }}
-        />
-      </div>
-      <div>
-        <h4>Rank By</h4>
-        <Radio.Group
-          options={rankByOptions}
-          style={{ minWidth: "6rem" }}
-          value={rankBy}
-          optionType="button"
-          onChange={(event) => {
-            console.log(event);
-            setRankBy(event);
+            setSearchRadius(event);
           }}
         />
       </div>

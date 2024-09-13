@@ -20,9 +20,17 @@ import styles from "./SearchResultsListPage.module.css";
 const SearchResultsListPage = () => {
   const navigate = useNavigate();
   const { showMap, setCurrentMapPins } = useMapContext();
-  const { searchQuery, setSearchQuery } = useSearchContext();
 
-  const { placesResults, isPlacesResultsLoading } =
+  const {
+    searchQuery,
+    setSearchQuery,
+    searchType,
+    searchRadius,
+    rankBy,
+    placeType,
+  } = useSearchContext();
+
+  const { placesResults, isPlacesResultsLoading, refetchPlacesResults } =
     usePlacesSearch(searchQuery);
 
   const { setPlaceType } = useSearchContext();
@@ -32,6 +40,10 @@ const SearchResultsListPage = () => {
     setSearchQuery("");
     navigate(-1);
   };
+
+  if (!placesResults || placesResults?.length === 0) {
+    refetchPlacesResults();
+  }
 
   useEffect(() => {
     if (placesResults) {
@@ -46,12 +58,19 @@ const SearchResultsListPage = () => {
         className={styles.backButton}
         onClick={handleBack}
       />
+      <div className={styles.searchParamsContainer}>
+        <h3>Search Parameters:</h3>
+        <p>Query: {searchQuery}</p>
+        <p>Place Type: {placeType}</p>
+        <p>Search Type: {searchType}</p>
+        <p>Search Radius: {searchRadius} miles</p>
+        <p>Rank By: {rankBy}</p>
+      </div>
       {isPlacesResultsLoading && (
         <div className={styles.spinContainer}>
           <Spin />
         </div>
       )}
-
       {placesResults &&
         placesResults.map(
           (result) =>

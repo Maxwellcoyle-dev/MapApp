@@ -60,13 +60,7 @@ const types = [
 ];
 
 const PlaceTypeSelector = () => {
-  const navigate = useNavigate();
   const { placeType, setPlaceType } = useSearchContext();
-
-  const handleSelectPlace = (type) => {
-    setPlaceType(type);
-    navigate("/results-list");
-  };
 
   return (
     <div className={styles.placeTypeSelectorContainer}>
@@ -81,7 +75,7 @@ const PlaceTypeSelector = () => {
                   ? styles.typeContainerSelected
                   : styles.typeContainer
               }
-              onClick={() => handleSelectPlace(type.value)}
+              onClick={() => setPlaceType(type.value)}
             >
               {type.icon}
               <span className={styles.text}>{type.name}</span>

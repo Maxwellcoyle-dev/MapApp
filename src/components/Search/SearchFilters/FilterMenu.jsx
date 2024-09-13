@@ -1,14 +1,10 @@
-import React, { useState } from "react";
-import { Button, Radio, Switch } from "antd";
-import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
-
-import PlaceTypeSelector from "../PlaceTypeSelector/PlaceTypeSelector";
-
-import { useSearchContext } from "../../../state/SearchContext";
+import React from "react";
+import { Button, Radio } from "antd";
+import { FilterOutlined } from "@ant-design/icons";
 
 const searchTypeOptions = [
+  { label: "Places", value: "places" },
   { label: "Nearby", value: "nearby" },
-  { label: "Location", value: "location" },
 ];
 
 const FilterMenu = ({
@@ -21,37 +17,24 @@ const FilterMenu = ({
     <div
       style={{
         display: "flex",
-        flexDirection: "column",
-        gap: ".5rem",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "1rem",
+        width: "100%",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+      <Radio.Group
+        options={searchTypeOptions}
+        value={searchType}
+        onClick={(e) => {
+          console.log(e);
         }}
-      >
-        <Button
-          icon={<FilterOutlined style={{ fontSize: "1rem" }} />}
-          style={{ padding: ".5rem", width: "auto", height: "auto" }}
-          onClick={() => setShowFilters(!showFilters)}
-        />
-
-        <Radio.Group
-          options={searchTypeOptions}
-          value={searchType}
-          onClick={(e) => {
-            console.log(e);
-          }}
-          onChange={(e) => {
-            console.log(e.target.value);
-            setSearchType(e.target.value);
-          }}
-          optionType="button"
-        />
-      </div>
-      <PlaceTypeSelector />
+        onChange={(e) => {
+          console.log(e.target.value);
+          setSearchType(e.target.value);
+        }}
+        optionType="button"
+      />
     </div>
   );
 };

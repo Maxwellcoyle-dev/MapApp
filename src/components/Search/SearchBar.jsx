@@ -1,20 +1,26 @@
 // Libaries
-import React from "react";
+import React, { useState } from "react";
 
 // Components
-import Input from "./Input/Input";
-import AutoComplete from "./AutoComplete/AutoComplete";
+
 import SearchNav from "./SearchNav/SearchNav";
+import FilterMenu from "./SearchFilters/FilterMenu";
+import LocationSearchForm from "./SearchFilters/LocationSearchForm";
+import NearbySearchForm from "./SearchFilters/NearbySearchForm";
 
 // State
 import { useMapContext } from "../../state/MapContext";
+import { useSearchContext } from "../../state/SearchContext";
 
 // Styles
 import styles from "./SearchBar.module.css";
-import Filters from "./SearchFilters/Filters";
 
 const SearchBar = () => {
+  const [showFilters, setShowFilters] = useState(true);
+  const [locationSearchType, setLocationSearchType] = useState("city");
+
   const { showMap } = useMapContext();
+  const { searchType, setSearchType } = useSearchContext();
 
   return (
     <div
@@ -23,11 +29,24 @@ const SearchBar = () => {
       }
     >
       <SearchNav />
-      <Input />
-      <div className={styles.autocompleteWrapper}>
-        <AutoComplete />
-      </div>
-      <Filters />
+      <FilterMenu
+        searchType={searchType}
+        setSearchType={setSearchType}
+        showFilters={showFilters}
+        setShowFilters={setShowFilters}
+      />
+
+      {showFilters && (
+        <>
+          {searchType === "places" && (
+            <LocationSearchForm
+              locationSearchType={locationSearchType}
+              setLocationSearchType={setLocationSearchType}
+            />
+          )}
+          {searchType === "nearby" && <NearbySearchForm />}
+        </>
+      )}
     </div>
   );
 };
