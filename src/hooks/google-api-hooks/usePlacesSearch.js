@@ -9,13 +9,13 @@ import { useMapContext } from "../../state/MapContext";
 import { textSearch } from "./place-search-functions/textSearch";
 import { nearbySearch } from "./place-search-functions/nearbySearch";
 
-const usePlacesSearch = (searchQuery) => {
+const usePlacesSearch = () => {
   const map = useMap();
   const placesLibrary = useMapsLibrary("places");
   const SearchNearbyRankPreference = useMapsLibrary("places");
   const geocodingLibrary = useMapsLibrary("geocoding");
 
-  const { searchType, searchRadius, rankBy, placeType, searchLocation } =
+  const { searchType, searchRadius, placeType, searchLocation, searchQuery } =
     useSearchContext();
   const { userLocation } = useMapContext();
 
@@ -23,41 +23,35 @@ const usePlacesSearch = (searchQuery) => {
     console.log("Search query: ", searchQuery);
     console.log("Search type: ", searchType);
     console.log("Search radius: ", searchRadius);
-    console.log("Rank by: ", rankBy);
     console.log("Place type: ", placeType);
+    console.log("User location: ", userLocation);
+    console.log("searchLocation: ", searchLocation);
     console.log("Fetching text search places");
 
     try {
       let results;
       let center;
-      if (searchType === "nearby") {
+      if (searchType === "nearby" || searchType === "places") {
         console.log("User location: ", userLocation);
         center = userLocation;
       } else {
         // Geocode the searchLocation
-        const geocoder = new geocodingLibrary.Geocoder();
-        const results = await new Promise((resolve, reject) => {
-          geocoder.geocode({ address: searchLocation }, (results, status) => {
-            if (status === "OK") resolve(results);
-            else reject(status);
-          });
-        });
-        center = results[0].geometry.location;
+        // const geocoder = new geocodingLibrary.Geocoder();
+        // // const results = await new Promise((resolve, reject) => {
+        // //   geocoder.geocode({ address: searchLocation }, (results, status) => {
+        // //     if (status === "OK") resolve(results);
+        // //     else reject(status);
+        // //   });
+        // // });
+        // // center = results[0].geometry.location;
       }
 
-      console.log("Center: ", center);
-      map.setCenter(center);
+      // console.log("Center: ", center);
+      // map.setCenter(center);
 
-      if (searchType === "location") {
-        results = await textSearch(
-          placesLibrary,
-          map,
-          searchQuery,
-          searchType,
-          searchRadius,
-          rankBy,
-          placeType || "establishment"
-        );
+      if (searchType === "places") {
+        console.log("Searching for places");
+        results = await textSearch(placesLibrary, map, searchQuery, placeType);
       } else if (searchType === "nearby") {
         center = userLocation;
         console.log("Center: ", center);
@@ -66,10 +60,7 @@ const usePlacesSearch = (searchQuery) => {
           placesLibrary,
           SearchNearbyRankPreference,
           map,
-          searchQuery,
-          searchType,
           searchRadius,
-          rankBy,
           placeType || "establishment"
         );
       }
@@ -122,17 +113,15 @@ const usePlacesSearch = (searchQuery) => {
   } = useQuery({
     queryKey: [
       "places-search",
-      searchQuery || "nearby",
-      searchType,
-      searchRadius,
-      rankBy,
-      placeType,
+      placeType || "establishment",
+      searchQuery || "establishments",
     ],
     queryFn: fetchPlaces,
     enabled: !!map && !!placesLibrary,
     staleTime: 1000 * 60 * 10, // Cache the data for 10 minutes
     cacheTime: 1000 * 60 * 30, // Keep the data in cache for 30 minutes
     refetchOnWindowFocus: false, // Do not refetch on window focus
+    retry: false,
   });
 
   return {

@@ -1,18 +1,29 @@
 import React from "react";
-import { Button, Radio } from "antd";
-import { FilterOutlined } from "@ant-design/icons";
+import { Radio, Switch } from "antd";
+
+// State
+import { useSearchContext } from "../../../state/SearchContext";
 
 const searchTypeOptions = [
-  { label: "Places", value: "places" },
-  { label: "Nearby", value: "nearby" },
+  { label: "Place", value: "places" },
+  { label: "Type", value: "nearby" },
 ];
 
-const FilterMenu = ({
-  showFilters,
-  setShowFilters,
-  searchType,
-  setSearchType,
-}) => {
+const searchLocationOptions = [
+  { label: "Near Me", value: "nearMe" },
+  { label: "Set Location", value: "setLocation" },
+];
+
+const FilterMenu = () => {
+  const {
+    setSearchLocation,
+    searchLocation,
+    searchType,
+    setSearchType,
+    nearby,
+    setNearby,
+  } = useSearchContext();
+
   return (
     <div
       style={{
@@ -23,18 +34,38 @@ const FilterMenu = ({
         width: "100%",
       }}
     >
-      <Radio.Group
-        options={searchTypeOptions}
-        value={searchType}
-        onClick={(e) => {
-          console.log(e);
+      <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
+        <Radio.Group
+          options={searchTypeOptions}
+          value={searchType}
+          onClick={(e) => {
+            console.log(e);
+          }}
+          onChange={(e) => {
+            console.log(e.target.value);
+            setSearchType(e.target.value);
+          }}
+          optionType="button"
+        />
+      </div>
+      <div
+        style={{
+          display: "flex",
+          gap: ".5rem",
+          border: "1px solid gray",
+          padding: ".5rem",
+          borderRadius: ".5rem",
         }}
-        onChange={(e) => {
-          console.log(e.target.value);
-          setSearchType(e.target.value);
-        }}
-        optionType="button"
-      />
+      >
+        <h4>Nearby</h4>
+        <Switch
+          checked={nearby}
+          onChange={(checked) => {
+            console.log(checked);
+            setNearby(checked);
+          }}
+        />
+      </div>
     </div>
   );
 };

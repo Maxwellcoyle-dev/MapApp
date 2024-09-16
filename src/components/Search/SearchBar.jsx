@@ -2,11 +2,11 @@
 import React, { useState } from "react";
 
 // Components
-
 import SearchNav from "./SearchNav/SearchNav";
 import FilterMenu from "./SearchFilters/FilterMenu";
 import LocationSearchForm from "./SearchFilters/LocationSearchForm";
 import NearbySearchForm from "./SearchFilters/NearbySearchForm";
+import LocationInput from "./LocationInput/LocationInput";
 
 // State
 import { useMapContext } from "../../state/MapContext";
@@ -20,7 +20,7 @@ const SearchBar = () => {
   const [locationSearchType, setLocationSearchType] = useState("city");
 
   const { showMap } = useMapContext();
-  const { searchType, setSearchType } = useSearchContext();
+  const { searchType, setSearchType, nearby } = useSearchContext();
 
   return (
     <div
@@ -35,7 +35,7 @@ const SearchBar = () => {
         showFilters={showFilters}
         setShowFilters={setShowFilters}
       />
-
+      {!nearby && <LocationInput />}
       {showFilters && (
         <>
           {searchType === "places" && (

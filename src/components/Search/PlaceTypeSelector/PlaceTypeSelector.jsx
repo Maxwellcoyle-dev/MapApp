@@ -11,10 +11,6 @@ import {
 } from "react-icons/md";
 import { BiCoffeeTogo } from "react-icons/bi";
 
-// Hooks
-import useListPlaces from "../../../hooks/backend-hooks/useListPlaces";
-import useAppUser from "../../../hooks/backend-hooks/useAppUser";
-
 // State
 import { useSearchContext } from "../../../state/SearchContext";
 
@@ -62,6 +58,8 @@ const types = [
 const PlaceTypeSelector = () => {
   const { placeType, setPlaceType } = useSearchContext();
 
+  const navigate = useNavigate();
+
   return (
     <div className={styles.placeTypeSelectorContainer}>
       <h4>Type of Place</h4>
@@ -75,7 +73,10 @@ const PlaceTypeSelector = () => {
                   ? styles.typeContainerSelected
                   : styles.typeContainer
               }
-              onClick={() => setPlaceType(type.value)}
+              onClick={() => {
+                setPlaceType(type.value);
+                navigate(`/results-list`);
+              }}
             >
               {type.icon}
               <span className={styles.text}>{type.name}</span>

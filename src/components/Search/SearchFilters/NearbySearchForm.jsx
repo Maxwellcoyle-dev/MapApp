@@ -25,35 +25,26 @@ const NearbySearchForm = () => {
   return (
     <div
       style={{
-        width: "100%",
         display: "flex",
-        justifyContent: "space-between",
-        gap: ".25rem",
+        flexDirection: "column",
+        gap: ".5rem",
+        width: "100%",
         padding: "0 1rem",
       }}
     >
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: ".5rem",
-          width: "100%",
-        }}
-      >
-        <PlaceTypeSelector />
+      <PlaceTypeSelector />
 
-        <h4>Radius</h4>
-        <Select
-          options={radiusOptions}
-          style={{ minWidth: "6rem" }}
-          value={searchRadius}
-          optionType="default"
-          onChange={(event) => {
-            console.log(event);
-            setSearchRadius(event);
-          }}
-        />
-      </div>
+      <h4>Radius</h4>
+      <Select
+        options={radiusOptions}
+        style={{ minWidth: "6rem" }}
+        value={searchRadius}
+        optionType="default"
+        onChange={(event) => {
+          console.log(event);
+          setSearchRadius(event);
+        }}
+      />
     </div>
   );
 };
