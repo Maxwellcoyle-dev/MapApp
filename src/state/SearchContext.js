@@ -12,7 +12,10 @@ export const SearchProvider = ({ children }) => {
   const [autoCompleteResults, setAutoCompleteResults] = useState([]);
   const [locationAutoCompleteResults, setLocationAutoCompleteResults] =
     useState([]);
-  const [searchLocation, setSearchLocation] = useState("");
+  const [searchLocation, setSearchLocation] = useState({
+    coords: null,
+    locality: null,
+  });
   const [locationQueryInput, setLocationQueryInput] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [searchType, setSearchType] = useState("places");

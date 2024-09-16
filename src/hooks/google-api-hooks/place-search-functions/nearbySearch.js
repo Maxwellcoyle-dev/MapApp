@@ -14,18 +14,21 @@ const schema = {
 
 export const nearbySearch = async (
   placesLibrary,
-  SearchNearbyRankPreference,
   map,
   searchRadius,
   placeType
 ) => {
   const placesService = new placesLibrary.PlacesService(map);
 
+  if (!placesLibrary || !map) {
+    console.log("Places library or map not found");
+    return [];
+  }
+
   console.log("placesService object -- ", placesService);
   console.log("nearby search - getPlaces function arguments -- ");
   console.log("searchRadius -- ", searchRadius * 1609.34);
   console.log("placeType -- ", placeType);
-  console.log("SearchNearbyRankPreference -- ", SearchNearbyRankPreference);
 
   const radius = searchRadius * 1609.34;
 

@@ -20,7 +20,7 @@ export const textSearch = async (
   placeType
 ) => {
   if (!map || !placesLibrary || !searchQuery) {
-    console.error(
+    console.log(
       "textSearch: Missing required arguments. Required arguments are placesLibrary, map, searchQuery."
     );
     return;

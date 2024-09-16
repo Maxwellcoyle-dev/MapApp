@@ -12,8 +12,6 @@ import { nearbySearch } from "./place-search-functions/nearbySearch";
 const usePlacesSearch = () => {
   const map = useMap();
   const placesLibrary = useMapsLibrary("places");
-  const SearchNearbyRankPreference = useMapsLibrary("places");
-  const geocodingLibrary = useMapsLibrary("geocoding");
 
   const { searchType, searchRadius, placeType, searchLocation, searchQuery } =
     useSearchContext();
@@ -31,34 +29,19 @@ const usePlacesSearch = () => {
     try {
       let results;
       let center;
-      if (searchType === "nearby" || searchType === "places") {
-        console.log("User location: ", userLocation);
-        center = userLocation;
-      } else {
-        // Geocode the searchLocation
-        // const geocoder = new geocodingLibrary.Geocoder();
-        // // const results = await new Promise((resolve, reject) => {
-        // //   geocoder.geocode({ address: searchLocation }, (results, status) => {
-        // //     if (status === "OK") resolve(results);
-        // //     else reject(status);
-        // //   });
-        // // });
-        // // center = results[0].geometry.location;
-      }
 
-      // console.log("Center: ", center);
-      // map.setCenter(center);
+      console.log("User location: ", userLocation);
+      center = userLocation;
 
       if (searchType === "places") {
         console.log("Searching for places");
         results = await textSearch(placesLibrary, map, searchQuery, placeType);
-      } else if (searchType === "nearby") {
+      } else if (searchType === "type") {
         center = userLocation;
         console.log("Center: ", center);
 
         results = await nearbySearch(
           placesLibrary,
-          SearchNearbyRankPreference,
           map,
           searchRadius,
           placeType || "establishment"
