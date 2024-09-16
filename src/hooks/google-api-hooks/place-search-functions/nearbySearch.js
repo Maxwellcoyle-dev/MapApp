@@ -15,22 +15,29 @@ const schema = {
 export const nearbySearch = async (
   placesLibrary,
   map,
-  placeType,
-  rankPreference = "popularity"
+  searchRadius,
+  placeType
 ) => {
   const placesService = new placesLibrary.PlacesService(map);
-  console.log("placesService object -- ", placesService);
 
+  if (!placesLibrary || !map) {
+    console.log("Places library or map not found");
+    return [];
+  }
+
+  console.log("placesService object -- ", placesService);
   console.log("nearby search - getPlaces function arguments -- ");
-  console.log("included Primary Types -- ", placeType);
-  console.log("rank Preference -- ", rankPreference);
+  console.log("searchRadius -- ", searchRadius * 1609.34);
+  console.log("placeType -- ", placeType);
+
+  const radius = searchRadius * 1609.34;
 
   // if ranking by popularity then radius is required. If ranking by distance then radius is not required.
 
   const request = {
     location: map.getCenter(),
-    radius: 5000,
-    keyword: placeType,
+    radius,
+    keyword: placeType || "establishments",
   };
   console.log("nearby search - getPlaces function request -- ", request);
 

@@ -32,12 +32,6 @@ const MapView = ({ markerList }) => {
 
   const handleMarkerClick = useMarkerClick();
 
-  useEffect(() => {
-    console.log("MapView mounted");
-    console.log("center", center);
-    console.log("zoom", zoom);
-  }, [center, zoom]);
-
   return (
     <div className={styles.mapViewContainer} style={{ height: "100vh" }}>
       <Map

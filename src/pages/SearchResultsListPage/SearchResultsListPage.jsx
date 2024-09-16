@@ -20,9 +20,10 @@ import styles from "./SearchResultsListPage.module.css";
 const SearchResultsListPage = () => {
   const navigate = useNavigate();
   const { showMap, setCurrentMapPins } = useMapContext();
+
   const { searchQuery, setSearchQuery } = useSearchContext();
 
-  const { placesResults, isPlacesResultsLoading } =
+  const { placesResults, isPlacesResultsLoading, refetchPlacesResults } =
     usePlacesSearch(searchQuery);
 
   const { setPlaceType } = useSearchContext();
@@ -32,6 +33,10 @@ const SearchResultsListPage = () => {
     setSearchQuery("");
     navigate(-1);
   };
+
+  if (!placesResults || placesResults?.length === 0) {
+    refetchPlacesResults();
+  }
 
   useEffect(() => {
     if (placesResults) {
@@ -46,12 +51,12 @@ const SearchResultsListPage = () => {
         className={styles.backButton}
         onClick={handleBack}
       />
+
       {isPlacesResultsLoading && (
         <div className={styles.spinContainer}>
           <Spin />
         </div>
       )}
-
       {placesResults &&
         placesResults.map(
           (result) =>

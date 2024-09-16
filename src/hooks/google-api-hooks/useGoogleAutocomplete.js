@@ -1,10 +1,7 @@
 import { useState, useEffect } from "react";
 import { useMapsLibrary, useMap } from "@vis.gl/react-google-maps";
-import { useSearchContext } from "../../state/SearchContext";
 
 const useGoogleAutocomplete = () => {
-  const { setAutoCompleteResults, setQueryInput, setSearchQuery } =
-    useSearchContext();
   const [autocompleteService, setAutocompleteService] = useState(null);
   const map = useMap();
   const placesLibrary = useMapsLibrary("places");
