@@ -44,7 +44,7 @@ const SearchBar = () => {
               setLocationSearchType={setLocationSearchType}
             />
           )}
-          {searchType === "nearby" && <NearbySearchForm />}
+          {searchType === "type" && <NearbySearchForm />}
         </>
       )}
     </div>
