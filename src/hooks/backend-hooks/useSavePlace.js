@@ -1,5 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 
 import { savePlace } from "../../api/placeApi";
 
@@ -10,8 +9,6 @@ const useSavePlace = (placeId) => {
   const { appUser } = useAppUser();
 
   const { optimalPlaceData } = useGetOptimalPlaceData(placeId);
-
-  const navigate = useNavigate();
 
   const queryClient = useQueryClient();
 

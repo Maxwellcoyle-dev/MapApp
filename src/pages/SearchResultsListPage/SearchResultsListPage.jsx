@@ -53,7 +53,7 @@ const SearchResultsListPage = () => {
     if (placesResults) {
       setCurrentMapPins(placesResults);
     }
-  }, [placesResults]);
+  }, [placesResults, setCurrentMapPins]);
 
   return (
     <div className={!showMap ? styles.listViewDiv : styles.listViewDivHide}>
