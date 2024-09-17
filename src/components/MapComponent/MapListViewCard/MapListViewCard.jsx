@@ -18,9 +18,13 @@ import usePlaceIsSaved from "../../../hooks/usePlaceIsSaved";
 // Styles
 import styles from "./MapListViewCard.module.css";
 
-const MapListViewCard = ({ place, placeId }) => {
+const MapListViewCard = ({
+  place,
+  placeId,
+  setSelectedPlaceId,
+  setShowSavePlaceModal,
+}) => {
   const [imageUrl, setImageUrl] = useState(null);
-  const { setSelectedPlace } = useSearchContext();
 
   const { isPlaceSaved, isPlaceSavedLoading } = usePlaceIsSaved(placeId);
 
@@ -36,8 +40,8 @@ const MapListViewCard = ({ place, placeId }) => {
   }, [place]);
 
   const handleSavePlace = () => {
-    setSelectedPlace(place);
-    navigate("/save-place");
+    setSelectedPlaceId(placeId);
+    setShowSavePlaceModal(true);
   };
 
   if (!place) {

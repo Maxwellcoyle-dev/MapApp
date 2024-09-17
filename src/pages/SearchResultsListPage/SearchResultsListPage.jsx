@@ -1,15 +1,18 @@
 // Libraries
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Spin, Button } from "antd";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
 // Components
 import MapListViewCard from "../../components/MapComponent/MapListViewCard/MapListViewCard";
+import SavePlaceModal from "../../components/SavePlaceModal/SavePlaceModal";
 
 // State
 import { useSearchContext } from "../../state/SearchContext";
 import { useMapContext } from "../../state/MapContext";
+import { useAppContext } from "../../state/AppContext";
+import { useAuthContext } from "../../state/AuthContext";
 
 // Hooks
 import usePlacesSearch from "../../hooks/google-api-hooks/usePlacesSearch";
@@ -18,15 +21,23 @@ import usePlacesSearch from "../../hooks/google-api-hooks/usePlacesSearch";
 import styles from "./SearchResultsListPage.module.css";
 
 const SearchResultsListPage = () => {
-  const navigate = useNavigate();
-  const { showMap, setCurrentMapPins } = useMapContext();
+  const [selectedPlaceId, setSelectedPlaceId] = useState(null);
 
+  const navigate = useNavigate();
+
+  const { user } = useAuthContext();
+  const { showSavePlaceModal, setShowSavePlaceModal } = useAppContext();
+  const { showMap, setCurrentMapPins } = useMapContext();
   const { searchQuery, setSearchQuery } = useSearchContext();
 
   const { placesResults, isPlacesResultsLoading, refetchPlacesResults } =
     usePlacesSearch(searchQuery);
 
   const { setPlaceType } = useSearchContext();
+
+  useEffect(() => {
+    console.log("user", user);
+  }, [user]);
 
   const handleBack = () => {
     setPlaceType(null);
@@ -66,9 +77,17 @@ const SearchResultsListPage = () => {
                 key={result.placeId}
                 placeId={result.placeId}
                 place={result}
+                setSelectedPlaceId={setSelectedPlaceId}
+                setShowSavePlaceModal={setShowSavePlaceModal}
               />
             )
         )}
+      <SavePlaceModal
+        visible={showSavePlaceModal}
+        onClose={() => setShowSavePlaceModal(false)}
+        placeId={selectedPlaceId} // Pass the appropriate placeId here
+        userId={user?.sub}
+      />
     </div>
   );
 };

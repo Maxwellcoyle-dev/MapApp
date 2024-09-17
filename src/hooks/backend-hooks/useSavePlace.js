@@ -3,19 +3,11 @@ import { useNavigate } from "react-router-dom";
 
 import { savePlace } from "../../api/placeApi";
 
-import { useAppContext } from "../../state/AppContext";
-
 import useGetOptimalPlaceData from "../useGetOptimalPlaceData";
 import useAppUser from "./useAppUser";
 
 const useSavePlace = (placeId) => {
-  if (!placeId) {
-    throw new Error("placeId is required");
-  }
-
   const { appUser } = useAppUser();
-
-  console.log("placeId: ", placeId);
 
   const { optimalPlaceData } = useGetOptimalPlaceData(placeId);
 
@@ -52,10 +44,6 @@ const useSavePlace = (placeId) => {
       });
       queryClient.invalidateQueries({
         queryKey: ["list-places", variables.listId],
-      });
-
-      navigate(`/place/${optimalPlaceData.placeId}`, {
-        state: { from: "addToList" },
       });
     },
   });
