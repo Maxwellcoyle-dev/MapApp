@@ -35,7 +35,13 @@ const usePlacesSearch = () => {
 
       if (searchType === "places") {
         console.log("Searching for places");
-        results = await textSearch(placesLibrary, map, searchQuery, placeType);
+        results = await textSearch(
+          placesLibrary,
+          map,
+          searchQuery,
+          placeType,
+          searchLocation
+        );
       } else if (searchType === "type") {
         center = userLocation;
         console.log("Center: ", center);
@@ -43,8 +49,8 @@ const usePlacesSearch = () => {
         results = await nearbySearch(
           placesLibrary,
           map,
-          searchRadius,
-          placeType || "establishment"
+          placeType || "establishment",
+          searchLocation
         );
       }
 
@@ -98,6 +104,7 @@ const usePlacesSearch = () => {
       "places-search",
       placeType || "establishment",
       searchQuery || "establishments",
+      searchLocation,
     ],
     queryFn: fetchPlaces,
     enabled: !!map && !!placesLibrary,

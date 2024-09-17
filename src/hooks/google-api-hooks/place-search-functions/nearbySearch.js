@@ -16,7 +16,8 @@ export const nearbySearch = async (
   placesLibrary,
   map,
   searchRadius,
-  placeType
+  placeType,
+  searchLocation
 ) => {
   const placesService = new placesLibrary.PlacesService(map);
 
