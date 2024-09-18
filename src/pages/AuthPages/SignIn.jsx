@@ -1,71 +1,43 @@
 import React, { useState, useEffect } from "react";
-import {
-  signIn,
-  fetchUserAttributes,
-  signInWithRedirect,
-  fetchAuthSession,
-} from "@aws-amplify/auth";
+import { signIn, signInWithRedirect, fetchAuthSession } from "@aws-amplify/auth";
 import { Form, Input, Button, Alert, Collapse } from "antd";
-import { GoogleOutlined } from "@ant-design/icons"; // For Google logo
-import { useNavigate, useLocation } from "react-router-dom";
-
-// Context
+import { GoogleOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../state/AuthContext";
-
-// Hooks
-import useAppUser from "../../hooks/backend-hooks/useAppUser";
-
-// Styles
 import styles from "./Auth.module.css";
 import demoLogo from "../../assets/ap-logo-dmeo.png";
 
 function SignIn() {
-  const [authSession, setAuthSession] = useState(null);
-  const { login } = useAuthContext();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [authChecked, setAuthChecked] = useState(false);
-
+  const { login } = useAuthContext();
   const navigate = useNavigate();
-  const location = useLocation();
 
-  // Location state handling
-  const from = location.state?.from?.pathname || "/";
-  console.log("from", from);
-
-  const { appUser } = useAppUser();
-
-  const getAuthSession = async () => {
-    const authSession = await fetchAuthSession();
-    setAuthSession(authSession);
-    console.log("authSession", authSession);
-  };
-
-  // Temporary sollution for redirect issue. Make sure that authenticated users are not stuck on signin page.
   useEffect(() => {
-    getAuthSession();
-    if (appUser || authSession) {
-      navigate(from);
-      console.log("Navigating to", from);
-    }
-  }, [appUser, authSession, getAuthSession]);
+    const checkAuth = async () => {
+      try {
+        await fetchAuthSession();
+        navigate("/");
+      } catch (error) {
+        // User is not authenticated, stay on sign-in page
+      }
+    };
+    checkAuth();
+  }, [navigate]);
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (values) => {
     setLoading(true);
     setError("");
     try {
-      console.log("from", from);
+      const { username, password } = values;
       const amplifyUser = await signIn(username, password);
-      const attributes = await fetchUserAttributes(amplifyUser);
-      login({ ...amplifyUser, ...attributes });
+      login(amplifyUser);
+      navigate("/");
     } catch (error) {
       console.error("Error signing in", error);
       setError(error.message || "Failed to sign in");
     } finally {
       setLoading(false);
-      navigate(from);
     }
   };
 
@@ -77,32 +49,6 @@ function SignIn() {
       setError(error.message || "Failed to sign in with Google");
     }
   };
-
-  useEffect(() => {
-    console.log("Checking appUser for redirection:", appUser);
-    if (appUser && appUser.userId) {
-      console.log("Redirecting to", from);
-      navigate(from);
-    }
-  }, [appUser, navigate, from]);
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        await fetchAuthSession();
-        navigate(from);
-      } catch (error) {
-        // User is not authenticated
-      } finally {
-        setAuthChecked(true);
-      }
-    };
-    checkAuth();
-  }, [navigate, from]);
-
-  if (!authChecked) {
-    return null; // or a loading spinner
-  }
 
   return (
     <div className={styles.signInContainer}>
@@ -131,35 +77,20 @@ function SignIn() {
               <Form.Item
                 label="Username"
                 name="username"
-                rules={[
-                  { required: true, message: "Please input your username!" },
-                ]}
+                rules={[{ required: true, message: "Please input your username!" }]}
               >
-                <Input
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter your username"
-                />
+                <Input placeholder="Enter your username" />
               </Form.Item>
               <Form.Item
                 label="Password"
                 name="password"
-                rules={[
-                  { required: true, message: "Please input your password!" },
-                ]}
+                rules={[{ required: true, message: "Please input your password!" }]}
               >
-                <Input.Password
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                />
+                <Input.Password placeholder="Enter your password" />
               </Form.Item>
               {error && <Alert message={error} type="error" showIcon />}
               <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  loading={loading}
-                  block
-                >
+                <Button type="primary" htmlType="submit" loading={loading} block>
                   Sign In
                 </Button>
               </Form.Item>
