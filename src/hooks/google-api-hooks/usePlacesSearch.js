@@ -49,6 +49,7 @@ const usePlacesSearch = () => {
         results = await nearbySearch(
           placesLibrary,
           map,
+          searchRadius,
           placeType || "establishment",
           searchLocation
         );
@@ -105,6 +106,7 @@ const usePlacesSearch = () => {
       placeType || "establishment",
       searchQuery || "establishments",
       searchLocation,
+      searchRadius,
     ],
     queryFn: fetchPlaces,
     enabled: !!map && !!placesLibrary,

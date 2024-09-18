@@ -36,7 +36,7 @@ export const nearbySearch = async (
   // if ranking by popularity then radius is required. If ranking by distance then radius is not required.
 
   const request = {
-    location: map.getCenter(),
+    location: searchLocation.coords,
     radius,
     keyword: placeType || "establishments",
   };

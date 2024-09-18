@@ -42,7 +42,7 @@ const SearchResultsListPage = () => {
   const handleBack = () => {
     setPlaceType(null);
     setSearchQuery("");
-    navigate(-1);
+    navigate(-1, { replace: true });
   };
 
   if (!placesResults || placesResults?.length === 0) {
