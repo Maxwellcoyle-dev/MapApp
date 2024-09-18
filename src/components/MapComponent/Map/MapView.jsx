@@ -32,6 +32,8 @@ const MapView = ({ markerList }) => {
   const { center, zoom, userLocation } = useMapContext();
   useGetUserLocation();
 
+  console.log("userLocation", userLocation);
+
   const handleMarkerClick = useMarkerClick();
 
   return (
@@ -43,6 +45,24 @@ const MapView = ({ markerList }) => {
         options={mapOptions}
       >
         <MapComponent />
+        {userLocation && (
+          <AdvancedMarker
+            position={{
+              lat: userLocation.lat,
+              lng: userLocation.lng,
+            }}
+          >
+            <div
+              style={{
+                width: "16px",
+                height: "16px",
+                borderRadius: "50%",
+                backgroundColor: "blue",
+                border: "2px solid white",
+              }}
+            />
+          </AdvancedMarker>
+        )}
         {markerList?.length !== 0 &&
           markerList?.map((marker) => {
             const placeId = marker.placeId;
