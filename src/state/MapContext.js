@@ -12,6 +12,7 @@ export const MapProvider = ({ children }) => {
   const [mapLayout, setMapLayout] = useState("bottom");
   const [showMap, setShowMap] = useState(false);
   const [currentMapPins, setCurrentMapPins] = useState([]);
+  const [userLocality, setUserLocality] = useState("");
 
   return (
     <MapContext.Provider
@@ -30,6 +31,8 @@ export const MapProvider = ({ children }) => {
         setShowMap,
         currentMapPins,
         setCurrentMapPins,
+        userLocality,
+        setUserLocality,
       }}
     >
       {children}

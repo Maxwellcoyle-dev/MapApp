@@ -1,17 +1,23 @@
 import { useEffect, useState } from "react";
 import { useMapContext } from "../state/MapContext";
+import useGetCoordsLocality from "./google-api-hooks/useGetCoordsLocality";
 
 const useGetUserLocation = () => {
-  const { setUserLocation } = useMapContext();
+  const { setUserLocation, setUserLocality } = useMapContext();
   const [watchId, setWatchId] = useState(null);
 
+  const { getCoordsLocality } = useGetCoordsLocality();
+
   useEffect(() => {
-    const handlePositionUpdate = (position) => {
+    const handlePositionUpdate = async (position) => {
       const newLocation = {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
       };
-      
+
+      const locality = await getCoordsLocality(newLocation);
+      setUserLocality(locality);
+
       localStorage.setItem("mapAppUserLocation", JSON.stringify(newLocation));
       setUserLocation(newLocation);
     };
@@ -38,7 +44,10 @@ const useGetUserLocation = () => {
     }
 
     if (navigator.geolocation) {
-      const id = navigator.geolocation.watchPosition(handlePositionUpdate, handleError);
+      const id = navigator.geolocation.watchPosition(
+        handlePositionUpdate,
+        handleError
+      );
       setWatchId(id);
     } else {
       handleError({ code: 0, message: "Geolocation not supported" });

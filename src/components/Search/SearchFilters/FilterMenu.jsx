@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Radio, Switch, Input } from "antd";
+import React, { useEffect } from "react";
+import { Radio, Switch } from "antd";
 import { MdOutlineLocationOn } from "react-icons/md";
 import { useMap } from "@vis.gl/react-google-maps";
 
@@ -7,18 +7,17 @@ import { useMap } from "@vis.gl/react-google-maps";
 import { useSearchContext } from "../../../state/SearchContext";
 import { useMapContext } from "../../../state/MapContext";
 
-// Hooks
-import useGetCoordsLocality from "../../../hooks/google-api-hooks/useGetCoordsLocality";
-
 const searchTypeOptions = [
   { label: "Place", value: "places" },
   { label: "Type", value: "type" },
 ];
 
 const FilterMenu = () => {
-  const { userLocation } = useMapContext();
+  const { userLocation, userLocality } = useMapContext();
   const map = useMap();
   const {
+    setLocationQueryInput,
+    setLocationAutoCompleteResults,
     setSearchLocation,
     searchLocation,
     searchType,
@@ -27,21 +26,17 @@ const FilterMenu = () => {
     setNearby,
   } = useSearchContext();
 
-  const { getCoordsLocality } = useGetCoordsLocality();
-
   useEffect(() => {
     if (nearby) {
-      const getLocality = async () => {
-        const locality = await getCoordsLocality(userLocation);
-        setSearchLocation({
-          coords: userLocation,
-          locality: locality,
-        });
+      setSearchLocation({
+        coords: userLocation,
+        locality: userLocality,
+      });
 
-        map?.setCenter(userLocation);
-      };
-      getLocality();
+      map?.setCenter(userLocation);
     } else {
+      setLocationQueryInput("");
+      setLocationAutoCompleteResults([]);
       setSearchLocation({
         coords: null,
         locality: null,
@@ -94,7 +89,20 @@ const FilterMenu = () => {
             }}
           >
             <MdOutlineLocationOn />
-            <p>{searchLocation?.locality}</p>
+            <p style={{ 
+              maxWidth: "150px", 
+              whiteSpace: "nowrap", 
+              overflow: "hidden", 
+              textOverflow: "ellipsis" 
+            }}>
+              {searchLocation?.locality ? 
+                (searchLocation.locality.length > 15 
+                  ? searchLocation.locality.slice(0, 15) + '...' 
+                  : searchLocation.locality
+                ) 
+                : ''
+              }
+            </p>
           </div>
           <div
             style={{
