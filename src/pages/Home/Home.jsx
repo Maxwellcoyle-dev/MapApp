@@ -6,12 +6,10 @@ import { Outlet } from "react-router-dom";
 // Components
 import MapView from "../../components/MapComponent/Map/MapView";
 import SearchBar from "../../components/Search/SearchBar";
-import PlaceTypeSelector from "../../components/Search/PlaceTypeSelector/PlaceTypeSelector";
 import MyLists from "../../components/MyLists/MyLists";
 import MapToggle from "../../components/MapToggle/MapToggle";
 
 // Hooks
-import usePlacesSearch from "../../hooks/google-api-hooks/usePlacesSearch";
 import useListPlaces from "../../hooks/backend-hooks/useListPlaces";
 import useAppUser from "../../hooks/backend-hooks/useAppUser";
 
@@ -22,7 +20,6 @@ import { useMapContext } from "../../state/MapContext";
 // Styles
 import styles from "./Home.module.css";
 import CreateListModal from "../../components/CreateListModal/CreateListModal";
-import Search from "antd/es/input/Search";
 
 const Home = () => {
   const { userLocation } = useAppContext();

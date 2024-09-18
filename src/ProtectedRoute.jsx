@@ -1,11 +1,20 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
-import { useAuthContext } from "./state/AuthContext";
+import { fetchAuthSession } from "aws-amplify/auth";
 
 const ProtectedRoute = ({ children }) => {
-  const { user } = useAuthContext(); // Custom hook to check if user is authenticated
+  const [authSession, setAuthSession] = useState(null);
 
-  if (!user) {
+  useEffect(() => {
+    const getAuthSession = async () => {
+      const authSession = await fetchAuthSession();
+      console.log("authSession -- ", authSession);
+      setAuthSession(authSession);
+    };
+    getAuthSession();
+  }, []);
+
+  if (!authSession) {
     return (
       <Navigate to="/login" state={{ from: children.props.location }} replace />
     );

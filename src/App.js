@@ -54,6 +54,7 @@ function App() {
       (error) => console.error(error)
     );
   }, []);
+
   return (
     <SearchProvider>
       <Router>
