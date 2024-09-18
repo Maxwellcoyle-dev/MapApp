@@ -3,8 +3,8 @@ import {
   signIn,
   fetchUserAttributes,
   signInWithRedirect,
+  fetchAuthSession,
 } from "@aws-amplify/auth";
-import { Hub } from "aws-amplify";
 import { Form, Input, Button, Alert, Collapse } from "antd";
 import { GoogleOutlined } from "@ant-design/icons"; // For Google logo
 import { useNavigate, useLocation } from "react-router-dom";
@@ -20,12 +20,13 @@ import styles from "./Auth.module.css";
 import demoLogo from "../../assets/ap-logo-dmeo.png";
 
 function SignIn() {
+  const [authSession, setAuthSession] = useState(null);
   const { login } = useAuthContext();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [showManualSignIn, setShowManualSignIn] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -36,13 +37,20 @@ function SignIn() {
 
   const { appUser } = useAppUser();
 
+  const getAuthSession = async () => {
+    const authSession = await fetchAuthSession();
+    setAuthSession(authSession);
+    console.log("authSession", authSession);
+  };
+
   // Temporary sollution for redirect issue. Make sure that authenticated users are not stuck on signin page.
   useEffect(() => {
-    if (appUser) {
+    getAuthSession();
+    if (appUser || authSession) {
       navigate(from);
       console.log("Navigating to", from);
     }
-  }, [appUser]);
+  }, [appUser, authSession, getAuthSession]);
 
   const handleSignIn = async () => {
     setLoading(true);
@@ -77,6 +85,24 @@ function SignIn() {
       navigate(from);
     }
   }, [appUser, navigate, from]);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        await fetchAuthSession();
+        navigate(from);
+      } catch (error) {
+        // User is not authenticated
+      } finally {
+        setAuthChecked(true);
+      }
+    };
+    checkAuth();
+  }, [navigate, from]);
+
+  if (!authChecked) {
+    return null; // or a loading spinner
+  }
 
   return (
     <div className={styles.signInContainer}>

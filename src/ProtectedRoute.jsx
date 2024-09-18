@@ -1,26 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { fetchAuthSession } from "aws-amplify/auth";
 
-const ProtectedRoute = ({ children }) => {
-  const [authSession, setAuthSession] = useState(null);
+const ProtectedRoute = () => {
+  const [authStatus, setAuthStatus] = useState("loading");
 
   useEffect(() => {
     const getAuthSession = async () => {
-      const authSession = await fetchAuthSession();
-      console.log("authSession -- ", authSession);
-      setAuthSession(authSession);
+      try {
+        await fetchAuthSession();
+        setAuthStatus("authenticated");
+      } catch (error) {
+        setAuthStatus("unauthenticated");
+      }
     };
     getAuthSession();
   }, []);
 
-  if (!authSession) {
-    return (
-      <Navigate to="/login" state={{ from: children.props.location }} replace />
-    );
+  if (authStatus === "loading") {
+    return null; // or a loading spinner
   }
 
-  return children;
+  if (authStatus === "unauthenticated") {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <Outlet />;
 };
 
 export default ProtectedRoute;
