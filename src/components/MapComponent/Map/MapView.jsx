@@ -1,6 +1,6 @@
 // Libraries
 import React, { useEffect, useState } from "react";
-import { Map, AdvancedMarker, Pin, useMap } from "@vis.gl/react-google-maps";
+import { Map, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
 
 // Components
 import MapComponent from "./MapComponent";
@@ -12,6 +12,7 @@ import { useSearchContext } from "../../../state/SearchContext";
 
 // Hooks
 import useMarkerClick from "../../../hooks/useMakerClick";
+import useGetUserLocation from "../../../hooks/useGetUserLocation";
 
 // Styles
 import styles from "./MapView.module.css";
@@ -28,7 +29,10 @@ const mapOptions = {
 
 const MapView = ({ markerList }) => {
   const { selectedPlace } = useSearchContext();
-  const { center, zoom } = useMapContext();
+  const { center, zoom, userLocation } = useMapContext();
+  useGetUserLocation();
+
+  console.log("userLocation", userLocation);
 
   const handleMarkerClick = useMarkerClick();
 
@@ -41,6 +45,24 @@ const MapView = ({ markerList }) => {
         options={mapOptions}
       >
         <MapComponent />
+        {userLocation && (
+          <AdvancedMarker
+            position={{
+              lat: userLocation.lat,
+              lng: userLocation.lng,
+            }}
+          >
+            <div
+              style={{
+                width: "16px",
+                height: "16px",
+                borderRadius: "50%",
+                backgroundColor: "blue",
+                border: "2px solid white",
+              }}
+            />
+          </AdvancedMarker>
+        )}
         {markerList?.length !== 0 &&
           markerList?.map((marker) => {
             const placeId = marker.placeId;

@@ -17,7 +17,8 @@ export const textSearch = async (
   placesLibrary,
   map,
   searchQuery,
-  placeType
+  placeType,
+  searchLocation
 ) => {
   if (!map || !placesLibrary || !searchQuery) {
     console.log(
@@ -31,10 +32,9 @@ export const textSearch = async (
   console.log("textSearch: searchQuery -- ", searchQuery);
 
   return new Promise((resolve, reject) => {
-    const center = map.getCenter();
     const request = {
       query: searchQuery,
-      locationBias: center,
+      location: searchLocation.coords,
       type: placeType,
     };
     console.log("textSearch: request -- ", request);

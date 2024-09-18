@@ -25,7 +25,7 @@ const SavePlaceModal = ({ visible, onClose, placeId }) => {
 
   const { appUser } = useAppUser();
 
-  const { setShowCreateListModal } = useAppContext();
+  const { setShowCreateListModal, setShowSavePlaceModal } = useAppContext();
 
   const { listsData, listsError, isListsLoading } = useUserLists(
     appUser?.data?.userId
@@ -39,9 +39,9 @@ const SavePlaceModal = ({ visible, onClose, placeId }) => {
 
   useEffect(() => {
     if (savePlaceIsSuccess) {
-      onClose();
+      setShowSavePlaceModal(false);
     }
-  }, [savePlaceIsSuccess, onClose]);
+  }, [savePlaceIsSuccess, setShowSavePlaceModal]);
 
   const handleListSelection = (listId) => {
     setSelectedList(listId);

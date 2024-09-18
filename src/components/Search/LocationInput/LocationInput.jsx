@@ -19,7 +19,6 @@ const LocationInput = () => {
     locationQueryInput,
     setLocationQueryInput,
     setSearchLocation,
-
     locationAutoCompleteResults,
     setLocationAutoCompleteResults,
   } = useSearchContext();
@@ -58,6 +57,10 @@ const LocationInput = () => {
     setLocationAutoCompleteResults([]);
   };
 
+  const truncateText = (text, maxLength) => {
+    return text.length > maxLength ? text.slice(0, maxLength) + '..' : text;
+  };
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.inputContainer}>
@@ -65,7 +68,7 @@ const LocationInput = () => {
           className={styles.input}
           placeholder="Enter a city, state, country or zip code"
           onChange={handleInputChange}
-          value={locationQueryInput}
+          value={truncateText(locationQueryInput, 38)}
         />
         {locationQueryInput && (
           <div className={styles.buttonDiv}>
