@@ -1,5 +1,5 @@
 // Libraries
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Map, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
 
 // Components

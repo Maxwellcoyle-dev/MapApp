@@ -79,8 +79,8 @@ function App() {
                           element={<SearchResultsListPage />}
                         />
                         <Route path="list/:listId" element={<ListPage />} />
+                        <Route path="place/:placeId" element={<PlacePage />} />
                       </Route>
-                      <Route path="place/:placeId" element={<PlacePage />} />
                       <Route path="my-lists" element={<MyListsPage />} />
                       <Route path="add-tag/:placeId" element={<AddTagPage />} />
                       <Route

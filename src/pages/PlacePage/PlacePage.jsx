@@ -46,6 +46,10 @@ const PlacePage = () => {
   const { optimalPlaceData, optimalPlaceDataLoading, optimalPlaceDataError } =
     useGetOptimalPlaceData(placeId);
 
+  useEffect(() => {
+    console.log("optimalPlaceData", optimalPlaceData);
+  }, [optimalPlaceData]);
+
   // Get the navigate function from the useNavigate hook
   const navigate = useNavigate();
 
