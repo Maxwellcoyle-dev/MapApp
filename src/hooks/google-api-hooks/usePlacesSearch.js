@@ -13,13 +13,13 @@ const usePlacesSearch = () => {
   const map = useMap();
   const placesLibrary = useMapsLibrary("places");
 
-  const { searchType, searchRadius, placeType, searchLocation, searchQuery } =
+  const { globalSearch, searchRadius, placeType, searchLocation, searchQuery } =
     useSearchContext();
   const { userLocation } = useMapContext();
 
   const fetchPlaces = async () => {
     console.log("Search query: ", searchQuery);
-    console.log("Search type: ", searchType);
+    console.log("Global Search: ", globalSearch);
     console.log("Search radius: ", searchRadius);
     console.log("Place type: ", placeType);
     console.log("User location: ", userLocation);
@@ -33,7 +33,7 @@ const usePlacesSearch = () => {
       console.log("User location: ", userLocation);
       center = userLocation;
 
-      if (searchType === "places") {
+      if (globalSearch) {
         console.log("Searching for places");
         results = await textSearch(
           placesLibrary,
@@ -42,7 +42,7 @@ const usePlacesSearch = () => {
           placeType,
           searchLocation
         );
-      } else if (searchType === "type") {
+      } else {
         center = userLocation;
         console.log("Center: ", center);
 
