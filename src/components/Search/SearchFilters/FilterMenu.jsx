@@ -61,7 +61,9 @@ const FilterMenu = () => {
         }}
       >
         <p style={{ fontSize: "0.9em", color: "#666", margin: 0 }}>
-          Optionally turn off Gloabl Search to search by type.
+          {globalSearch
+            ? "Optionally turn off Gloabl Search to search by type."
+            : "Turn on Global Search"}
         </p>
         <div
           style={{
