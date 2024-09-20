@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Input as AntInput, Radio, Select } from "antd";
 
 // components
-import Input from "../Input/Input";
 import AutoComplete from "../AutoComplete/AutoComplete";
 
 // Contexts
@@ -27,12 +26,7 @@ const LocationSearchForm = () => {
         gap: "1rem",
         padding: "0 1rem",
       }}
-    >
-      <Input />
-      <div>
-        <AutoComplete />
-      </div>
-    </div>
+    ></div>
   );
 };
 

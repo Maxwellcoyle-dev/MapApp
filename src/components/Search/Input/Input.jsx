@@ -71,7 +71,7 @@ const Input = () => {
         )}
         <input
           type="text"
-          placeholder="Enter a place name"
+          placeholder="Global Search"
           value={queryInput}
           onChange={handleInputChange}
           className={styles.input}
