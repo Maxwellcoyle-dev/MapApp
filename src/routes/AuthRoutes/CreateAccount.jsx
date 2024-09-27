@@ -5,9 +5,8 @@ import { GoogleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 import { useAuthContext } from "../../state/AuthContext";
-import useAppUser from "../../hooks/backend-hooks/useAppUser";
 import styles from "./Auth.module.css";
-import demoLogo from "../../assets/ap-logo-dmeo.png";
+import logo from "../../assets/mapapp-logo-v2-192.png";
 
 function CreateAccount() {
   const { setAuthUser } = useAuthContext();
@@ -56,7 +55,7 @@ function CreateAccount() {
   return (
     <div className={styles.signInContainer}>
       <header className={styles.header}>
-        <img src={demoLogo} alt="App Logo" className={styles.logo} />
+        <img src={logo} alt="App Logo" className={styles.logo} />
         <h1>Create Your Account</h1>
       </header>
       <div className={styles.buttonDiv}>
