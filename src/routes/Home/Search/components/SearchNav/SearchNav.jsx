@@ -5,7 +5,7 @@ import Menu from "./Menu";
 
 import styles from "./SearchNav.module.css";
 
-import logo from "../../../../../assets/ap-logo-dmeo.png";
+import logo from "../../../../../assets/mapapp-logo-v2-192.png";
 
 const SearchNav = () => {
   return (

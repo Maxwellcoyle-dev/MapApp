@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { signIn, signInWithRedirect, fetchAuthSession } from "@aws-amplify/auth";
+import {
+  signIn,
+  signInWithRedirect,
+  fetchAuthSession,
+} from "@aws-amplify/auth";
 import { Form, Input, Button, Alert, Collapse } from "antd";
 import { GoogleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../state/AuthContext";
 import styles from "./Auth.module.css";
-import demoLogo from "../../assets/ap-logo-dmeo.png";
+import demoLogo from "../../assets/mapapp-logo-v2-192.png";
 
 function SignIn() {
   const [loading, setLoading] = useState(false);
@@ -77,20 +81,29 @@ function SignIn() {
               <Form.Item
                 label="Username"
                 name="username"
-                rules={[{ required: true, message: "Please input your username!" }]}
+                rules={[
+                  { required: true, message: "Please input your username!" },
+                ]}
               >
                 <Input placeholder="Enter your username" />
               </Form.Item>
               <Form.Item
                 label="Password"
                 name="password"
-                rules={[{ required: true, message: "Please input your password!" }]}
+                rules={[
+                  { required: true, message: "Please input your password!" },
+                ]}
               >
                 <Input.Password placeholder="Enter your password" />
               </Form.Item>
               {error && <Alert message={error} type="error" showIcon />}
               <Form.Item>
-                <Button type="primary" htmlType="submit" loading={loading} block>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={loading}
+                  block
+                >
                   Sign In
                 </Button>
               </Form.Item>
