@@ -26,7 +26,7 @@ const Home = () => {
   const [homePageContentTopPadding, setHomePageContentTopPadding] = useState(
     searchRef?.current?.offsetHeight || 0
   );
-  const { setCenter, showMap, currentMapPins } = useMapContext();
+  const { setCenter, showMap } = useMapContext();
   const { nearby, searchLocation } = useSearchContext();
 
   const { appUser } = useAppUser();
@@ -44,7 +44,7 @@ const Home = () => {
     }
   }, [searchLocation, nearby, setCenter]);
 
-  const updatePadding = useCallback((isCollapsed) => {
+  const updatePadding = useCallback(() => {
     if (searchRef.current) {
       const height = searchRef.current.offsetHeight;
       setHomePageContentTopPadding(height);
@@ -55,7 +55,7 @@ const Home = () => {
     <div className={styles.mainContainer}>
       <Outlet />
       <Search searchRef={searchRef} onToggle={updatePadding} />
-      <MapView markerList={currentMapPins} />
+      <MapView />
       {!showMap && (
         <div
           className={styles.homePageContent}

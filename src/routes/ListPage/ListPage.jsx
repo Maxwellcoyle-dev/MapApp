@@ -13,7 +13,7 @@ import styles from "./ListPage.module.css";
 const List = () => {
   const [showFilterForm, setShowFilterForm] = useState(false);
 
-  const { showMap, setCurrentMapPins } = useMapContext();
+  const { showMap } = useMapContext();
 
   const location = useLocation();
   const { listId } = useParams();

@@ -113,9 +113,6 @@ const PlaceDetailsCard = () => {
                 className={styles.iconContainer}
                 onClick={() => {
                   setSelectedPlace(null);
-                  setQueryInput("");
-                  navigate("/");
-                  setZoom(12);
                 }}
               >
                 <MdClose className={styles.overlayIcon} />

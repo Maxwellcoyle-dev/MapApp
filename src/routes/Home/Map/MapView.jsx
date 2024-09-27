@@ -9,6 +9,7 @@ import PlaceDetailsCard from "./PlaceDetailsCard/PlaceDetailsCard";
 // State
 import { useMapContext } from "../../../state/MapContext";
 import { useSearchContext } from "../../../state/SearchContext";
+import { useAppContext } from "../../../state/AppContext";
 
 // Hooks
 import useMarkerClick from "../../../hooks/useMakerClick";
@@ -26,9 +27,10 @@ const mapOptions = {
   gestureHandling: "greedy",
 };
 
-const MapView = ({ markerList }) => {
+const MapView = () => {
   const { selectedPlace } = useSearchContext();
-  const { center, zoom, userLocation } = useMapContext();
+  const { center, zoom, currentMapPins } = useMapContext();
+  const { userLocation } = useAppContext();
 
   const handleMarkerClick = useMarkerClick();
 
@@ -59,8 +61,8 @@ const MapView = ({ markerList }) => {
             />
           </AdvancedMarker>
         )}
-        {markerList?.length !== 0 &&
-          markerList?.map((marker) => {
+        {currentMapPins?.length !== 0 &&
+          currentMapPins?.map((marker) => {
             const placeId = marker.placeId;
             return (
               <AdvancedMarker
