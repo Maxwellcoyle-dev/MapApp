@@ -25,7 +25,6 @@ const RadiusSelect = () => {
         flexDirection: "column",
         alignItems: "flex-start",
         gap: "0.25rem",
-        padding: "0 1rem",
         maxWidth: "13rem",
       }}
     >
