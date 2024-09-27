@@ -1,4 +1,6 @@
 import React from "react";
+import { Button } from "antd";
+import { LogoutOutlined } from "@ant-design/icons";
 import { useAuthContext } from "../state/AuthContext"; // Adjust path as needed
 import { signOut } from "aws-amplify/auth";
 
@@ -15,7 +17,16 @@ const SignOutButton = () => {
     }
   };
 
-  return <button onClick={handleSignOut}>Sign Out</button>;
+  return (
+    <Button
+      danger
+      type="primary"
+      icon={<LogoutOutlined />}
+      onClick={handleSignOut}
+    >
+      Sign Out
+    </Button>
+  );
 };
 
 export default SignOutButton;

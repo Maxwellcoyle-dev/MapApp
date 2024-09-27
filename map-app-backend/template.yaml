@@ -53,7 +53,6 @@ Resources:
             TableName: !Ref MapAppUserTable
         - DynamoDBCrudPolicy:
             TableName: !Ref MapAppListTable
-
       Events:
         GetUser:
           Type: Api
@@ -94,23 +93,39 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          TABLE_NAME: !Ref MapAppUserTable
+          LIST_TABLE: !Ref MapAppListTable
+          PLACE_TABLE: !Ref MapAppPlacesTable
+          USER_TABLE: !Ref MapAppUserTable
       Policies:
         - DynamoDBReadPolicy:
             TableName: !Ref MapAppUserTable
         - DynamoDBWritePolicy:
             TableName: !Ref MapAppUserTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppListTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppPlacesTable
         - Statement:
             Effect: Allow
             Action:
               - dynamodb:DeleteItem
             Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/MapAppUserTable"
+        - Statement:
+            Effect: Allow
+            Action:
+              - dynamodb:DeleteItem
+            Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/MapAppListTable"
+        - Statement:
+            Effect: Allow
+            Action:
+              - dynamodb:DeleteItem
+            Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/MapAppPlacesTable"
       Events:
         DeleteUser:
           Type: Api
           Properties:
-            Path: /user
-            Method: delete
+            Path: /user/delete-user/{userId}
+            Method: put
             RestApiId: !Ref MappAppAPI
 
   # List table and functions
@@ -192,6 +207,7 @@ Resources:
       Environment:
         Variables:
           LIST_TABLE: !Ref MapAppListTable
+          USER_TABLE: !Ref MapAppUserTable
       Policies:
         - DynamoDBWritePolicy:
             TableName: !Ref MapAppListTable
@@ -199,6 +215,8 @@ Resources:
             TableName: !Ref MapAppListTable
         - DynamoDBCrudPolicy:
             TableName: !Ref MapAppListTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppUserTable
       Events:
         CreateListApiEvent:
           Type: Api
