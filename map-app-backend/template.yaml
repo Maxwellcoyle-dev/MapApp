@@ -207,6 +207,7 @@ Resources:
       Environment:
         Variables:
           LIST_TABLE: !Ref MapAppListTable
+          USER_TABLE: !Ref MapAppUserTable
       Policies:
         - DynamoDBWritePolicy:
             TableName: !Ref MapAppListTable
@@ -214,6 +215,8 @@ Resources:
             TableName: !Ref MapAppListTable
         - DynamoDBCrudPolicy:
             TableName: !Ref MapAppListTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref MapAppUserTable
       Events:
         CreateListApiEvent:
           Type: Api

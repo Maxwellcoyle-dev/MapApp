@@ -8,7 +8,7 @@ import CreateListModal from "../../../modals/CreateListModal/CreateListModal";
 import { useAppContext } from "../../../state/AppContext";
 
 const SavedLists = ({ allListsData }) => {
-  const { showCreateListModal, setShowCreateListModal } = useAppContext();
+  const { setShowCreateListModal } = useAppContext();
 
   const navigate = useNavigate();
 

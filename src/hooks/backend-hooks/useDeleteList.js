@@ -19,14 +19,17 @@ const useDeleteList = () => {
       return deleteListResponse;
     },
     onSuccess: (data, variables) => {
+      console.log("data", data);
+      console.log("variables", variables);
+      queryClient.invalidateQueries({
+        queryKey: ["listplaces", variables.userId],
+      });
+
       queryClient.invalidateQueries({
         queryKey: ["user-lists", variables.userId],
       });
       queryClient.invalidateQueries({
         queryKey: ["get-list", variables.listId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["listplaces", variables.userId],
       });
       console.log("data", data);
       console.log("variables", variables);
