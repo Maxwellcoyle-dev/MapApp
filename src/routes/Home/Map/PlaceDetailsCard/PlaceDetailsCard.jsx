@@ -17,19 +17,16 @@ import useGetPhotos from "../../../../hooks/google-api-hooks/useGetPhotos";
 
 // State
 import { useSearchContext } from "../../../../state/SearchContext";
-import { useMapContext } from "../../../../state/MapContext";
 import usePlaceIsSaved from "../../../../hooks/usePlaceIsSaved";
 
 // Styles
 import styles from "./PlaceDetailsCard.module.css";
 
 const PlaceDetailsCard = () => {
-  const [isOpen, setIsOpen] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
   const [isSavePlaceModalVisible, setIsSavePlaceModalVisible] = useState(false);
 
-  const { selectedPlace, setSelectedPlace, setQueryInput } = useSearchContext();
-  const { setZoom } = useMapContext();
+  const { selectedPlace, setSelectedPlace } = useSearchContext();
 
   const navigate = useNavigate();
 
@@ -40,6 +37,7 @@ const PlaceDetailsCard = () => {
   const { placesPhotos } = useGetPhotos([selectedPlace?.placeId]);
 
   useEffect(() => {
+    console.log("selectedPlace: ", selectedPlace);
     if (selectedPlace?.photos) {
       const image = selectedPlace.photos[0].getUrl();
       setImageUrl(image);
@@ -50,13 +48,6 @@ const PlaceDetailsCard = () => {
       setImageUrl(null);
     }
   }, [selectedPlace, placesPhotos]);
-
-  useEffect(() => {
-    let open = selectedPlace?.opening_hours?.isOpen
-      ? selectedPlace.opening_hours.isOpen()
-      : null;
-    setIsOpen(open);
-  }, [selectedPlace]);
 
   const handleSavePlace = () => {
     setIsSavePlaceModalVisible(true);
@@ -125,37 +116,40 @@ const PlaceDetailsCard = () => {
           >
             <div className={styles.headerDiv}>
               <h3>{selectedPlace?.placeName}</h3>
-              {isOpen !== null && (
-                <p className={isOpen ? styles.open : styles.closed}>
-                  {isOpen ? "Open" : "Closed"}
-                </p>
-              )}
-            </div>
-            <div className={styles.infoDiv}>
               <div className={styles.ratingDiv}>
                 <p>{selectedPlace?.rating}</p>
-                {[1, 2, 3, 4, 5].map((star) => {
-                  if (selectedPlace?.rating >= star) {
-                    return (
-                      <MdOutlineStar key={star} className={styles.ratingStar} />
-                    );
-                  } else if (selectedPlace?.rating >= star - 0.5) {
-                    return (
-                      <MdOutlineStarHalf
-                        key={star}
-                        className={styles.ratingStar}
-                      />
-                    );
-                  } else {
-                    return (
-                      <MdOutlineStarBorder
-                        key={star}
-                        className={styles.ratingStar}
-                      />
-                    );
-                  }
-                })}
-                <p>({selectedPlace?.user_ratings_total} reviews)</p>
+                <div className={styles.ratingStarsDiv}>
+                  {[1, 2, 3, 4, 5].map((star) => {
+                    if (selectedPlace?.rating >= star) {
+                      return (
+                        <MdOutlineStar
+                          key={star}
+                          className={styles.ratingStar}
+                        />
+                      );
+                    } else if (selectedPlace?.rating >= star - 0.5) {
+                      return (
+                        <MdOutlineStarHalf
+                          key={star}
+                          className={styles.ratingStar}
+                        />
+                      );
+                    } else {
+                      return (
+                        <MdOutlineStarBorder
+                          key={star}
+                          className={styles.ratingStar}
+                        />
+                      );
+                    }
+                  })}
+                </div>
+                <p>{selectedPlace?.user_ratings_total} reviews</p>
+              </div>
+            </div>
+            <div className={styles.infoDiv}>
+              <div className={styles.addressDiv}>
+                <p>{selectedPlace?.formatted_address}</p>
               </div>
             </div>
           </div>
