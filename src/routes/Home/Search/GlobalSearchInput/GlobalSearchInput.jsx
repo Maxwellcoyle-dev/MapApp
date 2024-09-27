@@ -78,16 +78,16 @@ const GlobalSearchInput = () => {
           onKeyDown={handleKeyDown}
         />
       </div>
-      <Button
+      <button
         onClick={() => {
           setSearchQuery(queryInput);
           setAutoCompleteResults([]);
           navigate(`/results-list`);
         }}
-        type="primary"
-        icon={<SearchOutlined style={{ fontSize: "1.25rem" }} />}
-        style={{ height: "100%", width: "2rem" }}
-      />
+        className={styles.searchButton}
+      >
+        <SearchOutlined style={{ fontSize: "1.25rem", color: "white" }} />
+      </button>
     </div>
   );
 };

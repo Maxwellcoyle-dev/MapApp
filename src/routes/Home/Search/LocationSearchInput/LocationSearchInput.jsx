@@ -62,37 +62,40 @@ const LocationSearchInput = () => {
   };
 
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.inputContainer}>
-        <Input
-          className={styles.input}
-          placeholder="Enter a city, state, country or zip code"
-          onChange={handleInputChange}
-          value={truncateText(locationQueryInput, 38)}
-        />
-        {locationQueryInput && (
-          <div className={styles.buttonDiv}>
-            <button className={styles.button} onClick={handleClearInput}>
-              <MdClear
-                style={{ fontSize: "1.5rem", color: "black", margin: "auto" }}
-              />
-            </button>
+    <div className={styles.container}>
+      <h4>Enter a location</h4>
+      <div className={styles.wrapper}>
+        <div className={styles.inputContainer}>
+          <Input
+            className={styles.input}
+            placeholder="Enter a city, state, country or zip code"
+            onChange={handleInputChange}
+            value={truncateText(locationQueryInput, 38)}
+          />
+          {locationQueryInput && (
+            <div className={styles.buttonDiv}>
+              <button className={styles.button} onClick={handleClearInput}>
+                <MdClear
+                  style={{ fontSize: "1.5rem", color: "black", margin: "auto" }}
+                />
+              </button>
+            </div>
+          )}
+        </div>
+        {locationAutoCompleteResults.length > 0 && (
+          <div className={styles.autocompleteResults}>
+            {locationAutoCompleteResults.map((result) => (
+              <div
+                key={result.place_id}
+                className={styles.autocompleteItem}
+                onClick={() => handleSelectLocation(result)}
+              >
+                {result.description}
+              </div>
+            ))}
           </div>
         )}
       </div>
-      {locationAutoCompleteResults.length > 0 && (
-        <div className={styles.autocompleteResults}>
-          {locationAutoCompleteResults.map((result) => (
-            <div
-              key={result.place_id}
-              className={styles.autocompleteItem}
-              onClick={() => handleSelectLocation(result)}
-            >
-              {result.description}
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };
