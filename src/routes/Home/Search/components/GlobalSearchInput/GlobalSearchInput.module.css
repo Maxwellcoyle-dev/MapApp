@@ -1,0 +1,54 @@
+.wrapper {
+  display: flex;
+  gap: 0.1rem;
+  align-items: stretch;
+  justify-content: center;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  position: relative;
+  width: calc(100% - 2.5rem);
+}
+
+.input {
+  margin-bottom: 0;
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem 0 0 0.25rem;
+}
+
+.searchButton {
+  width: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1890ff;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.buttonDiv {
+  position: absolute;
+  display: flex;
+  right: 0.25rem;
+  top: 0.25rem;
+}
+
+.button {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+}

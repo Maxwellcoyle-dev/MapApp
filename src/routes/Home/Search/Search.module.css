@@ -1,0 +1,51 @@
+.searchBarContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+  padding-bottom: 0.5rem;
+  position: absolute;
+  z-index: 11;
+  background-color: white;
+  border-bottom-right-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+}
+
+.autocompleteWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.appName {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.searchOptions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 1.5rem;
+}
+
+.collapseButtonDiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.collapseButton {
+  padding: 0;
+  height: 2rem;
+  width: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.collapseButtonIcon {
+  font-size: 1.5rem;
+}

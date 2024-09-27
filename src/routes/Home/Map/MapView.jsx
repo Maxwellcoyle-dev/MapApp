@@ -9,6 +9,7 @@ import PlaceDetailsCard from "./PlaceDetailsCard/PlaceDetailsCard";
 // State
 import { useMapContext } from "../../../state/MapContext";
 import { useSearchContext } from "../../../state/SearchContext";
+import { useAppContext } from "../../../state/AppContext";
 
 // Hooks
 import useMarkerClick from "../../../hooks/useMakerClick";
@@ -26,70 +27,76 @@ const mapOptions = {
   gestureHandling: "greedy",
 };
 
-const MapView = ({ markerList }) => {
+const MapView = ({ topPadding }) => {
   const { selectedPlace } = useSearchContext();
-  const { center, zoom, userLocation } = useMapContext();
+  const { center, zoom, currentMapPins } = useMapContext();
+  const { userLocation } = useAppContext();
 
   const handleMarkerClick = useMarkerClick();
 
   return (
-    <div className={styles.mapViewContainer} style={{ height: "100vh" }}>
-      <Map
-        mapId={"126ae8e8ffefefdf"}
-        defaultCenter={center}
-        zoom={zoom}
-        options={mapOptions}
+    <div className={styles.mapViewWrapper}>
+      <div
+        className={styles.mapViewContainer}
+        style={{ height: `calc(100vh - ${topPadding}px)` }}
       >
-        <MapComponent />
-        {userLocation && (
-          <AdvancedMarker
-            position={{
-              lat: userLocation.lat,
-              lng: userLocation.lng,
-            }}
-          >
-            <div
-              style={{
-                width: "16px",
-                height: "16px",
-                borderRadius: "50%",
-                backgroundColor: "blue",
-                border: "2px solid white",
+        <Map
+          mapId={"126ae8e8ffefefdf"}
+          defaultCenter={center}
+          zoom={zoom}
+          options={mapOptions}
+        >
+          <MapComponent />
+          {userLocation && (
+            <AdvancedMarker
+              position={{
+                lat: userLocation.lat,
+                lng: userLocation.lng,
               }}
-            />
-          </AdvancedMarker>
-        )}
-        {markerList?.length !== 0 &&
-          markerList?.map((marker) => {
-            const placeId = marker.placeId;
-            return (
-              <AdvancedMarker
-                key={placeId}
-                position={
-                  placeId && {
-                    lng: marker?.geometry?.location?.lng,
-                    lat: marker?.geometry?.location?.lat,
-                  }
-                }
-                onClick={() => {
-                  handleMarkerClick(marker);
+            >
+              <div
+                style={{
+                  width: "16px",
+                  height: "16px",
+                  borderRadius: "50%",
+                  backgroundColor: "blue",
+                  border: "2px solid white",
                 }}
-              >
-                {placeId === selectedPlace?.placeId ? (
-                  <Pin
-                    background={"blue"}
-                    glyphColor={"gray"}
-                    borderColor={"gray"}
-                  />
-                ) : (
-                  <Pin background={""} glyphColor={""} borderColor={""} />
-                )}
-              </AdvancedMarker>
-            );
-          })}
+              />
+            </AdvancedMarker>
+          )}
+          {currentMapPins?.length !== 0 &&
+            currentMapPins?.map((marker) => {
+              const placeId = marker.placeId;
+              return (
+                <AdvancedMarker
+                  key={placeId}
+                  position={
+                    placeId && {
+                      lng: marker?.geometry?.location?.lng,
+                      lat: marker?.geometry?.location?.lat,
+                    }
+                  }
+                  onClick={() => {
+                    handleMarkerClick(marker);
+                  }}
+                >
+                  {placeId === selectedPlace?.placeId ? (
+                    <Pin
+                      background={"blue"}
+                      glyphColor={"gray"}
+                      borderColor={"gray"}
+                    />
+                  ) : (
+                    <Pin background={""} glyphColor={""} borderColor={""} />
+                  )}
+                </AdvancedMarker>
+              );
+            })}
 
-        {selectedPlace?.placeId && <PlaceDetailsCard />}
-      </Map>
+          {selectedPlace?.placeId && <PlaceDetailsCard />}
+        </Map>
+      </div>
     </div>
   );
 };

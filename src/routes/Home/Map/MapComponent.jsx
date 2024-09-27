@@ -7,12 +7,7 @@ import { useMapContext } from "../../../state/MapContext";
 
 const MapComponent = () => {
   const map = useMap();
-  const { setCenter, setZoom } = useMapContext();
-
-  useEffect(() => {
-    console.log("MapComponent mounted");
-    console.log(map);
-  }, []);
+  const { setCenter, setZoom, currentMapPins } = useMapContext();
 
   useEffect(() => {
     if (!map) return;
@@ -33,6 +28,20 @@ const MapComponent = () => {
       zoomChangedListener.remove();
     };
   }, [map]);
+
+  useEffect(() => {
+    if (!map || !currentMapPins || currentMapPins.length === 0) return;
+
+    const bounds = new window.google.maps.LatLngBounds();
+    currentMapPins.forEach((pin) => {
+      bounds.extend({
+        lat: pin.geometry.location.lat,
+        lng: pin.geometry.location.lng,
+      });
+    });
+
+    map.fitBounds(bounds);
+  }, [map, currentMapPins]);
 
   return null;
 };

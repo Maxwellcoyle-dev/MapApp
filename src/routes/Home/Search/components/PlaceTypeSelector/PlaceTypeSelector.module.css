@@ -1,6 +1,7 @@
 .placeTypeSelectorContainer {
   width: 100%;
   height: min-content;
+  padding: 0 1rem;
 }
 
 .scrollWrapper {

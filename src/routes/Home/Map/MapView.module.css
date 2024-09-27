@@ -1,6 +1,13 @@
 /* MapView.module.css */
-.mapViewContainer {
+.mapViewWrapper {
   position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.mapViewContainer {
+  position: absolute;
+  bottom: 0;
   width: 100%;
 }
 
