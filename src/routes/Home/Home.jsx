@@ -55,7 +55,7 @@ const Home = () => {
     <div className={styles.mainContainer}>
       <Outlet />
       <Search searchRef={searchRef} onToggle={updatePadding} />
-      <MapView />
+      <MapView topPadding={homePageContentTopPadding} />
       {!showMap && (
         <div
           className={styles.homePageContent}
