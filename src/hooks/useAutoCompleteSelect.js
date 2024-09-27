@@ -11,13 +11,8 @@ import { useSearchContext } from "../state/SearchContext";
 const useAutoCompleteSelect = () => {
   const { setCenter, setZoom } = useMapContext();
 
-  const {
-    setQueryInput,
-    setSelectedPlace,
-    setAutoCompleteResults,
-    setSearchResults,
-    placeType,
-  } = useSearchContext();
+  const { setQueryInput, setSelectedPlace, setAutoCompleteResults, placeType } =
+    useSearchContext();
 
   const map = useMap();
   const placesLibrary = useMapsLibrary("places");
@@ -49,7 +44,6 @@ const useAutoCompleteSelect = () => {
       };
 
       setSelectedPlace(selectedPlace);
-      setSearchResults([selectedPlace]);
       setCenter(location);
       setAutoCompleteResults([]);
       setQueryInput(selectedPlace.name);

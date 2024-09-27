@@ -12,27 +12,32 @@ import {
 import { fetchAuthSession } from "aws-amplify/auth";
 
 // Pages
-import Home from "./pages/Home/Home";
-import MyAccount from "./pages/MyAccount";
-import MyListsPage from "./pages/MyListsPage/MyListsPage";
-import ListPage from "./pages/ListPage/ListPage";
-import PlacePage from "./pages/PlacePage/PlacePage";
-import SignIn from "./pages/AuthPages/SignIn";
-import CreateAccount from "./pages/AuthPages/CreateAccount";
-import AddTagPage from "./pages/AddTagPage/AddTagPage";
-import ManageCategoriesPage from "./pages/ManageCategoriesPage/ManageCategoriesPage";
-import SearchResultsListPage from "./pages/SearchResultsListPage/SearchResultsListPage";
-
-// Hooks
-import useGetUserLocation from "./hooks/useGetUserLocation";
+import Home from "./routes/Home/Home";
+import MyAccount from "./routes/MyAccount";
+import ListPage from "./routes/ListPage/ListPage";
+import PlacePage from "./routes/PlacePage/PlacePage";
+import SignIn from "./routes/AuthRoutes/SignIn";
+import CreateAccount from "./routes/AuthRoutes/CreateAccount";
+import AddTag from "./routes/AddTag/AddTag";
+import ManageCategoriesPage from "./routes/ManageCategoriesPage/ManageCategoriesPage";
+import SearchResultsPage from "./routes/SearchResultsPage/SearchResultsPage";
 
 // Context
 import { SearchProvider } from "./state/SearchContext";
+
+// Hooks
+import useGetUserLocation from "./hooks/useGetUserLocation";
 
 const { Content } = Layout;
 
 function AuthenticatedLayout({ children }) {
   const [authStatus, setAuthStatus] = useState("loading");
+
+  const getUserLocation = useGetUserLocation();
+
+  useEffect(() => {
+    getUserLocation();
+  }, [getUserLocation]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -58,16 +63,17 @@ function AuthenticatedLayout({ children }) {
 }
 
 function App() {
-  useGetUserLocation();
-
   return (
     <SearchProvider>
       <Router>
         <Layout style={{ height: "100vh", position: "relative" }}>
           <Content>
             <Routes>
+              {/* Auth Routes */}
               <Route path="login" element={<SignIn />} />
               <Route path="create-account" element={<CreateAccount />} />
+
+              {/* Authenticated Routes */}
               <Route
                 path="/*"
                 element={
@@ -76,13 +82,12 @@ function App() {
                       <Route path="/" element={<Home />}>
                         <Route
                           path="results-list"
-                          element={<SearchResultsListPage />}
+                          element={<SearchResultsPage />}
                         />
                         <Route path="list/:listId" element={<ListPage />} />
                         <Route path="place/:placeId" element={<PlacePage />} />
                       </Route>
-                      <Route path="my-lists" element={<MyListsPage />} />
-                      <Route path="add-tag/:placeId" element={<AddTagPage />} />
+                      <Route path="add-tag/:placeId" element={<AddTag />} />
                       <Route
                         path="manage-categories"
                         element={<ManageCategoriesPage />}

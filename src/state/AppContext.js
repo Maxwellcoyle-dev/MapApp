@@ -5,21 +5,16 @@ const AppContext = createContext();
 export const useAppContext = () => useContext(AppContext);
 
 export const AppProvider = ({ children }) => {
-  const [userLocation, setUserLocation] = useState(null);
-  const [showAddToList, setShowAddToList] = useState(false);
   const [showDeletePlaceModal, setShowDeletePlaceModal] = useState(false);
   const [showSavePlaceModal, setShowSavePlaceModal] = useState(false);
   const [showCreateListModal, setShowCreateListModal] = useState(false);
   const [showDeleteListModal, setShowDeleteListModal] = useState(false);
   const [showEditListModal, setShowEditListModal] = useState(false);
+  const [userLocation, setUserLocation] = useState(null);
 
   return (
     <AppContext.Provider
       value={{
-        userLocation,
-        setUserLocation,
-        showAddToList,
-        setShowAddToList,
         showDeletePlaceModal,
         setShowDeletePlaceModal,
         showSavePlaceModal,
@@ -30,6 +25,8 @@ export const AppProvider = ({ children }) => {
         setShowDeleteListModal,
         showEditListModal,
         setShowEditListModal,
+        userLocation,
+        setUserLocation,
       }}
     >
       {children}
