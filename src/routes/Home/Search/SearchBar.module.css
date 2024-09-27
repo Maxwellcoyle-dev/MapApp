@@ -46,10 +46,19 @@
 .collapseButtonDiv {
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 .collapseButton {
   padding: 0;
-  height: 1.5rem;
-  width: 2.5rem;
+  height: 2rem;
+  width: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.collapseButtonIcon {
+  font-size: 1.5rem;
 }

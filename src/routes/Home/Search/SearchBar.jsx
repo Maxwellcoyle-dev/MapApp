@@ -56,11 +56,17 @@ const SearchBar = () => {
         </div>
       )}
       <div className={styles.collapseButtonDiv}>
-        <Button
+        <div
           className={styles.collapseButton}
           onClick={() => setIsCollapsed(!isCollapsed)}
           icon={!isCollapsed ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
-        />
+        >
+          {!isCollapsed ? (
+            <MdKeyboardArrowUp className={styles.collapseButtonIcon} />
+          ) : (
+            <MdKeyboardArrowDown className={styles.collapseButtonIcon} />
+          )}
+        </div>
       </div>
     </div>
   );
