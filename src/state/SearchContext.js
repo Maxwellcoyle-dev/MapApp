@@ -17,10 +17,8 @@ export const SearchProvider = ({ children }) => {
     locality: null,
   });
   const [locationQueryInput, setLocationQueryInput] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
   const [globalSearch, setGlobalSearch] = useState(true);
   const [searchRadius, setSearchRadius] = useState(2);
-  const [rankBy, setRankBy] = useState("distance");
   const [nearby, setNearby] = useState(true);
 
   return (
@@ -36,14 +34,10 @@ export const SearchProvider = ({ children }) => {
         setSelectedPlace,
         autoCompleteResults,
         setAutoCompleteResults,
-        searchResults,
-        setSearchResults,
         globalSearch,
         setGlobalSearch,
         searchRadius,
         setSearchRadius,
-        rankBy,
-        setRankBy,
         nearby,
         setNearby,
         locationAutoCompleteResults,
