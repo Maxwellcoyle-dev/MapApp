@@ -6,11 +6,11 @@ import { SearchOutlined } from "@ant-design/icons";
 import { MdClear } from "react-icons/md";
 
 // State
-import { useSearchContext } from "../../../../state/SearchContext.js";
+import { useSearchContext } from "../../../../../state/SearchContext";
 
 // Hooks
-import useAutoComplete from "../../../../hooks/useAutoComplete.js";
-import usePlacesSearch from "../../../../hooks/google-api-hooks/usePlacesSearch.js";
+import useAutoComplete from "../../../../../hooks/useAutoComplete.js";
+import usePlacesSearch from "../../../../../hooks/google-api-hooks/usePlacesSearch.js";
 
 // styles
 import styles from "./GlobalSearchInput.module.css";

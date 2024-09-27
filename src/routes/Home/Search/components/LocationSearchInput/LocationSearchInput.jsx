@@ -4,11 +4,11 @@ import { MdClear } from "react-icons/md";
 import { useMap } from "@vis.gl/react-google-maps";
 
 // state
-import { useSearchContext } from "../../../../state/SearchContext";
+import { useSearchContext } from "../../../../../state/SearchContext";
 
 // hooks
-import useLocationAutocomplete from "../../../../hooks/google-api-hooks/useLocationAutoComplete";
-import useGetLocalityCoords from "../../../../hooks/google-api-hooks/useGetLocalityCoords";
+import useLocationAutocomplete from "../../../../../hooks/google-api-hooks/useLocationAutoComplete";
+import useGetLocalityCoords from "../../../../../hooks/google-api-hooks/useGetLocalityCoords";
 
 // styles
 import styles from "./LocationSearchInput.module.css";

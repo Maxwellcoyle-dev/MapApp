@@ -37,8 +37,9 @@
 
 .buttonDiv {
   position: absolute;
-  right: 0;
   display: flex;
+  right: 0.25rem;
+  top: 0.25rem;
 }
 
 .button {

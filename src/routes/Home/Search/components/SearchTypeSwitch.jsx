@@ -2,7 +2,7 @@ import React from "react";
 import { Switch } from "antd";
 
 // State
-import { useSearchContext } from "../../../state/SearchContext";
+import { useSearchContext } from "../../../../state/SearchContext";
 
 const SearchTypeSwitch = () => {
   const { globalSearch, setGlobalSearch } = useSearchContext();

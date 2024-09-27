@@ -4,11 +4,11 @@ import { MdOutlineLocationOn } from "react-icons/md";
 import { Switch, Tag } from "antd";
 
 // hooks
-import useGetCoordsLocality from "../../../hooks/google-api-hooks/useGetCoordsLocality";
+import useGetCoordsLocality from "../../../../hooks/google-api-hooks/useGetCoordsLocality";
 
 // State
-import { useSearchContext } from "../../../state/SearchContext";
-import { useAppContext } from "../../../state/AppContext";
+import { useSearchContext } from "../../../../state/SearchContext";
+import { useAppContext } from "../../../../state/AppContext";
 
 const LocationToggle = () => {
   const [localityDisplay, setLocalityDisplay] = useState("");

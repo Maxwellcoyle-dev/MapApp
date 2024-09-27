@@ -8,7 +8,7 @@ import {
   MenuOutlined,
 } from "@ant-design/icons";
 import { signOut } from "aws-amplify/auth";
-import { useAuthContext } from "../../../../state/AuthContext";
+import { useAuthContext } from "../../../../../state/AuthContext";
 
 const Menu = () => {
   const navigate = useNavigate();

@@ -1,25 +1,12 @@
-.searchBarContainer_Map {
+.searchBarContainer {
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   align-items: center;
   padding-bottom: 0.5rem;
-
   position: absolute;
   z-index: 11;
-  background-color: white;
-  border-bottom-right-radius: 1rem;
-  border-bottom-left-radius: 1rem;
-}
-
-.searchBarContainer_List {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  padding-bottom: 0.5rem;
   background-color: white;
   border-bottom-right-radius: 1rem;
   border-bottom-left-radius: 1rem;

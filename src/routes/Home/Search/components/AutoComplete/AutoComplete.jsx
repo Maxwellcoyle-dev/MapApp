@@ -4,7 +4,7 @@ import { Tag } from "antd";
 import { UnorderedListOutlined } from "@ant-design/icons";
 
 // State
-import { useSearchContext } from "../../../../state/SearchContext";
+import { useSearchContext } from "../../../../../state/SearchContext";
 
 import styles from "./AutoComplete.module.css";
 

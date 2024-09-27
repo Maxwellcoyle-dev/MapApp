@@ -12,7 +12,7 @@ import {
 import { BiCoffeeTogo } from "react-icons/bi";
 
 // State
-import { useSearchContext } from "../../../../state/SearchContext";
+import { useSearchContext } from "../../../../../state/SearchContext";
 
 // Styles
 import styles from "./PlaceTypeSelector.module.css";

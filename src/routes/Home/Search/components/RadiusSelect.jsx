@@ -2,7 +2,7 @@ import React from "react";
 import { Select } from "antd";
 
 // Context
-import { useSearchContext } from "../../../state/SearchContext";
+import { useSearchContext } from "../../../../state/SearchContext";
 
 const RadiusSelect = () => {
   const { searchRadius, setSearchRadius } = useSearchContext();

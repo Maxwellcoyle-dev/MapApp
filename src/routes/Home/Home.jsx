@@ -1,11 +1,11 @@
 // Libraries
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState, useCallback } from "react";
 
 import { Outlet } from "react-router-dom";
 
 // Components
 import MapView from "./Map/MapView";
-import SearchBar from "./Search/SearchBar";
+import Search from "./Search/Search";
 import SavedLists from "./SavedLists/SavedLists";
 import MapToggle from "./MapToggle/MapToggle";
 
@@ -21,6 +21,11 @@ import styles from "./Home.module.css";
 import CreateListModal from "../../modals/CreateListModal/CreateListModal";
 
 const Home = () => {
+  const searchRef = useRef(null);
+
+  const [homePageContentTopPadding, setHomePageContentTopPadding] = useState(
+    searchRef?.current?.offsetHeight || 0
+  );
   const { setCenter, showMap, currentMapPins } = useMapContext();
   const { nearby, searchLocation } = useSearchContext();
 
@@ -34,21 +39,28 @@ const Home = () => {
   }, [getUserLocation]);
 
   useEffect(() => {
-    console.log("searchLocation", searchLocation);
-    console.log("nearby", nearby);
     if (nearby && searchLocation.coords) {
       setCenter(searchLocation.coords);
     }
-  }, [searchLocation, nearby]);
+  }, [searchLocation, nearby, setCenter]);
+
+  const updatePadding = useCallback((isCollapsed) => {
+    if (searchRef.current) {
+      const height = searchRef.current.offsetHeight;
+      setHomePageContentTopPadding(height);
+    }
+  }, []);
 
   return (
     <div className={styles.mainContainer}>
       <Outlet />
-      {showMap && <SearchBar />}
+      <Search searchRef={searchRef} onToggle={updatePadding} />
       <MapView markerList={currentMapPins} />
       {!showMap && (
-        <div className={styles.homePageContent}>
-          <SearchBar />
+        <div
+          className={styles.homePageContent}
+          style={{ paddingTop: `${homePageContentTopPadding}px` }}
+        >
           <SavedLists allListsData={allListsData} />
         </div>
       )}
