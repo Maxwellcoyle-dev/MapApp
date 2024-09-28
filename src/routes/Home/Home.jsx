@@ -47,10 +47,6 @@ const Home = () => {
   const getUserLocation = useGetUserLocation();
 
   useEffect(() => {
-    setSelectedPlace(null);
-  }, []);
-
-  useEffect(() => {
     if (placesResults) {
       setHomeContent("results");
     }
