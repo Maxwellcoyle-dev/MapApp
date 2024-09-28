@@ -78,7 +78,9 @@ const PlaceDetailsCard = () => {
           <div className={styles.imageContainer}>
             <div
               className={styles.imageDiv}
-              onClick={() => navigate(`/place/${selectedPlace.placeId}`)}
+              onClick={() => {
+                navigate(`/place/${selectedPlace.placeId}`);
+              }}
             >
               {imageUrl ? (
                 <Image

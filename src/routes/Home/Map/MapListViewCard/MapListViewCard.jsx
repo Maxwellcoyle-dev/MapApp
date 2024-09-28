@@ -12,6 +12,9 @@ import {
 // hooks
 import usePlaceIsSaved from "../../../../hooks/usePlaceIsSaved";
 
+// state
+import { useSearchContext } from "../../../../state/SearchContext";
+
 // Styles
 import styles from "./MapListViewCard.module.css";
 
@@ -22,6 +25,7 @@ const MapListViewCard = ({
   setShowSavePlaceModal,
 }) => {
   const [imageUrl, setImageUrl] = useState(null);
+  const { setSelectedPlace } = useSearchContext();
 
   const { isPlaceSaved } = usePlaceIsSaved(placeId);
 
@@ -62,7 +66,10 @@ const MapListViewCard = ({
           <div className={styles.imageContainer}>
             <div
               className={styles.imageDiv}
-              onClick={() => navigate(`/place/${placeId}`)}
+              onClick={() => {
+                setSelectedPlace(place);
+                navigate(`/place/${placeId}`);
+              }}
             >
               {imageUrl ? (
                 <Image
@@ -86,7 +93,10 @@ const MapListViewCard = ({
           </div>
           <div
             className={styles.headerDiv}
-            onClick={() => navigate(`/place/${placeId}`)}
+            onClick={() => {
+              setSelectedPlace(place);
+              navigate(`/place/${placeId}`);
+            }}
           >
             <h3>{place?.placeName}</h3>
             {/* {place?.opening_hours !== null && (
@@ -101,7 +111,10 @@ const MapListViewCard = ({
           </div>
           <div
             className={styles.infoDiv}
-            onClick={() => navigate(`/place/${placeId}`)}
+            onClick={() => {
+              setSelectedPlace(place);
+              navigate(`/place/${placeId}`);
+            }}
           >
             <div className={styles.ratingDiv}>
               <p>{place?.rating}</p>

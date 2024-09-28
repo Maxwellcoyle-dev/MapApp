@@ -30,7 +30,7 @@ const Home = () => {
     searchRef?.current?.offsetHeight || 0
   );
   const { setCenter, showMap } = useMapContext();
-  const { nearby, searchLocation, searchQuery, queryInput } =
+  const { nearby, searchLocation, searchQuery, queryInput, selectedPlace } =
     useSearchContext();
 
   const { appUser } = useAppUser();
@@ -96,7 +96,7 @@ const Home = () => {
           {homeContent === "results" && <SearchResultsPage />}
         </div>
       )}
-      <MapToggle />
+      {!selectedPlace && <MapToggle />}
       <CreateListModal />
     </div>
   );
