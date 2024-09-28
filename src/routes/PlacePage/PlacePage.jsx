@@ -22,6 +22,7 @@ import useUserLists from "../../hooks/backend-hooks/useUserLists";
 
 // state
 import { useAppContext } from "../../state/AppContext";
+import { useSearchContext } from "../../state/SearchContext";
 
 // Styles
 import styles from "./PlacePage.module.css";
@@ -33,6 +34,8 @@ const PlacePage = () => {
   const [placeIds, setPlaceIds] = useState([]);
   const [photos, setPhotos] = useState([]);
   const [listsContainingPlace, setListsContainingPlace] = useState([]);
+
+  const { setSelectedPlace } = useSearchContext();
 
   useEffect(() => {
     const getUser = async () => {

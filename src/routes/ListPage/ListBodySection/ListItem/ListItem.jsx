@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Tag } from "antd";
 import { MdOutlineNewLabel, MdDeleteOutline } from "react-icons/md";
 
 // Components
 import DeletePlaceModal from "../../../../modals/DeletePlaceModal/DeletePlaceModal";
 
+// State
+import { useSearchContext } from "../../../../state/SearchContext";
+
 import styles from "./ListItem.module.css";
 
 const ListItem = ({ place, firstPhoto, navigate, listData, appUser }) => {
-  useEffect(() => {
-    console.log("place: ", place);
-    console.log("firstPhoto: ", firstPhoto);
-  }, [place]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const { setSelectedPlace } = useSearchContext();
+
   const handleDeleteClick = (e) => {
     e.stopPropagation();
     setIsModalVisible(true); // Open the modal when delete icon is clicked
@@ -44,6 +46,7 @@ const ListItem = ({ place, firstPhoto, navigate, listData, appUser }) => {
         <div
           className={styles.btnIconDiv}
           onClick={() => {
+            setSelectedPlace(place);
             navigate(`/add-tag/${place.placeId}`, {
               state: { place },
             });
@@ -57,7 +60,10 @@ const ListItem = ({ place, firstPhoto, navigate, listData, appUser }) => {
         </div>
       </div>
       <div
-        onClick={() => navigate(`/place/${place.placeId}`)}
+        onClick={() => {
+          setSelectedPlace(place);
+          navigate(`/place/${place.placeId}`);
+        }}
         className={styles.cardBody}
       >
         <div className={styles.tagContainer}>

@@ -1,9 +1,8 @@
 .card {
   position: absolute;
-  z-index: 10;
-  bottom: 3.5rem;
+  z-index: 25;
+  bottom: 1.5rem;
   left: 0.5rem;
-  height: 60%;
   background: white;
   width: 95%;
   border-radius: 1.5rem;
@@ -20,7 +19,7 @@
   width: 100%;
   height: auto;
   overflow: hidden;
-  max-height: 200px;
+  max-height: 170px;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -20,7 +20,6 @@ import SignIn from "./routes/AuthRoutes/SignIn";
 import CreateAccount from "./routes/AuthRoutes/CreateAccount";
 import AddTag from "./routes/AddTag/AddTag";
 import ManageCategoriesPage from "./routes/ManageCategoriesPage/ManageCategoriesPage";
-import SearchResultsPage from "./routes/SearchResultsPage/SearchResultsPage";
 
 // Context
 import { SearchProvider } from "./state/SearchContext";
