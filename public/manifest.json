@@ -1,19 +1,19 @@
 {
-  "short_name": "Foodie Map App",
-  "name": "Foodie Map App",
+  "short_name": "MesaVibe",
+  "name": "MesaVibe Foodie App",
   "icons": [
     {
-      "src": "favicon.ico",
+      "src": "./mapapp-logo-v2-64.png",
       "sizes": "64x64 32x32 24x24 16x16",
-      "type": "image/x-icon"
+      "type": "image/png"
     },
     {
-      "src": "./mapapp-logo-v2-192.png",
+      "src": "./mesavibe-logo-v2-192.png",
       "type": "image/png",
       "sizes": "192x192"
     },
     {
-      "src": "./mapapp-logo-v2-512.png",
+      "src": "./mesavibe-logo-v2-512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
