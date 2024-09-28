@@ -48,16 +48,16 @@ const PlacePage = () => {
   const { optimalPlaceData, optimalPlaceDataLoading, optimalPlaceDataError } =
     useGetOptimalPlaceData(placeId);
 
-  useEffect(() => {
-    console.log("optimalPlaceData", optimalPlaceData);
-  }, [optimalPlaceData]);
-
   // Get the navigate function from the useNavigate hook
   const navigate = useNavigate();
 
   // Get the state from the location object
   const location = useLocation();
   const { state } = location;
+  useEffect(() => {
+    console.log("optimalPlaceData", optimalPlaceData);
+    console.log("state", state);
+  }, [optimalPlaceData, state]);
 
   // Get Modal Triggers from AppContext
   const {
