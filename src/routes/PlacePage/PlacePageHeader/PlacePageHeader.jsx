@@ -10,7 +10,7 @@ import {
 
 // state
 import { useAppContext } from "../../../state/AppContext";
-
+import { useSearchContext } from "../../../state/SearchContext";
 import styles from "./PlacePageHeader.module.css";
 
 const PlacePageHeader = ({
@@ -19,6 +19,7 @@ const PlacePageHeader = ({
   backNavigation,
   isOpen,
 }) => {
+  const { setSelectedPlace } = useSearchContext();
   const navigate = useNavigate();
   const { setShowSavePlaceModal, setShowDeletePlaceModal } = useAppContext();
   return (
@@ -40,7 +41,10 @@ const PlacePageHeader = ({
           <div className={styles.iconDiv}>
             <LeftOutlined
               className={styles.overlayIcon}
-              onClick={() => navigate(backNavigation)}
+              onClick={() => {
+                setSelectedPlace(null);
+                navigate(backNavigation);
+              }}
             />
           </div>
           <div
