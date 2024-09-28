@@ -115,7 +115,6 @@ const PlaceDetailsCard = () => {
             onClick={() => navigate(`/place/${selectedPlace.placeId}`)}
           >
             <div className={styles.headerDiv}>
-              <h3>{selectedPlace?.placeName}</h3>
               <div className={styles.ratingDiv}>
                 <p>{selectedPlace?.rating}</p>
                 <div className={styles.ratingStarsDiv}>
@@ -146,11 +145,8 @@ const PlaceDetailsCard = () => {
                 </div>
                 <p>{selectedPlace?.user_ratings_total} reviews</p>
               </div>
-            </div>
-            <div className={styles.infoDiv}>
-              <div className={styles.addressDiv}>
-                <p>{selectedPlace?.formatted_address}</p>
-              </div>
+              <h3>{selectedPlace?.placeName}</h3>
+              <p>{selectedPlace?.formatted_address}</p>
             </div>
           </div>
         </>

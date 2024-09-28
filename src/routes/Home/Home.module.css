@@ -14,3 +14,13 @@
   height: 100%;
   width: 100%;
 }
+
+.radioDiv {
+  width: 100%;
+  position: absolute;
+  z-index: 15;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 0rem;
+}

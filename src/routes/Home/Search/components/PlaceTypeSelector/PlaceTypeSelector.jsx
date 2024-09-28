@@ -75,7 +75,7 @@ const PlaceTypeSelector = () => {
               }
               onClick={() => {
                 setPlaceType(type.value);
-                navigate(`/results-list`);
+                // navigate(`/results-list`);
               }}
             >
               {type.icon}
