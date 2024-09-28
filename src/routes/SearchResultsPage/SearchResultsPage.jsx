@@ -1,8 +1,6 @@
 // Libraries
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Spin, Button } from "antd";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
 
 // Modals
 import SavePlaceModal from "../../modals/SavePlaceModal/SavePlaceModal";
@@ -22,15 +20,13 @@ import usePlacesSearch from "../../hooks/google-api-hooks/usePlacesSearch";
 // Styles
 import styles from "./SearchResultsPage.module.css";
 
-const SearchResultsPage = ({ showSearchResults, setShowSearchResults }) => {
+const SearchResultsPage = () => {
   const [selectedPlaceId, setSelectedPlaceId] = useState(null);
-
-  const navigate = useNavigate();
 
   const { user } = useAuthContext();
   const { showSavePlaceModal, setShowSavePlaceModal } = useAppContext();
   const { showMap, setCurrentMapPins } = useMapContext();
-  const { searchQuery, setSearchQuery } = useSearchContext();
+  const { searchQuery } = useSearchContext();
 
   const { placesResults, isPlacesResultsLoading, refetchPlacesResults } =
     usePlacesSearch(searchQuery);

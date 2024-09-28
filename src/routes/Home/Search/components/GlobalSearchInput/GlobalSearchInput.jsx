@@ -1,7 +1,6 @@
 // Libraries
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "antd";
 import { SearchOutlined } from "@ant-design/icons";
 import { MdClear } from "react-icons/md";
 

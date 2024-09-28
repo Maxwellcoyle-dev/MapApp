@@ -29,10 +29,6 @@ const SavedLists = ({ allListsData }) => {
             <h3>New List</h3>
           </div>
           {allListsData?.map((list) => {
-            const createdAt = new Date(
-              parseInt(list.createdAt)
-            ).toLocaleDateString();
-
             return (
               <div
                 className={styles.listDiv}
