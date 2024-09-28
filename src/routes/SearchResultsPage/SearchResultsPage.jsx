@@ -22,7 +22,7 @@ import usePlacesSearch from "../../hooks/google-api-hooks/usePlacesSearch";
 // Styles
 import styles from "./SearchResultsPage.module.css";
 
-const SearchResultsPage = () => {
+const SearchResultsPage = ({ showSearchResults, setShowSearchResults }) => {
   const [selectedPlaceId, setSelectedPlaceId] = useState(null);
 
   const navigate = useNavigate();
@@ -35,17 +35,9 @@ const SearchResultsPage = () => {
   const { placesResults, isPlacesResultsLoading, refetchPlacesResults } =
     usePlacesSearch(searchQuery);
 
-  const { setPlaceType } = useSearchContext();
-
   useEffect(() => {
     console.log("user", user);
   }, [user]);
-
-  const handleBack = () => {
-    setPlaceType(null);
-    setSearchQuery("");
-    navigate(-1, { replace: true });
-  };
 
   if (!placesResults || placesResults?.length === 0) {
     refetchPlacesResults();
@@ -59,12 +51,6 @@ const SearchResultsPage = () => {
 
   return (
     <div className={!showMap ? styles.listViewDiv : styles.listViewDivHide}>
-      <Button
-        icon={<ArrowLeftOutlined />}
-        className={styles.backButton}
-        onClick={handleBack}
-      />
-
       {isPlacesResultsLoading && (
         <div className={styles.spinContainer}>
           <Spin />

@@ -80,10 +80,6 @@ function App() {
                   <AuthenticatedLayout>
                     <Routes>
                       <Route path="/" element={<Home />}>
-                        <Route
-                          path="results-list"
-                          element={<SearchResultsPage />}
-                        />
                         <Route path="list/:listId" element={<ListPage />} />
                         <Route path="place/:placeId" element={<PlacePage />} />
                       </Route>

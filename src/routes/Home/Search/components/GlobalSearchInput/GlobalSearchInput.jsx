@@ -42,7 +42,7 @@ const GlobalSearchInput = () => {
     if (event.key === "Enter") {
       setSearchQuery(event.target.value);
       setAutoCompleteResults([]);
-      navigate(`/results-list`);
+      // navigate(`/results-list`);
     }
   };
 
