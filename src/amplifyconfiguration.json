@@ -13,8 +13,8 @@
       "profile",
       "aws.cognito.signin.user.admin"
     ],
-    "redirectSignIn": "http://localhost:3000/,https://main.d3prqyhmvclbmc.amplifyapp.com/",
-    "redirectSignOut": "http://localhost:3000/,https://main.d3prqyhmvclbmc.amplifyapp.com/",
+    "redirectSignIn": "http://localhost:3000/,https://main.d3prqyhmvclbmc.amplifyapp.com/,https://mesavibe.com/,https://mesavibe.com/login/,https://dev.d3prqyhmvclbmc.amplifyapp.com/",
+    "redirectSignOut": "http://localhost:3000/,https://main.d3prqyhmvclbmc.amplifyapp.com/,https://mesavibe.com/,https://mesavibe.com/login/,https://dev.d3prqyhmvclbmc.amplifyapp.com/",
     "responseType": "code"
   },
   "federationTarget": "COGNITO_USER_POOLS",
