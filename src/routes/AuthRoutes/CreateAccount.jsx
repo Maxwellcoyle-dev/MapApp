@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useAuthContext } from "../../state/AuthContext";
 import styles from "./Auth.module.css";
-import logo from "../../assets/mapapp-logo-v2-192.png";
+import logo from "../../assets/mesavibe-logo-v2-192.png";
 
 function CreateAccount() {
   const { setAuthUser } = useAuthContext();

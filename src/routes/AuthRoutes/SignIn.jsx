@@ -9,7 +9,7 @@ import { GoogleOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../../state/AuthContext";
 import styles from "./Auth.module.css";
-import demoLogo from "../../assets/mapapp-logo-v2-192.png";
+import demoLogo from "../../assets/mesavibe-logo-v2-192.png";
 
 function SignIn() {
   const [loading, setLoading] = useState(false);

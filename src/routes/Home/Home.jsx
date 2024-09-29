@@ -30,14 +30,8 @@ const Home = () => {
     searchRef?.current?.offsetHeight || 0
   );
   const { setCenter, showMap } = useMapContext();
-  const {
-    nearby,
-    searchLocation,
-    searchQuery,
-    queryInput,
-    selectedPlace,
-    setSelectedPlace,
-  } = useSearchContext();
+  const { nearby, searchLocation, searchQuery, queryInput, selectedPlace } =
+    useSearchContext();
 
   const { appUser } = useAppUser();
   const { allListsData } = useListPlaces(appUser?.data.userId);
@@ -45,10 +39,6 @@ const Home = () => {
   const { placesResults } = usePlacesSearch(searchQuery);
 
   const getUserLocation = useGetUserLocation();
-
-  useEffect(() => {
-    setSelectedPlace(null);
-  }, []);
 
   useEffect(() => {
     if (placesResults) {
