@@ -5,7 +5,19 @@ import { Switch } from "antd";
 import { useSearchContext } from "../../../../state/SearchContext";
 
 const SearchTypeSwitch = () => {
-  const { globalSearch, setGlobalSearch } = useSearchContext();
+  const {
+    globalSearch,
+    setGlobalSearch,
+    setQueryInput,
+    setSearchQuery,
+    setPlaceType,
+  } = useSearchContext();
+
+  // const handleGlobalSearch = () => {
+  //   setPlaceType("");
+  //   setSearchQuery("");
+  //   setQueryInput("");
+  // };
 
   return (
     <div
@@ -37,7 +49,10 @@ const SearchTypeSwitch = () => {
         )}
         <Switch
           checked={globalSearch}
-          onChange={(checked) => setGlobalSearch(checked)}
+          onChange={(checked) => {
+            setGlobalSearch(checked);
+            // handleGlobalSearch();
+          }}
         />
       </div>
     </div>

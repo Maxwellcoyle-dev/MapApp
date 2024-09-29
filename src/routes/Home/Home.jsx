@@ -43,11 +43,10 @@ const Home = () => {
   useEffect(() => {
     if (placesResults) {
       setHomeContent("results");
-    }
-    if (!queryInput) {
+    } else {
       setHomeContent("home");
     }
-  }, [placesResults, queryInput]);
+  }, [placesResults]);
 
   useEffect(() => {
     getUserLocation();

@@ -1,6 +1,5 @@
 // Libraries
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { IoRestaurantOutline } from "react-icons/io5";
 import {
   MdOutlineSportsBar,
@@ -58,8 +57,6 @@ const types = [
 const PlaceTypeSelector = () => {
   const { placeType, setPlaceType } = useSearchContext();
 
-  const navigate = useNavigate();
-
   return (
     <div className={styles.placeTypeSelectorContainer}>
       <h4>Type of Place</h4>
@@ -75,7 +72,6 @@ const PlaceTypeSelector = () => {
               }
               onClick={() => {
                 setPlaceType(type.value);
-                // navigate(`/results-list`);
               }}
             >
               {type.icon}
