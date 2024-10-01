@@ -14,16 +14,9 @@ import { useAuthContext } from "../../../../../state/AuthContext";
 // Hooks
 import useGetUserLocation from "../../../../../hooks/useGetUserLocation";
 
-// Context
-import { useAppContext } from "../../../../../state/AppContext";
-import { useSearchContext } from "../../../../../state/SearchContext";
-
 const Menu = () => {
   const navigate = useNavigate();
   const { logout } = useAuthContext();
-
-  const { setSearchLocation } = useSearchContext();
-  const { userLocation } = useAppContext();
 
   const { getUserLocation, setLoading } = useGetUserLocation();
 

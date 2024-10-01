@@ -11,7 +11,7 @@ const LocationTag = ({ setError, error, loading, location }) => {
     if (location || loading) {
       setError(null);
     }
-  }, [error, loading, location]);
+  }, [error, loading, location, setError]);
 
   if (error) {
     return (
