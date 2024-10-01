@@ -33,7 +33,6 @@ const RadiusSelect = () => {
         options={radiusOptions}
         style={{ minWidth: "6rem" }}
         value={searchRadius}
-        optionType="default"
         onChange={(event) => {
           console.log(event);
           setSearchRadius(event);

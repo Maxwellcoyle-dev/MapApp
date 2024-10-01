@@ -7,12 +7,25 @@ import {
   LogoutOutlined,
   MenuOutlined,
 } from "@ant-design/icons";
+import { MdOutlineLocationOn } from "react-icons/md";
 import { signOut } from "aws-amplify/auth";
 import { useAuthContext } from "../../../../../state/AuthContext";
+
+// Hooks
+import useGetUserLocation from "../../../../../hooks/useGetUserLocation";
+
+// Context
+import { useAppContext } from "../../../../../state/AppContext";
+import { useSearchContext } from "../../../../../state/SearchContext";
 
 const Menu = () => {
   const navigate = useNavigate();
   const { logout } = useAuthContext();
+
+  const { setSearchLocation } = useSearchContext();
+  const { userLocation } = useAppContext();
+
+  const { getUserLocation, setLoading } = useGetUserLocation();
 
   const dropdownItems = [
     {
@@ -33,6 +46,16 @@ const Menu = () => {
     },
     {
       key: "3",
+      label: "Refresh Location",
+      icon: <MdOutlineLocationOn />,
+      onClick: () => {
+        console.log("Refreshing location");
+        setLoading(true);
+        getUserLocation();
+      },
+    },
+    {
+      key: "4",
       label: "Logout",
       icon: <LogoutOutlined />,
       onClick: async () => {

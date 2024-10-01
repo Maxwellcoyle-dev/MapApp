@@ -38,7 +38,7 @@ const Home = () => {
 
   const { placesResults } = usePlacesSearch(searchQuery);
 
-  const getUserLocation = useGetUserLocation();
+  const { getUserLocation } = useGetUserLocation();
 
   useEffect(() => {
     if (placesResults) {
@@ -52,11 +52,12 @@ const Home = () => {
     getUserLocation();
   }, [getUserLocation]);
 
-  useEffect(() => {
-    if (nearby && searchLocation.coords) {
-      setCenter(searchLocation.coords);
-    }
-  }, [searchLocation, nearby, setCenter]);
+  // useEffect(() => {
+  //   if (nearby && searchLocation?.coords) {
+  //     console.log("searchLocation: ", searchLocation);
+  //     setCenter(searchLocation?.coords);
+  //   }
+  // }, [searchLocation, nearby, setCenter]);
 
   const updatePadding = useCallback(() => {
     if (searchRef.current) {

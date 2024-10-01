@@ -16,6 +16,9 @@ import RadiusSelect from "./components/RadiusSelect";
 import { useMapContext } from "../../../state/MapContext";
 import { useSearchContext } from "../../../state/SearchContext";
 
+// Hooks
+import useGetUserLocation from "../../../hooks/useGetUserLocation";
+
 // Styles
 import styles from "./Search.module.css";
 
@@ -24,6 +27,12 @@ const Search = ({ searchRef, onToggle }) => {
 
   const { showMap } = useMapContext();
   const { globalSearch, nearby, autoCompleteResults } = useSearchContext();
+
+  const { getUserLocation, loading, error } = useGetUserLocation();
+
+  useEffect(() => {
+    getUserLocation();
+  }, [getUserLocation]);
 
   const handleToggle = () => {
     setIsCollapsed((prev) => !prev);
@@ -43,7 +52,12 @@ const Search = ({ searchRef, onToggle }) => {
   }, [isCollapsed, onToggle]);
 
   return (
-    <div className={`${styles.searchBarContainer} ${isCollapsed ? styles.collapsed : ''}`} ref={searchRef}>
+    <div
+      className={`${styles.searchBarContainer} ${
+        isCollapsed ? styles.collapsed : ""
+      }`}
+      ref={searchRef}
+    >
       <SearchNav />
       <LocationToggle />
       {globalSearch && (
@@ -71,10 +85,7 @@ const Search = ({ searchRef, onToggle }) => {
         </>
       )}
       <div className={styles.collapseButtonDiv}>
-        <div
-          className={styles.collapseButton}
-          onClick={handleToggle}
-        >
+        <div className={styles.collapseButton} onClick={handleToggle}>
           {!isCollapsed ? (
             <MdKeyboardArrowUp className={styles.collapseButtonIcon} />
           ) : (

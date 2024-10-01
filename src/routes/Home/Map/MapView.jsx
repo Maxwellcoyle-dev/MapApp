@@ -1,6 +1,6 @@
 // Libraries
-import React from "react";
-import { Map, AdvancedMarker, Pin } from "@vis.gl/react-google-maps";
+import React, { useEffect } from "react";
+import { Map, AdvancedMarker, Pin, useMap } from "@vis.gl/react-google-maps";
 
 // Components
 import MapComponent from "./MapComponent";
@@ -47,11 +47,11 @@ const MapView = ({ topPadding }) => {
           options={mapOptions}
         >
           <MapComponent />
-          {userLocation && (
+          {userLocation?.coords && (
             <AdvancedMarker
               position={{
-                lat: userLocation.lat,
-                lng: userLocation.lng,
+                lat: userLocation.coords?.lat,
+                lng: userLocation.coords?.lng,
               }}
             >
               <div

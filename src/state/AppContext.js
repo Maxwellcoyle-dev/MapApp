@@ -11,6 +11,7 @@ export const AppProvider = ({ children }) => {
   const [showDeleteListModal, setShowDeleteListModal] = useState(false);
   const [showEditListModal, setShowEditListModal] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
+  const [deviceType, setDeviceType] = useState(null);
 
   return (
     <AppContext.Provider
@@ -27,6 +28,8 @@ export const AppProvider = ({ children }) => {
         setShowEditListModal,
         userLocation,
         setUserLocation,
+        deviceType,
+        setDeviceType,
       }}
     >
       {children}

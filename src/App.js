@@ -26,13 +26,16 @@ import { SearchProvider } from "./state/SearchContext";
 
 // Hooks
 import useGetUserLocation from "./hooks/useGetUserLocation";
+import useGetDeviceType from "./hooks/useGetDeviceType";
 
 const { Content } = Layout;
 
 function AuthenticatedLayout({ children }) {
   const [authStatus, setAuthStatus] = useState("loading");
 
-  const getUserLocation = useGetUserLocation();
+  const { getUserLocation } = useGetUserLocation();
+
+  useGetDeviceType();
 
   useEffect(() => {
     getUserLocation();
