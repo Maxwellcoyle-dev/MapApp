@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Tag, Tooltip } from "antd";
 import {
   PlusOutlined,
@@ -18,6 +18,7 @@ const PlacePageActions = ({
   myRating,
   handleRatingClick,
 }) => {
+  const [hoveredStar, setHoveredStar] = useState(null); // Add hover state
   const truncatedNote =
     note && note.length > 100 ? note.substring(0, 100) + "..." : note;
 
@@ -43,8 +44,10 @@ const PlacePageActions = ({
               <MdOutlineStar
                 key={star}
                 className={
-                  star <= myRating ? styles.filledStar : styles.emptyStar
+                  star <= (hoveredStar || myRating) ? styles.filledStar : styles.emptyStar
                 }
+                onMouseEnter={() => setHoveredStar(star)}
+                onMouseLeave={() => setHoveredStar(null)}
                 onClick={() => {
                   handleRatingClick(star);
                 }}
