@@ -7,7 +7,7 @@ import { useMapContext } from "../../../state/MapContext";
 
 const MapComponent = () => {
   const map = useMap();
-  const { setCenter, setZoom, currentMapPins } = useMapContext();
+  const { setCenter, setZoom, currentMapPins, isSearchButtonVisible, setIsSearchButtonVisible } = useMapContext();
 
   useEffect(() => {
     if (!map) return;
@@ -23,9 +23,14 @@ const MapComponent = () => {
       setZoom(map.getZoom());
     });
 
+    const boundsChangedListener = map.addListener("bounds_changed", () => {
+      setIsSearchButtonVisible(true);
+    });
+
     return () => {
       centerChangedListener.remove();
       zoomChangedListener.remove();
+      boundsChangedListener.remove();
     };
   }, [map]);
 
@@ -43,7 +48,27 @@ const MapComponent = () => {
     map.fitBounds(bounds);
   }, [map, currentMapPins]);
 
-  return null;
+  return (
+    <>
+      {isSearchButtonVisible && (
+        <button
+          style={{
+            position: "absolute",
+            bottom: "20px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            zIndex: 1000,
+          }}
+          onClick={() => {
+            // Handle search with new bounds
+            setIsSearchButtonVisible(false);
+          }}
+        >
+          Search this area
+        </button>
+      )}
+    </>
+  );
 };
 
 export default MapComponent;

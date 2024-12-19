@@ -1,5 +1,5 @@
 // Libraries
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Map, AdvancedMarker, Pin, useMap } from "@vis.gl/react-google-maps";
 
 // Components
@@ -28,11 +28,22 @@ const mapOptions = {
 };
 
 const MapView = ({ topPadding }) => {
+  const [bounds, setBounds] = useState(null);
   const { selectedPlace } = useSearchContext();
   const { center, zoom, currentMapPins } = useMapContext();
   const { userLocation } = useAppContext();
 
   const handleMarkerClick = useMarkerClick();
+
+  const map = useMap();
+
+  useEffect(() => {
+    if (map) {
+      const bounds = map.getBounds();
+      setBounds(bounds);
+      console.log("bounds: ", bounds);
+    }
+  }, [map]);
 
   return (
     <div className={styles.mapViewWrapper}>

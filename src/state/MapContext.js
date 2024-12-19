@@ -11,6 +11,7 @@ export const MapProvider = ({ children }) => {
   const [mapLayout, setMapLayout] = useState("bottom");
   const [showMap, setShowMap] = useState(false);
   const [currentMapPins, setCurrentMapPins] = useState([]);
+  const [isSearchButtonVisible, setIsSearchButtonVisible] = useState(false);
 
   return (
     <MapContext.Provider
@@ -27,6 +28,8 @@ export const MapProvider = ({ children }) => {
         setShowMap,
         currentMapPins,
         setCurrentMapPins,
+        isSearchButtonVisible,
+        setIsSearchButtonVisible,
       }}
     >
       {children}
